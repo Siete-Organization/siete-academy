@@ -1,0 +1,30 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=app",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+    "-p", "no:cacheprovider",
+]
+markers = [
+    "integration: tests that hit the test DB",
+    "unit: fast isolated tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+omit = ["app/core/celery_app.py", "app/main.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]

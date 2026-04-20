@@ -1,0 +1,124 @@
+{
+  "app": {
+    "name": "Siete Academy",
+    "tagline": "World-class SDR training"
+  },
+  "nav": {
+    "apply": "Apply",
+    "login": "Log in",
+    "logout": "Log out",
+    "dashboard": "My progress",
+    "admin": "Admin",
+    "teacher": "Teacher",
+    "recruiter": "Recruiter",
+    "feedback": "Feedback",
+    "certificate": "Certificate"
+  },
+  "apply": {
+    "title": "Apply to Siete Academy",
+    "subtitle": "We want to know you before opening the door. Be specific and honest.",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "locale": "Preferred language",
+    "question1": "Why do you want to work in sales?",
+    "question2": "Tell us about an achievement you're proud of",
+    "question3": "How many hours/week can you dedicate?",
+    "minWords": "Minimum 100 words per answer.",
+    "video": "Video URL (YouTube/Loom/public Drive) — 1 to 2 min pitching yourself",
+    "submit": "Submit application",
+    "success": "Thanks! We'll review your application and get back to you."
+  },
+  "student": {
+    "title": "My progress",
+    "noEnrollments": "You are not enrolled in any cohort yet.",
+    "module": "Module",
+    "liveSession": "Live session",
+    "watchLive": "Join Zoom",
+    "lesson": "Lesson",
+    "markComplete": "Mark complete",
+    "assessment": "Assessment",
+    "submit": "Submit"
+  },
+  "teacher": {
+    "reviewQueue": "Review queue",
+    "noPending": "No pending submissions.",
+    "feedback": "Feedback for the student",
+    "score": "Score",
+    "approve": "Approve",
+    "aiDraft": "Claude draft (teacher-only)",
+    "useDraft": "Use draft",
+    "attachment": "Attach material (URL)",
+    "attachmentHint": "Upload to Drive/Dropbox/Loom and paste the link"
+  },
+  "admin": {
+    "applications": "Applications",
+    "cohorts": "Cohorts",
+    "courses": "Courses",
+    "users": "Users",
+    "placement": "Placement",
+    "analytics": "Analytics",
+    "approve": "Approve",
+    "reject": "Reject",
+    "status": {
+      "submitted": "Submitted",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "empty": "Nothing here yet."
+  },
+  "feedback": {
+    "title": "Feedback on your submissions",
+    "pending": "Pending review",
+    "reviewed": "Reviewed",
+    "autoGraded": "Auto-graded",
+    "score": "Score",
+    "teacherNote": "Teacher feedback",
+    "attachment": "Attached material"
+  },
+  "certificate": {
+    "title": "Your certificate",
+    "empty": "You don't have a certificate yet. Finish every module of your cohort.",
+    "downloadPdf": "Download PDF",
+    "verifyHint": "Verification code",
+    "issuedOn": "Issued on"
+  },
+  "placement": {
+    "title": "Placement pipeline",
+    "stages": {
+      "applying": "Applying",
+      "siete_interview": "Siete interview",
+      "siete_test": "Siete test",
+      "approved": "Approved",
+      "presented": "Presented",
+      "placed": "Placed",
+      "rejected": "Rejected"
+    },
+    "candidate": "Candidate",
+    "moveTo": "Move to",
+    "addNote": "Add note",
+    "summary": "Executive summary",
+    "portfolio": "Portfolio / CV"
+  },
+  "recruiter": {
+    "title": "Available talent",
+    "subtitle": "Graduates cleared by Siete, ready to meet.",
+    "viewProfile": "View profile",
+    "approvedOn": "Approved"
+  },
+  "analytics": {
+    "title": "Dashboard",
+    "applications": "Applications",
+    "students": "Active students",
+    "pendingReviews": "Pending reviews",
+    "graduates": "Graduates",
+    "placed": "Placed"
+  }
+}

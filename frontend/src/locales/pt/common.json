@@ -1,0 +1,124 @@
+{
+  "app": {
+    "name": "Siete Academy",
+    "tagline": "Formação SDR de nível mundial"
+  },
+  "nav": {
+    "apply": "Inscrever-se",
+    "login": "Entrar",
+    "logout": "Sair",
+    "dashboard": "Meu progresso",
+    "admin": "Admin",
+    "teacher": "Professor",
+    "recruiter": "Recrutador",
+    "feedback": "Feedback",
+    "certificate": "Certificado"
+  },
+  "apply": {
+    "title": "Inscreva-se na Siete Academy",
+    "subtitle": "Queremos te conhecer antes de abrir a porta. Seja específico e honesto.",
+    "name": "Nome completo",
+    "email": "Email",
+    "phone": "Telefone (opcional)",
+    "locale": "Idioma preferido",
+    "question1": "Por que você quer trabalhar em vendas?",
+    "question2": "Conte uma conquista da qual você se orgulha",
+    "question3": "Quantas horas/semana pode dedicar?",
+    "minWords": "Mínimo de 100 palavras por resposta.",
+    "video": "URL do vídeo (YouTube/Loom/Drive público) — 1 a 2 min se apresentando",
+    "submit": "Enviar inscrição",
+    "success": "Obrigado! Vamos revisar sua inscrição e entrar em contato."
+  },
+  "student": {
+    "title": "Meu progresso",
+    "noEnrollments": "Você ainda não está inscrito em nenhuma turma.",
+    "module": "Módulo",
+    "liveSession": "Sessão ao vivo",
+    "watchLive": "Entrar no Zoom",
+    "lesson": "Aula",
+    "markComplete": "Marcar como concluída",
+    "assessment": "Prova",
+    "submit": "Enviar"
+  },
+  "teacher": {
+    "reviewQueue": "Fila de revisões",
+    "noPending": "Nenhuma entrega pendente.",
+    "feedback": "Feedback para o aluno",
+    "score": "Nota",
+    "approve": "Aprovar",
+    "aiDraft": "Rascunho Claude (só professor)",
+    "useDraft": "Usar rascunho",
+    "attachment": "Anexar material (URL)",
+    "attachmentHint": "Suba no Drive/Dropbox/Loom e cole o link"
+  },
+  "admin": {
+    "applications": "Inscrições",
+    "cohorts": "Turmas",
+    "courses": "Cursos",
+    "users": "Usuários",
+    "placement": "Placement",
+    "analytics": "Analytics",
+    "approve": "Aprovar",
+    "reject": "Rejeitar",
+    "status": {
+      "submitted": "Enviada",
+      "under_review": "Em revisão",
+      "approved": "Aprovada",
+      "rejected": "Rejeitada"
+    }
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "empty": "Nada por aqui ainda."
+  },
+  "feedback": {
+    "title": "Feedback das suas entregas",
+    "pending": "Aguardando revisão",
+    "reviewed": "Revisada",
+    "autoGraded": "Auto-avaliada",
+    "score": "Nota",
+    "teacherNote": "Feedback do professor",
+    "attachment": "Material anexo"
+  },
+  "certificate": {
+    "title": "Seu certificado",
+    "empty": "Ainda não há certificado. Complete todos os módulos da sua turma.",
+    "downloadPdf": "Baixar PDF",
+    "verifyHint": "Código de verificação",
+    "issuedOn": "Emitido em"
+  },
+  "placement": {
+    "title": "Pipeline de colocação",
+    "stages": {
+      "applying": "Aplicando",
+      "siete_interview": "Entrevista Siete",
+      "siete_test": "Prova Siete",
+      "approved": "Aprovado",
+      "presented": "Apresentado",
+      "placed": "Colocado",
+      "rejected": "Rejeitado"
+    },
+    "candidate": "Candidato",
+    "moveTo": "Mover para",
+    "addNote": "Adicionar nota",
+    "summary": "Resumo executivo",
+    "portfolio": "Portfólio / CV"
+  },
+  "recruiter": {
+    "title": "Talento disponível",
+    "subtitle": "Graduados aprovados pela Siete, prontos para conhecer.",
+    "viewProfile": "Ver perfil",
+    "approvedOn": "Aprovado"
+  },
+  "analytics": {
+    "title": "Dashboard",
+    "applications": "Inscrições",
+    "students": "Alunos ativos",
+    "pendingReviews": "Entregas pendentes",
+    "graduates": "Graduados",
+    "placed": "Colocados"
+  }
+}

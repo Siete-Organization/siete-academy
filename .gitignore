@@ -1,0 +1,26 @@
+.env
+.env.local
+credentials.json
+token.json
+firebase-admin.json
+.tmp/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+*.log
+
+# Coverage / testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
