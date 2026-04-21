@@ -50,6 +50,9 @@ class Module(Base):
     lessons: Mapped[list["Lesson"]] = relationship(
         back_populates="module", cascade="all, delete-orphan", order_by="Lesson.order_index"
     )
+    resources: Mapped[list["ModuleResource"]] = relationship(
+        back_populates="module", cascade="all, delete-orphan", order_by="ModuleResource.order_index"
+    )
 
 
 class ModuleTranslation(Base):
@@ -71,6 +74,8 @@ class Lesson(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     module_id: Mapped[int] = mapped_column(ForeignKey("modules.id", ondelete="CASCADE"), index=True)
     order_index: Mapped[int] = mapped_column(Integer, default=0)
+    # "video" (YouTube iframe) | "reading" (manual / lectura inline, no descargable)
+    kind: Mapped[str] = mapped_column(String(16), default="video")
     # YouTube unlisted video ID (ej: "dQw4w9WgXcQ"). El front embebe el iframe.
     youtube_id: Mapped[str | None] = mapped_column(String(20), nullable=True)
     duration_seconds: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -93,3 +98,26 @@ class LessonTranslation(Base):
     body: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     lesson: Mapped[Lesson] = relationship(back_populates="translations")
+
+
+class ModuleResource(Base):
+    """Material complementario por módulo: PDFs, PPTs, videos, docs, links externos.
+
+    Fase 0: basado en URL (Drive/Dropbox/YouTube/Loom).
+    Fase 1+ podrá apuntar a uploads propios en /uploads/... servidos por StaticFiles.
+    """
+
+    __tablename__ = "module_resources"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    module_id: Mapped[int] = mapped_column(
+        ForeignKey("modules.id", ondelete="CASCADE"), index=True
+    )
+    # "pdf" | "ppt" | "video" | "doc" | "link"
+    kind: Mapped[str] = mapped_column(String(16), default="link")
+    title: Mapped[str] = mapped_column(String(200))
+    url: Mapped[str] = mapped_column(String(600))
+    order_index: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    module: Mapped[Module] = relationship(back_populates="resources")

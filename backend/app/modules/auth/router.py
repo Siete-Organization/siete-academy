@@ -13,6 +13,7 @@ def me(current: CurrentUser = Depends(get_current_user)) -> dict:
         "firebase_uid": u.firebase_uid,
         "email": u.email,
         "display_name": u.display_name,
+        "photo_url": u.photo_url,
         "role": current.role,
         "locale": u.locale,
     }

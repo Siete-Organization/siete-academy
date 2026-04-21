@@ -14,6 +14,8 @@ class Application(Base):
     applicant_email: Mapped[str] = mapped_column(String(255), index=True)
     applicant_name: Mapped[str] = mapped_column(String(200))
     applicant_phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    linkedin_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    country: Mapped[str | None] = mapped_column(String(80), nullable=True)
     locale: Mapped[str] = mapped_column(String(5), default="es")
 
     # Respuestas abiertas (question_id -> texto)

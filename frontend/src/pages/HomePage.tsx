@@ -9,22 +9,21 @@ export function HomePage() {
       {/* Hero */}
       <section className="pt-20 pb-28 md:pt-32 md:pb-40 relative">
         <p className="num-label animate-fade-up" style={{ animationDelay: "60ms" }}>
-          № 001 · cohorte mayo 2026
+          {t("home.eyebrow")}
         </p>
         <h1
           className="font-display text-display-xl mt-6 max-w-5xl text-balance animate-fade-up"
           style={{ animationDelay: "140ms" }}
         >
-          La formación <em className="italic font-light">SDR</em> que siempre
+          {t("home.heroLine1")}
           <br />
-          debió <span className="relative inline-block">
-            existir
+          <span className="relative inline-block">
+            {t("home.heroLine2")}
             <span
               className="absolute inset-x-0 -bottom-2 h-[3px] bg-ember origin-left animate-stroke-in"
               style={{ animationDelay: "900ms" }}
             />
           </span>
-          .
         </h1>
 
         <div
@@ -32,21 +31,11 @@ export function HomePage() {
           style={{ animationDelay: "300ms" }}
         >
           <p className="md:col-span-7 text-lg text-ink-soft leading-relaxed text-pretty">
-            Hecho por <strong className="font-semibold">Siete</strong> — la agencia de prospección
-            que ha enviado más de <span className="font-mono">4.2M</span> de emails
-            profesionales en LatAm. Formamos SDRs durante ocho semanas con contenido
-            on-demand, sesiones en vivo, ejercicios en equipo, y un examen práctico real
-            frente al equipo comercial de Siete. Los que pasan, se colocan.
+            {t("home.heroPitch")}
           </p>
-          <aside className="md:col-span-4 md:col-start-9 border-l border-bone pl-6 flex flex-col gap-3">
-            <p className="eyebrow">Qué esperar</p>
-            {[
-              "4 módulos · 2 semanas c/u",
-              "3h en vivo al cierre de cada módulo",
-              "Ejercicios en equipo breakout",
-              "Examen práctico en Siete",
-              "Placement con clientes reales",
-            ].map((item, i) => (
+          <aside className="md:col-span-4 md:col-start-9 border-l-2 border-ember pl-6 flex flex-col gap-3">
+            <p className="eyebrow">{t("home.whatToExpect")}</p>
+            {(t("home.expectList", { returnObjects: true }) as string[]).map((item, i) => (
               <div key={item} className="flex items-baseline gap-3 text-[13px]">
                 <span className="font-mono text-[10px] text-ink-faint tabular-nums">
                   {String(i + 1).padStart(2, "0")}
@@ -62,51 +51,29 @@ export function HomePage() {
           style={{ animationDelay: "460ms" }}
         >
           <Link to="/apply">
-            <Button size="lg">
-              Aplica a la cohorte
+            <Button size="lg" variant="ember">
+              {t("home.ctaApply")}
               <span aria-hidden>→</span>
             </Button>
           </Link>
-          <p className="font-mono text-xs text-ink-muted">
-            Filtrado personal · 100% gratis · plazas limitadas
-          </p>
+          <p className="font-mono text-xs text-ink-muted">{t("home.ctaFine")}</p>
         </div>
       </section>
 
       {/* Curriculum preview */}
       <section className="hairline pt-16 pb-24">
         <div className="flex items-baseline justify-between mb-10">
-          <h2 className="font-display text-display-md">El currículum</h2>
-          <p className="num-label">4 módulos · 8 semanas</p>
+          <h2 className="font-display text-display-md">{t("home.curriculumTitle")}</h2>
+          <p className="num-label">{t("home.curriculumMeta")}</p>
         </div>
 
         <ol className="divide-y divide-bone border-y border-bone">
-          {[
-            {
-              n: "01",
-              t: "Modelos de negocio",
-              d: "Cómo se gana dinero en B2B. Recurring vs. transaccional, pricing, funding, métricas.",
-              w: "semana 1–2",
-            },
-            {
-              n: "02",
-              t: "Ideal Customer Profile",
-              d: "Del buyer persona al ICP utilitario. Segmentación por señales reales, no por intuición.",
-              w: "semana 3–4",
-            },
-            {
-              n: "03",
-              t: "Metodología SDR",
-              d: "Cadencias, discovery, qualification frameworks, manejo de respuestas y seguimiento.",
-              w: "semana 5–6",
-            },
-            {
-              n: "04",
-              t: "Herramientas & Cold Calling",
-              d: "Stack técnico real de prospección. Tu primera llamada frente al equipo de Siete.",
-              w: "semana 7–8",
-            },
-          ].map((m) => (
+          {(t("home.modules", { returnObjects: true }) as {
+            n: string;
+            t: string;
+            d: string;
+            w: string;
+          }[]).map((m) => (
             <li key={m.n} className="grid grid-cols-12 gap-4 py-7 group">
               <span className="col-span-1 font-mono text-xs text-ink-faint tabular-nums mt-1">
                 {m.n}
@@ -126,14 +93,9 @@ export function HomePage() {
       {/* Social / numbers */}
       <section className="py-24">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-8">
-          {[
-            { k: "4.2M", v: "emails profesionales enviados" },
-            { k: "180+", v: "clientes B2B activos" },
-            { k: "70/30", v: "on-demand vs. en vivo" },
-            { k: "0 $", v: "costo para la cohorte 001" },
-          ].map((s) => (
+          {(t("home.stats", { returnObjects: true }) as { k: string; v: string }[]).map((s) => (
             <div key={s.k} className="flex flex-col">
-              <span className="font-display text-5xl tracking-editorial tabular-nums">{s.k}</span>
+              <span className="font-display text-5xl tabular-nums font-black">{s.k}</span>
               <span className="text-xs text-ink-muted mt-3 max-w-[16ch]">{s.v}</span>
             </div>
           ))}
@@ -144,14 +106,14 @@ export function HomePage() {
       <section className="hairline py-20">
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
           <div>
-            <p className="eyebrow">Aplicaciones abiertas</p>
-            <p className="font-display text-display-md mt-3 max-w-2xl text-balance">
-              Si crees que tienes lo que se necesita, <em>demuéstralo.</em>
+            <p className="eyebrow">{t("home.finalEyebrow")}</p>
+            <p className="font-display text-display-md mt-3 max-w-2xl text-balance font-bold">
+              {t("home.finalTagline")}
             </p>
           </div>
           <Link to="/apply">
             <Button size="lg" variant="ember">
-              Aplicar ahora <span aria-hidden>→</span>
+              {t("home.ctaApply")} <span aria-hidden>→</span>
             </Button>
           </Link>
         </div>

@@ -15,6 +15,8 @@ def create_application(db: Session, data: ApplicationCreate) -> Application:
         applicant_name=data.applicant_name,
         applicant_email=str(data.applicant_email),
         applicant_phone=data.applicant_phone,
+        linkedin_url=data.linkedin_url,
+        country=data.country,
         locale=data.locale,
         answers=answers_dict,
         video_url=data.video_url,

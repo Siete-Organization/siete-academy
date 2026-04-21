@@ -75,6 +75,7 @@ class CandidateRecruiterOut(BaseModel):
 
     id: int
     user_name: str | None
+    user_email: str | None
     cohort_id: int | None
     stage: str
     summary: str | None

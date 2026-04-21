@@ -73,13 +73,16 @@ export function StudentDashboard() {
 
   return (
     <div className="container-editorial py-16 md:py-24 space-y-16">
-      <header>
-        <p className="num-label">
-          Bienvenido, {me?.display_name?.split(" ")[0] || "estudiante"}
-        </p>
-        <h1 className="font-display text-display-lg mt-4 text-balance">
-          Tu <em className="italic font-light">progreso</em>.
-        </h1>
+      <header className="flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <p className="num-label">
+            Bienvenido, {me?.display_name?.split(" ")[0] || "estudiante"}
+          </p>
+          <h1 className="font-display text-display-lg mt-4 text-balance">
+            Tu <em className="italic font-light">progreso</em>.
+          </h1>
+        </div>
+        <ReferralShare name={me?.display_name || null} />
       </header>
 
       {enrollments.map((e) => {
@@ -164,6 +167,51 @@ export function StudentDashboard() {
           </section>
         );
       })}
+    </div>
+  );
+}
+
+function ReferralShare({ name }: { name: string | null }) {
+  const { t } = useTranslation();
+  const landingUrl = `${window.location.origin}/academy/`;
+  const text = t("student.referralText", {
+    name: name?.split(" ")[0] || "",
+  });
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+    landingUrl,
+  )}`;
+  const copyText = `${text} ${landingUrl}`;
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(copyText);
+    } catch {
+      /* clipboard blocked; user can still use the LinkedIn button */
+    }
+  };
+  return (
+    <div className="border border-bone rounded-xs px-4 py-3 space-y-2 bg-paper-warm/40 max-w-xs">
+      <p className="num-label">{t("student.referTitle")}</p>
+      <p className="text-xs text-ink-muted leading-relaxed">
+        {t("student.referSubtitle")}
+      </p>
+      <div className="flex items-center gap-2 pt-1">
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ink text-paper text-xs uppercase tracking-[0.14em] font-mono hover:bg-ember transition-colors"
+        >
+          <span aria-hidden>in</span>
+          {t("student.shareLinkedin")}
+        </a>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="text-xs uppercase tracking-[0.14em] font-mono text-ink-muted hover:text-ink transition-colors"
+        >
+          {t("student.copyLink")}
+        </button>
+      </div>
     </div>
   );
 }

@@ -4,41 +4,55 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Rebrand 2026 — paleta primaria (AZUL PROFUNDO / COOL STEEL)
+        // Los tokens "paper/ink/bone/ember/moss" se mantienen por compatibilidad,
+        // pero apuntan ahora a los valores oficiales del rebranding.
         paper: {
-          DEFAULT: "#faf8f3",
-          tint: "#f4f1e9",
-          deep: "#ece8db",
+          DEFAULT: "#F5F5F7",        // OFF WHITE (rebrand)
+          warm: "#FFFFFF",
+          tint: "#EDEDF0",
+          deep: "#E4E4E9",
         },
         ink: {
-          DEFAULT: "#0f0f10",
-          soft: "#2a2a2d",
-          muted: "#5b5b61",
-          faint: "#8a8a90",
+          DEFAULT: "#000000",        // BLACK (rebrand)
+          soft: "#1a1a1c",
+          muted: "#505058",
+          faint: "#8c8c94",
         },
         bone: {
-          DEFAULT: "#e6e2d6",
-          strong: "#d8d3c2",
+          DEFAULT: "#E4E4E9",
+          strong: "#CECED4",
         },
+        // Accent principal — COOL STEEL. Se usa para CTAs y highlights.
         ember: {
-          DEFAULT: "#b8461f",
-          soft: "#e88664",
-          ghost: "#f8e7dc",
+          DEFAULT: "#406E8E",        // COOL STEEL (rebrand)
+          soft: "#6A94B0",
+          ghost: "#E9F0F5",
         },
+        // Accent secundario — FROZEN WATER. Para chips suaves y badges info.
+        sky: {
+          DEFAULT: "#B8DBD9",        // FROZEN WATER (rebrand)
+          soft: "#D6EAE9",
+          deep: "#86BAB7",
+        },
+        // Semántico: success/warn ajustados para convivir con el azul.
         moss: {
-          DEFAULT: "#3d4d35",
-          soft: "#6f805f",
+          DEFAULT: "#2F5D45",
+          soft: "#5E8873",
         },
         brand: {
-          50: "#f5f7ff",
-          500: "#4f46e5",
-          600: "#4338ca",
-          700: "#3730a3",
-          900: "#1e1b4b",
+          50: "#E9F0F5",
+          500: "#406E8E",
+          600: "#345A75",
+          700: "#274558",
+          900: "#182C38",
         },
       },
       fontFamily: {
-        display: ['"Fraunces"', "Georgia", "serif"],
-        sans: ['"Inter"', "system-ui", "sans-serif"],
+        // Brand: Montserrat para títulos + cuerpo largo.
+        // Space Grotesk como stand-in del "Road Radio" del rebrand (display).
+        display: ['"Space Grotesk"', '"Montserrat"', "system-ui", "sans-serif"],
+        sans: ['"Montserrat"', "system-ui", "sans-serif"],
         mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
       },
       fontSize: {

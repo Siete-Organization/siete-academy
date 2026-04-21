@@ -10,6 +10,7 @@ from app.modules.assessments.models import Assessment, Submission, TeacherReview
 from app.modules.assessments.schemas import (
     AssessmentCreate,
     AssessmentOut,
+    AssessmentUpdate,
     ReviewCreate,
     ReviewOut,
     SubmissionCreate,
@@ -42,6 +43,47 @@ def create_assessment(
 @router.get("/module/{module_id}", response_model=list[AssessmentOut])
 def list_by_module(module_id: int, db: Session = Depends(get_db)) -> list[Assessment]:
     return db.query(Assessment).filter(Assessment.module_id == module_id).all()
+
+
+@router.patch("/{assessment_id}", response_model=AssessmentOut)
+def update_assessment(
+    assessment_id: int,
+    body: AssessmentUpdate,
+    _admin: CurrentUser = Depends(require_roles("admin")),
+    db: Session = Depends(get_db),
+) -> Assessment:
+    a = db.get(Assessment, assessment_id)
+    if not a:
+        raise HTTPException(404, "Assessment not found")
+    if body.type is not None:
+        a.type = body.type
+    if body.title is not None:
+        a.title = body.title
+    if body.config is not None:
+        a.config = body.config
+    if body.passing_score is not None:
+        a.passing_score = body.passing_score
+    db.commit()
+    db.refresh(a)
+    log.info(
+        "assessment.updated",
+        extra={"assessment_id": a.id, "type": a.type},
+    )
+    return a
+
+
+@router.delete("/{assessment_id}", status_code=204)
+def delete_assessment(
+    assessment_id: int,
+    _admin: CurrentUser = Depends(require_roles("admin")),
+    db: Session = Depends(get_db),
+) -> None:
+    a = db.get(Assessment, assessment_id)
+    if not a:
+        raise HTTPException(404, "Assessment not found")
+    db.delete(a)
+    db.commit()
+    log.info("assessment.deleted", extra={"assessment_id": assessment_id})
 
 
 @router.post("/submissions", response_model=SubmissionOut, status_code=201)

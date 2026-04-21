@@ -32,3 +32,6 @@ test-results/
 # IDE
 .idea/
 .vscode/
+
+# Brand assets (se gestionan fuera del repo — viven en Drive/Figma)
+rebranding_2026_Siete.pdf

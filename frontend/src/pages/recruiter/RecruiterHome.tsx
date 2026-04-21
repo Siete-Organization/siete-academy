@@ -2,9 +2,26 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 
+function buildInterviewMailto({
+  name,
+  email,
+  subject,
+  body,
+}: {
+  name: string | null;
+  email: string;
+  subject: string;
+  body: string;
+}): string {
+  const params = new URLSearchParams({ subject, body });
+  const label = name ? `${name} <${email}>` : email;
+  return `mailto:${encodeURIComponent(label)}?${params.toString()}`;
+}
+
 interface RecruiterCandidate {
   id: number;
   user_name: string | null;
+  user_email: string | null;
   cohort_id: number | null;
   stage: string;
   summary: string | null;
@@ -64,12 +81,27 @@ export function RecruiterHome() {
                 )}
                 {c.portfolio_url && (
                   <a
-                    className="inline-block text-ember hover:underline underline-offset-4 text-sm"
+                    className="block text-ember hover:underline underline-offset-4 text-sm"
                     href={c.portfolio_url}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {t("recruiter.viewProfile")} ↗
+                  </a>
+                )}
+                {c.user_email && (
+                  <a
+                    className="inline-block mt-2 px-3 py-1.5 border border-ink text-ink text-xs uppercase tracking-[0.14em] font-mono hover:bg-ink hover:text-paper transition-colors"
+                    href={buildInterviewMailto({
+                      name: c.user_name,
+                      email: c.user_email,
+                      subject: t("recruiter.interviewSubject"),
+                      body: t("recruiter.interviewBody", {
+                        name: (c.user_name || "").split(" ")[0] || "",
+                      }),
+                    })}
+                  >
+                    {t("recruiter.scheduleInterview")} →
                   </a>
                 )}
               </aside>

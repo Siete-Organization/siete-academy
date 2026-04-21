@@ -31,6 +31,8 @@ def update_me(
     user = current.user
     if body.display_name is not None:
         user.display_name = body.display_name
+    if body.photo_url is not None:
+        user.photo_url = body.photo_url or None
     if body.locale is not None:
         user.locale = body.locale
     db.commit()

@@ -19,6 +19,7 @@ void i18n
     supportedLngs: ["es", "en", "pt"],
     defaultNS: "common",
     interpolation: { escapeValue: false },
+    returnObjects: true,
   });
 
 export default i18n;

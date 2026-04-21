@@ -5,10 +5,11 @@ import { api, DEV_USER_KEY } from "./api";
 
 export type Role = "admin" | "teacher" | "student" | "recruiter";
 
-interface Me {
+export interface Me {
   id: number;
   email: string;
   display_name: string | null;
+  photo_url: string | null;
   role: Role;
   locale: string;
 }

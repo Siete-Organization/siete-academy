@@ -24,6 +24,8 @@ class ApplicationCreate(BaseModel):
     applicant_name: str = Field(min_length=2, max_length=200)
     applicant_email: EmailStr
     applicant_phone: str | None = None
+    linkedin_url: str = Field(min_length=8, max_length=500)
+    country: str = Field(min_length=2, max_length=80)
     locale: Literal["es", "en", "pt"] = "es"
     answers: list[ApplicationAnswer]
     video_url: str | None = None  # URL de YouTube/Loom/Drive
@@ -50,6 +52,8 @@ class ApplicationOut(BaseModel):
     applicant_name: str
     applicant_email: EmailStr
     applicant_phone: str | None
+    linkedin_url: str | None
+    country: str | None
     locale: str
     answers: dict
     video_url: str | None

@@ -96,35 +96,274 @@ def seed_users(db) -> dict[str, User]:
 def seed_applications(db) -> None:
     if db.query(Application).count() > 0:
         return
-    long_text = lambda p: " ".join(f"{p}{i}" for i in range(105))  # noqa: E731
+
+    # Respuestas más realistas (≥100 palabras) — en vez de filler text.
+    answer_set_strong_es = {
+        "why_sales": (
+            "Quiero trabajar en ventas porque es el único rol donde mi resultado depende "
+            "directamente de qué tanto entiendo al otro. Soy curiosa por naturaleza, me "
+            "obsesiona entender qué hace que una persona diga que sí. Hice prospección a "
+            "frío durante tres años en una inmobiliaria de Bogotá y aprendí que un buen "
+            "SDR no vende: hace preguntas precisas, escucha más de lo que habla, y toma "
+            "la llamada que nadie quiere tomar. Ya perdí la vergüenza al teléfono, pero "
+            "me faltan las metodologías y las herramientas para escalar eso en B2B tech. "
+            "Siete Academy es el siguiente paso lógico."
+        ),
+        "achievement": (
+            "El último trimestre de 2025 cerré 14 reuniones calificadas en 8 semanas "
+            "vendiendo un SaaS de logística que nadie conocía en Colombia. Sin playbook, "
+            "sin lista de prospects, sin CRM. Construí una base de 400 leads scrapeando "
+            "LinkedIn y cruzando con info pública de empresas. De ahí saqué 14 meetings, "
+            "de los cuales 6 se convirtieron en deals. Lo más orgulloso no es el número: "
+            "es que documenté cada objeción real que escuché y se volvió el primer "
+            "playbook que tuvo el equipo comercial cuando entró el segundo SDR."
+        ),
+        "hours_per_week": (
+            "Puedo dedicar 25 horas a la semana al programa. Actualmente trabajo "
+            "part-time en una agencia como community manager (lunes a jueves medio día, "
+            "unas 20h/sem) y uso las mañanas temprano y los fines de semana para "
+            "estudiar. Ya bloqueé en mi calendario todas las sesiones en vivo de los 8 "
+            "módulos. En las semanas con entregas grandes puedo estirar a 30-35h, pero "
+            "prefiero comprometerme con 25 de forma sostenida que prometer 40 y no "
+            "cumplir. Vivo con mis papás, no tengo hijos, puedo reasignar tiempo."
+        ),
+    }
+
+    answer_set_medium_es = {
+        "why_sales": (
+            "Siempre me llamó la atención cómo las grandes compañías generan ingresos "
+            "sin que uno los vea trabajar. En los últimos años me di cuenta de que el "
+            "motor es el equipo comercial, y específicamente los SDR son los que abren "
+            "el embudo. Me gusta conversar con extraños, tengo buena tolerancia a la "
+            "frustración, y soy obsesiva con hacer seguimiento. Quiero pasar de mi rol "
+            "actual en atención al cliente a algo que pague mejor y que tenga una curva "
+            "de crecimiento clara. Ventas B2B es el camino que más me motiva de los "
+            "que exploré, por eso estoy aplicando."
+        ),
+        "achievement": (
+            "En mi trabajo actual de atención al cliente ayudé a bajar el tiempo de "
+            "respuesta promedio de 4 horas a 40 minutos en un trimestre. Fue un mix "
+            "entre ordenar el backlog de tickets, crear macros para los 20 casos más "
+            "frecuentes, y entrenar al resto del equipo a categorizar bien los tickets "
+            "desde el principio. Mi jefa me dio un bono y me pidió que ayudara a "
+            "escribir el proceso para los nuevos ingresos. Lo que más rescato es que "
+            "aprendí a medir, no solo a ejecutar. Antes trabajaba duro; ahora trabajo "
+            "duro Y llevo métricas."
+        ),
+        "hours_per_week": (
+            "Puedo dedicar entre 15 y 20 horas por semana. Trabajo full-time de lunes a "
+            "viernes en un horario fijo (9 a 6) y tengo los fines de semana y las "
+            "noches libres. Me comprometo a las sesiones en vivo porque son pocas y ya "
+            "hablé con mi pareja para organizar el tiempo. Soy consciente de que 20 "
+            "horas es el mínimo que debo dedicarle para aprovechar el programa, no "
+            "pienso hacer esto a medias. Si algo no me permite cumplir, aviso antes "
+            "con una semana de anticipación, no el mismo día."
+        ),
+    }
+
+    answer_set_weak_es = {
+        "why_sales": (
+            "La verdad es que no sé mucho de ventas pero me interesa aprender. Vi a "
+            "Siete Academy en LinkedIn y me llamó la atención el programa. Creo que "
+            "tengo buena comunicación y no me da miedo hablar con gente nueva. Quiero "
+            "tener más ingresos y una carrera que crezca rápido. En mi trabajo actual "
+            "ya me aburrí y quiero un cambio. Además siento que las ventas son el "
+            "futuro y con la IA todo el mundo dice que es un skill importante. Por eso "
+            "estoy aplicando, espero poder entrar al programa y dar lo mejor de mí "
+            "durante las semanas que dure el curso y todo lo que sigue después."
+        ),
+        "achievement": (
+            "En mi trabajo anterior me dieron el empleado del mes una vez porque "
+            "llegaba temprano y no faltaba. Creo que eso dice mucho de mí como persona. "
+            "También en la universidad saqué el tercer lugar en un concurso de "
+            "emprendimiento donde presentamos una app de comida saludable. No ganamos "
+            "pero nos fue bien para ser la primera vez. Me gusta trabajar en equipo y "
+            "soy responsable con los tiempos. Soy bastante estructurado y me gusta "
+            "hacer listas de pendientes para no olvidar nada durante el día. Eso me "
+            "ha ayudado mucho en todos los trabajos que he tenido."
+        ),
+        "hours_per_week": (
+            "Tengo bastante tiempo disponible. No estoy trabajando ahorita, salí hace "
+            "dos meses del trabajo anterior y estoy en búsqueda activa. Puedo dedicar "
+            "40 horas o más si es necesario. No tengo hijos ni otras responsabilidades "
+            "grandes ahorita. Estoy 100% disponible para lo que el programa pida. "
+            "Vivo con mis papás y no tengo que pagar renta, así que puedo enfocarme "
+            "solo en esto. Si me dan la oportunidad voy a meterle con todo porque "
+            "necesito volver a tener trabajo pronto y creo que esto me puede abrir "
+            "puertas importantes en el mundo B2B."
+        ),
+    }
+
     apps = [
         Application(
             applicant_name="Sofía Martínez",
             applicant_email="sofia.m@example.com",
             applicant_phone="+57 300 555 1212",
+            linkedin_url="https://www.linkedin.com/in/sofia-martinez-demo",
+            country="Colombia",
             locale="es",
-            answers={
-                "why_sales": long_text("a"),
-                "achievement": long_text("b"),
-                "hours_per_week": long_text("c"),
-            },
+            answers=answer_set_strong_es,
             video_url="https://loom.com/share/demo-sofia",
             status="submitted",
         ),
         Application(
             applicant_name="Rodrigo Castro",
             applicant_email="rodrigo.c@example.com",
+            applicant_phone="+52 55 2345 6789",
+            linkedin_url="https://www.linkedin.com/in/rodrigo-castro-demo",
+            country="México",
             locale="es",
-            answers={
-                "why_sales": long_text("x"),
-                "achievement": long_text("y"),
-                "hours_per_week": long_text("z"),
-            },
+            answers=answer_set_medium_es,
             video_url="https://loom.com/share/demo-rodrigo",
             ai_score=78,
             ai_notes=(
                 "Comunicación clara, motivación genuina. "
-                "Banderas: dice 20h/sem pero trabaja full-time."
+                "Banderas: dice 20h/sem pero trabaja full-time — validar."
+            ),
+            status="under_review",
+        ),
+        Application(
+            applicant_name="Valentina Ríos",
+            applicant_email="valentina.rios@example.com",
+            applicant_phone="+54 11 5678 4321",
+            linkedin_url="https://www.linkedin.com/in/valentina-rios-demo",
+            country="Argentina",
+            locale="es",
+            answers=answer_set_strong_es,
+            video_url="https://loom.com/share/demo-valentina",
+            ai_score=86,
+            ai_notes=(
+                "Perfil SDR maduro. Storytelling sólido, métricas reales. "
+                "Fuerte ajuste cultural — asignable a cohorte senior."
+            ),
+            status="under_review",
+        ),
+        Application(
+            applicant_name="Joaquín Salazar",
+            applicant_email="joaquin.s@example.com",
+            applicant_phone="+56 9 8765 4321",
+            linkedin_url="https://www.linkedin.com/in/joaquin-salazar-demo",
+            country="Chile",
+            locale="es",
+            answers=answer_set_medium_es,
+            video_url="https://loom.com/share/demo-joaquin",
+            status="submitted",
+        ),
+        Application(
+            applicant_name="Isabela Fernandes",
+            applicant_email="isabela.f@example.com",
+            applicant_phone="+55 11 94567 8901",
+            linkedin_url="https://www.linkedin.com/in/isabela-fernandes-demo",
+            country="Brasil",
+            locale="pt",
+            answers={
+                "why_sales": (
+                    "Quero trabalhar em vendas porque é o único papel onde o resultado "
+                    "depende do quanto entendo o outro. Passei três anos fazendo "
+                    "prospecção B2C em um banco em São Paulo, aprendi que um bom SDR "
+                    "pergunta mais do que fala. Já perdi o medo do telefone. Agora "
+                    "quero metodologia real para escalar em tech — por isso o Siete "
+                    "Academy faz sentido: é específico, tem mentoria humana e treina "
+                    "para colocação real em agências e SaaS. Minha meta é sair do "
+                    "programa com pipeline construído, não só com conhecimento teórico."
+                ),
+                "achievement": (
+                    "No último trimestre levei o NPS do meu esquadrão de 42 para 68 em "
+                    "dez semanas — reestruturei o script de atendimento, implementei "
+                    "um check-list de qualificação antes da ligação e treinei três "
+                    "colegas novos. A gerente transformou meu processo em padrão. "
+                    "Aprendi que medir importa mais do que fazer bonito. Já estou "
+                    "acostumada a ter metas semanais, ownership dos meus números e "
+                    "feedback direto. Quero levar isso para um ambiente B2B tech."
+                ),
+                "hours_per_week": (
+                    "Posso dedicar 22-25 horas por semana ao programa. Trabalho "
+                    "meio-expediente de manhã (20h/sem) e uso as tardes de três dias "
+                    "da semana mais os sábados. Minhas sessões ao vivo já estão "
+                    "bloqueadas no calendário. Moro com minha família, não tenho "
+                    "filhos, consigo reorganizar meu tempo facilmente para entregar "
+                    "as atividades antes do prazo."
+                ),
+            },
+            video_url="https://loom.com/share/demo-isabela",
+            ai_score=82,
+            ai_notes=(
+                "Perfil sólido en PT-BR. Evidencia cuantitativa, experiencia previa "
+                "relevante. Considerar cohorte PT-BR si hay cupo."
+            ),
+            status="under_review",
+        ),
+        Application(
+            applicant_name="Mateo Acosta",
+            applicant_email="mateo.a@example.com",
+            applicant_phone="+51 999 888 777",
+            linkedin_url="https://www.linkedin.com/in/mateo-acosta-demo",
+            country="Perú",
+            locale="es",
+            answers=answer_set_weak_es,
+            video_url="https://loom.com/share/demo-mateo",
+            ai_score=42,
+            ai_notes=(
+                "Respuestas genéricas, sin métricas concretas. Disponibilidad "
+                "40h/sem pero sin trabajo ni ingresos: riesgo de abandono si "
+                "consigue empleo mid-programa. Recomendado: entrevista o reject."
+            ),
+            status="under_review",
+        ),
+        Application(
+            applicant_name="Emily Carter",
+            applicant_email="emily.c@example.com",
+            applicant_phone="+1 415 555 0199",
+            linkedin_url="https://www.linkedin.com/in/emily-carter-demo",
+            country="United States",
+            locale="en",
+            answers={
+                "why_sales": (
+                    "I want to work in sales because it's the only role where my "
+                    "output is directly tied to how well I understand the other "
+                    "person. I spent two years doing inbound support for a B2B SaaS "
+                    "and saw the AE team make numbers I didn't make. I got tired of "
+                    "being on the receiving end of the conversation and started "
+                    "running discovery calls myself last quarter. I closed two small "
+                    "deals and realized this is what I want full-time. I'm applying "
+                    "to Siete Academy because I want structured methodology and real "
+                    "coaching, not just Udemy courses and hoping it sticks."
+                ),
+                "achievement": (
+                    "Last year I rebuilt our support macros from scratch after "
+                    "auditing 200 of our worst-rated tickets. I identified that 60% "
+                    "of bad ratings came from 4 specific issue types with unclear "
+                    "canned responses. I rewrote the top 20 macros, A/B tested them "
+                    "with two teammates for a month, and the CSAT moved from 4.1 to "
+                    "4.6 team-wide. My manager asked me to own onboarding for new "
+                    "support hires after that. I took ownership of the problem, "
+                    "measured the change, and made the fix durable."
+                ),
+                "hours_per_week": (
+                    "I can dedicate 25 hours per week. I work 30 hours weekly at my "
+                    "current role (contract, flexible schedule) and have mornings and "
+                    "weekends free. I've already blocked all eight live sessions on "
+                    "my calendar. I'd rather commit to 25 sustainably than promise "
+                    "40 and burn out. I live alone, no kids, no major time "
+                    "constraints aside from work."
+                ),
+            },
+            video_url="https://loom.com/share/demo-emily",
+            status="submitted",
+        ),
+        Application(
+            applicant_name="Ana Lucía Vega",
+            applicant_email="ana.vega@example.com",
+            applicant_phone="+593 99 888 7766",
+            linkedin_url="https://www.linkedin.com/in/ana-vega-demo",
+            country="Ecuador",
+            locale="es",
+            answers=answer_set_medium_es,
+            video_url="https://loom.com/share/demo-ana",
+            ai_score=71,
+            ai_notes=(
+                "Sólida en fundamentos. Poca exposición a B2B tech pero alta "
+                "motivación. Entrevista recomendada para validar ajuste."
             ),
             status="under_review",
         ),
@@ -195,6 +434,7 @@ def seed_course(db) -> dict[int, Module]:
                 le = Lesson(
                     module_id=m.id,
                     order_index=idx,
+                    kind="video",
                     youtube_id=yid,
                     duration_seconds=600 + idx * 120,
                 )
@@ -218,6 +458,80 @@ def seed_course(db) -> dict[int, Module]:
                     ]
                 )
                 db.add(le)
+            manual_idx = len(LESSON_VIDEOS)
+            manual = Lesson(
+                module_id=m.id,
+                order_index=manual_idx,
+                kind="reading",
+                youtube_id=None,
+                duration_seconds=None,
+            )
+            manual_body = {
+                "es": (
+                    f"# Manual — {titles['es']}\n\n"
+                    "## Introducción\n\n"
+                    f"{summaries['es']} Este material complementa las lecciones en video y "
+                    "te sirve como referencia durante y después del módulo.\n\n"
+                    "## Marco conceptual\n\n"
+                    "1. **Contexto**: entiende por qué este tema es crítico para un SDR moderno.\n"
+                    "2. **Principios**: las tres ideas centrales que debes interiorizar antes de hacer cold outreach.\n"
+                    "3. **Aplicación**: cómo se ve esto en la práctica, con ejemplos reales.\n\n"
+                    "## Checklist de dominio\n\n"
+                    "- [ ] Puedes explicarle este tema a alguien en 60 segundos.\n"
+                    "- [ ] Tienes un ejemplo concreto de tu experiencia donde aplica.\n"
+                    "- [ ] Identificas cuándo este concepto NO aplica.\n\n"
+                    "## Cierre\n\n"
+                    "Este manual es tuyo para consultar cuando estés en una llamada "
+                    "o preparando una cadencia. No lo descargues — vuelve aquí cuando lo necesites."
+                ),
+                "en": (
+                    f"# Handbook — {titles['en']}\n\n"
+                    "## Intro\n\n"
+                    f"{summaries['en']} This material complements the video lessons and "
+                    "serves as a reference during and after the module.\n\n"
+                    "## Framework\n\n"
+                    "1. **Context**: why this matters for a modern SDR.\n"
+                    "2. **Principles**: the three core ideas to internalize before any cold outreach.\n"
+                    "3. **Applied**: real examples of what this looks like in practice.\n\n"
+                    "## Mastery checklist\n\n"
+                    "- [ ] You can explain this topic to someone in 60 seconds.\n"
+                    "- [ ] You have a concrete example from your own experience.\n"
+                    "- [ ] You can identify when this concept does NOT apply.\n\n"
+                    "## Wrap\n\n"
+                    "Use this handbook during calls or when planning cadences. "
+                    "Don't download — come back here when you need it."
+                ),
+                "pt": (
+                    f"# Manual — {titles['pt']}\n\n"
+                    "## Introdução\n\n"
+                    f"{summaries['pt']} Este material complementa as aulas em vídeo e "
+                    "serve como referência durante e depois do módulo.\n\n"
+                    "## Enquadramento\n\n"
+                    "1. **Contexto**: por que isso importa para um SDR moderno.\n"
+                    "2. **Princípios**: as três ideias centrais para interiorizar antes de qualquer outreach.\n"
+                    "3. **Aplicado**: como isso aparece na prática, com exemplos reais.\n\n"
+                    "## Checklist de domínio\n\n"
+                    "- [ ] Consegue explicar este tema em 60 segundos.\n"
+                    "- [ ] Tem um exemplo concreto da sua experiência.\n"
+                    "- [ ] Identifica quando este conceito NÃO se aplica.\n\n"
+                    "## Fecho\n\n"
+                    "Este manual é seu para consultar. Não baixe — volte aqui quando precisar."
+                ),
+            }
+            manual_titles = {
+                "es": f"Manual — {titles['es']}",
+                "en": f"Handbook — {titles['en']}",
+                "pt": f"Manual — {titles['pt']}",
+            }
+            for loc in ("es", "en", "pt"):
+                manual.translations.append(
+                    LessonTranslation(
+                        locale=loc,
+                        title=manual_titles[loc],
+                        body=manual_body[loc],
+                    )
+                )
+            db.add(manual)
             db.commit()
         if created:
             log.info("seed.module", extra={"slug": slug})

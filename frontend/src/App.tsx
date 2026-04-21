@@ -8,9 +8,13 @@ import { StudentDashboard } from "@/pages/student/StudentDashboard";
 import { ModulePage } from "@/pages/student/ModulePage";
 import { StudentFeedback } from "@/pages/student/StudentFeedback";
 import { StudentCertificate } from "@/pages/student/StudentCertificate";
+import { StudentCalendar } from "@/pages/student/StudentCalendar";
+import { AccountPage } from "@/pages/account/AccountPage";
+import { TeacherHome } from "@/pages/teacher/TeacherHome";
 import { TeacherReviews } from "@/pages/teacher/TeacherReviews";
 import { AdminApplications } from "@/pages/admin/AdminApplications";
 import { AdminCohorts } from "@/pages/admin/AdminCohorts";
+import { AdminCourse } from "@/pages/admin/AdminCourse";
 import { AdminPlacement } from "@/pages/admin/AdminPlacement";
 import { AdminAnalytics } from "@/pages/admin/AdminAnalytics";
 import { AdminHome } from "@/pages/admin/AdminHome";
@@ -51,6 +55,14 @@ export default function App() {
             }
           />
           <Route
+            path="/student/calendar"
+            element={
+              <ProtectedRoute roles={["student"]}>
+                <StudentCalendar />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/student/certificate"
             element={
               <ProtectedRoute roles={["student"]}>
@@ -58,9 +70,25 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin", "recruiter"]}>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/teacher"
+            element={
+              <ProtectedRoute roles={["teacher", "admin"]}>
+                <TeacherHome />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/teacher/reviews"
             element={
               <ProtectedRoute roles={["teacher", "admin"]}>
                 <TeacherReviews />
@@ -89,6 +117,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["admin"]}>
                 <AdminCohorts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/course"
+            element={
+              <ProtectedRoute roles={["admin"]}>
+                <AdminCourse />
               </ProtectedRoute>
             }
           />

@@ -42,6 +42,7 @@ def lesson_to_dict(lesson: Lesson, locale: str) -> dict:
         "id": lesson.id,
         "module_id": lesson.module_id,
         "order_index": lesson.order_index,
+        "kind": lesson.kind,
         "youtube_id": lesson.youtube_id,
         "duration_seconds": lesson.duration_seconds,
         "title": pick_translation(translations, locale, "title"),
@@ -89,6 +90,126 @@ def create_module(
     return module
 
 
+def module_admin_dict(module: Module) -> dict:
+    """Vista admin del módulo — todas las traducciones + lecciones + recursos anidados."""
+    return {
+        "id": module.id,
+        "course_id": module.course_id,
+        "slug": module.slug,
+        "order_index": module.order_index,
+        "translations": [
+            {"locale": t.locale, "title": t.title, "summary": t.summary}
+            for t in sorted(module.translations, key=lambda x: x.locale)
+        ],
+        "lessons": [lesson_admin_dict(le) for le in sorted(module.lessons, key=lambda x: x.order_index)],
+        "resources": [
+            {
+                "id": r.id,
+                "module_id": r.module_id,
+                "kind": r.kind,
+                "title": r.title,
+                "url": r.url,
+                "order_index": r.order_index,
+            }
+            for r in sorted(module.resources, key=lambda x: x.order_index)
+        ],
+    }
+
+
+def lesson_admin_dict(lesson: Lesson) -> dict:
+    return {
+        "id": lesson.id,
+        "module_id": lesson.module_id,
+        "order_index": lesson.order_index,
+        "kind": lesson.kind,
+        "youtube_id": lesson.youtube_id,
+        "duration_seconds": lesson.duration_seconds,
+        "translations": [
+            {"locale": t.locale, "title": t.title, "body": t.body}
+            for t in sorted(lesson.translations, key=lambda x: x.locale)
+        ],
+    }
+
+
+def update_module(
+    db: Session,
+    module: Module,
+    *,
+    order_index: int | None,
+    translations: list[dict] | None,
+) -> Module:
+    if order_index is not None:
+        module.order_index = order_index
+    if translations is not None:
+        by_locale = {t.locale: t for t in module.translations}
+        for item in translations:
+            existing = by_locale.get(item["locale"])
+            if existing:
+                existing.title = item["title"]
+                existing.summary = item.get("summary")
+            else:
+                module.translations.append(
+                    ModuleTranslation(
+                        locale=item["locale"],
+                        title=item["title"],
+                        summary=item.get("summary"),
+                    )
+                )
+    db.commit()
+    db.refresh(module)
+    log.info("course.module_updated", extra={"module_id": module.id})
+    return module
+
+
+def update_lesson(
+    db: Session,
+    lesson: Lesson,
+    *,
+    order_index: int | None,
+    kind: str | None,
+    youtube_id: str | None,
+    duration_seconds: int | None,
+    translations: list[dict] | None,
+) -> Lesson:
+    if order_index is not None:
+        lesson.order_index = order_index
+    if kind is not None:
+        lesson.kind = kind
+    if youtube_id is not None:
+        lesson.youtube_id = youtube_id or None
+    if duration_seconds is not None:
+        lesson.duration_seconds = duration_seconds
+    if translations is not None:
+        by_locale = {t.locale: t for t in lesson.translations}
+        for item in translations:
+            existing = by_locale.get(item["locale"])
+            if existing:
+                existing.title = item["title"]
+                existing.body = item.get("body")
+            else:
+                lesson.translations.append(
+                    LessonTranslation(
+                        locale=item["locale"],
+                        title=item["title"],
+                        body=item.get("body"),
+                    )
+                )
+    db.commit()
+    db.refresh(lesson)
+    log.info(
+        "course.lesson_updated",
+        extra={"lesson_id": lesson.id, "kind": lesson.kind},
+    )
+    return lesson
+
+
+def delete_lesson(db: Session, lesson: Lesson) -> None:
+    lid = lesson.id
+    db.delete(lesson)
+    db.commit()
+    log.info("course.lesson_deleted", extra={"lesson_id": lid})
+
+
 def create_lesson(
     db: Session,
     module_id: int,
@@ -96,10 +217,12 @@ def create_lesson(
     youtube_id: str | None,
     duration_seconds: int | None,
     translations: list[dict],
+    kind: str = "video",
 ) -> Lesson:
     lesson = Lesson(
         module_id=module_id,
         order_index=order_index,
+        kind=kind,
         youtube_id=youtube_id,
         duration_seconds=duration_seconds,
     )

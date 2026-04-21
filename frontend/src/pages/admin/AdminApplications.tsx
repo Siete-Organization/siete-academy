@@ -9,6 +9,8 @@ interface Application {
   applicant_name: string;
   applicant_email: string;
   applicant_phone: string | null;
+  linkedin_url: string | null;
+  country: string | null;
   locale: string;
   answers: Record<string, string>;
   video_url: string | null;
@@ -23,6 +25,7 @@ export function AdminApplications() {
   const { t } = useTranslation();
   const [apps, setApps] = useState<Application[]>([]);
   const [selected, setSelected] = useState<Application | null>(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
   const [notes, setNotes] = useState("");
 
   const load = async () => {
@@ -33,6 +36,21 @@ export function AdminApplications() {
   useEffect(() => {
     void load();
   }, []);
+
+  // List view returns a lean shape (ApplicationListOut). Fetch the full detail
+  // for the selected row so answers/video/linkedin/admin_notes are available.
+  const selectRow = async (row: Application) => {
+    setSelected(row);
+    setNotes("");
+    setLoadingDetail(true);
+    try {
+      const { data } = await api.get<Application>(`/applications/${row.id}`);
+      setSelected(data);
+      setNotes(data.admin_notes || "");
+    } finally {
+      setLoadingDetail(false);
+    }
+  };
 
   const review = async (status: "approved" | "rejected") => {
     if (!selected) return;
@@ -59,7 +77,7 @@ export function AdminApplications() {
             {apps.map((a, idx) => (
               <li key={a.id}>
                 <button
-                  onClick={() => setSelected(a)}
+                  onClick={() => void selectRow(a)}
                   className={`w-full text-left py-5 grid grid-cols-12 gap-3 items-baseline transition-colors ${
                     selected?.id === a.id ? "bg-paper-tint" : "hover:bg-paper-tint/60"
                   }`}
@@ -88,6 +106,12 @@ export function AdminApplications() {
               <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm text-ink-muted">
                 <span>{selected.applicant_email}</span>
                 <span>{selected.applicant_phone || "—"}</span>
+                {selected.country && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="text-ink-faint">País</span>
+                    <span className="text-ink">{selected.country}</span>
+                  </span>
+                )}
                 <span className="font-mono text-xs uppercase tracking-[0.14em]">
                   {selected.locale}
                 </span>
@@ -95,10 +119,32 @@ export function AdminApplications() {
                   {new Date(selected.created_at).toLocaleDateString()}
                 </span>
               </div>
+              {selected.linkedin_url && (
+                <a
+                  href={selected.linkedin_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 text-sm text-ember hover:underline underline-offset-4"
+                >
+                  LinkedIn <span aria-hidden>↗</span>
+                </a>
+              )}
+              {selected.admin_notes && (
+                <div className="mt-4 text-xs font-mono uppercase tracking-[0.14em] text-ink-faint">
+                  Notas previas
+                  <p className="mt-1 font-sans normal-case tracking-normal text-sm text-ink-soft">
+                    {selected.admin_notes}
+                  </p>
+                </div>
+              )}
             </header>
 
+            {loadingDetail && (
+              <p className="text-xs text-ink-muted font-mono">Cargando detalle…</p>
+            )}
+
             <section className="space-y-7">
-              {Object.entries(selected.answers).map(([qid, text], i) => (
+              {Object.entries(selected.answers || {}).map(([qid, text], i) => (
                 <div key={qid} className="grid grid-cols-12 gap-4">
                   <span className="col-span-2 num-label tabular-nums pt-1">
                     q.{String(i + 1).padStart(2, "0")}

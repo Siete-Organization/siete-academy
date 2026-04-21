@@ -8,6 +8,7 @@ class UserOut(BaseModel):
     firebase_uid: str
     email: EmailStr
     display_name: str | None = None
+    photo_url: str | None = None
     role: str
     locale: str
     created_at: datetime
@@ -18,6 +19,7 @@ class UserOut(BaseModel):
 
 class UserUpdate(BaseModel):
     display_name: str | None = None
+    photo_url: str | None = None
     locale: str | None = None
 
 

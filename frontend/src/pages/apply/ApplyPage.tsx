@@ -17,6 +17,8 @@ export function ApplyPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [country, setCountry] = useState("");
   const [locale, setLocale] = useState<"es" | "en" | "pt">("es");
   const [answers, setAnswers] = useState<Record<QuestionId, string>>({
     why_sales: "",
@@ -29,7 +31,8 @@ export function ApplyPage() {
   const [error, setError] = useState<string | null>(null);
 
   const allQuestionsValid = QUESTION_IDS.every((q) => wordCount(answers[q]) >= 100);
-  const canSubmit = name && email && videoUrl && allQuestionsValid && !submitting;
+  const canSubmit =
+    name && email && linkedinUrl && country && videoUrl && allQuestionsValid && !submitting;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +43,8 @@ export function ApplyPage() {
         applicant_name: name,
         applicant_email: email,
         applicant_phone: phone || null,
+        linkedin_url: linkedinUrl,
+        country,
         locale,
         video_url: videoUrl,
         answers: QUESTION_IDS.map((qid) => ({ question_id: qid, text: answers[qid] })),
@@ -124,6 +129,25 @@ export function ApplyPage() {
               </Field>
               <Field label={t("apply.phone")}>
                 <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+              </Field>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Field label={t("apply.linkedin")} required>
+                <Input
+                  type="url"
+                  value={linkedinUrl}
+                  onChange={(e) => setLinkedinUrl(e.target.value)}
+                  placeholder="https://www.linkedin.com/in/..."
+                  required
+                />
+              </Field>
+              <Field label={t("apply.country")} required>
+                <Input
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder={t("apply.countryPlaceholder")}
+                  required
+                />
               </Field>
             </div>
             <Field label={t("apply.locale")}>

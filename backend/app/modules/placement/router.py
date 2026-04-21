@@ -193,6 +193,7 @@ def list_for_recruiter(
             {
                 "id": c.id,
                 "user_name": user.display_name if user else None,
+                "user_email": user.email if user else None,
                 "cohort_id": c.cohort_id,
                 "stage": c.stage,
                 "summary": c.summary,

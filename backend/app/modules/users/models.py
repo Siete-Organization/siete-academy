@@ -13,6 +13,7 @@ class User(Base):
     firebase_uid: Mapped[str] = mapped_column(String(128), unique=True, index=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     display_name: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    photo_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     role: Mapped[str] = mapped_column(String(20), default="student")
     locale: Mapped[str] = mapped_column(String(5), default="es")
     profile: Mapped[dict] = mapped_column(JSON, default=dict)

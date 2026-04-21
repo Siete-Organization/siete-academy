@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 export function AdminHome() {
   const { t } = useTranslation();
   const items = [
-    { n: "01", to: "/admin/applications", label: t("admin.applications"), hint: "Revisar aplicantes, aprobar/rechazar." },
-    { n: "02", to: "/admin/cohorts", label: t("admin.cohorts"), hint: "Crear cohortes, abrir/cerrar módulos." },
-    { n: "03", to: "/admin/placement", label: t("admin.placement"), hint: "ATS Kanban del pipeline de colocación." },
-    { n: "04", to: "/admin/analytics", label: t("admin.analytics"), hint: "Números clave del programa." },
+    { n: "01", to: "/admin/applications", label: t("admin.applications"), hint: t("admin.applicationsHint") },
+    { n: "02", to: "/admin/course", label: t("admin.course"), hint: t("admin.courseHint") },
+    { n: "03", to: "/admin/cohorts", label: t("admin.cohorts"), hint: t("admin.cohortsHint") },
+    { n: "04", to: "/admin/placement", label: t("admin.placement"), hint: t("admin.placementHint") },
+    { n: "05", to: "/admin/analytics", label: t("admin.analytics"), hint: t("admin.analyticsHint") },
   ];
   return (
     <div className="container-editorial py-16 md:py-24">

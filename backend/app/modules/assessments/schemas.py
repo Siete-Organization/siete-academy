@@ -14,6 +14,13 @@ class AssessmentCreate(BaseModel):
     passing_score: float = 70.0
 
 
+class AssessmentUpdate(BaseModel):
+    type: AssessmentType | None = None
+    title: str | None = None
+    config: dict[str, Any] | None = None
+    passing_score: float | None = None
+
+
 class AssessmentOut(BaseModel):
     id: int
     module_id: int
