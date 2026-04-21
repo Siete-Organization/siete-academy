@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import { Input, Textarea } from "@/components/ui/input";
 
 interface CohortStats {
   cohort_id: number;
@@ -36,6 +38,7 @@ export function TeacherHome() {
   const [data, setData] = useState<Dashboard | null>(null);
   const [cohortFilter, setCohortFilter] = useState<number | "all">("all");
   const [issuing, setIssuing] = useState<number | null>(null);
+  const [noteTarget, setNoteTarget] = useState<StudentStats | null>(null);
 
   const loadDashboard = async () => {
     const { data } = await api.get<Dashboard>("/teacher/dashboard");
@@ -177,6 +180,13 @@ export function TeacherHome() {
                       {s.user_name || s.user_email.split("@")[0]}
                     </p>
                     <p className="text-xs text-ink-muted">{s.user_email}</p>
+                    <button
+                      onClick={() => setNoteTarget(s)}
+                      className="mt-2 inline-flex items-center gap-1.5 bg-ember text-paper hover:bg-ember-soft rounded-full px-3 py-1 text-[11px] font-semibold tracking-tight transition-colors"
+                    >
+                      <span aria-hidden>✉</span>
+                      {t("teacherHome.sendNote")}
+                    </button>
                   </td>
                   <td className="px-4 py-3 text-ink-soft font-mono text-xs">
                     {s.cohort_name}
@@ -235,6 +245,150 @@ export function TeacherHome() {
           </table>
         </div>
       </section>
+
+      {noteTarget && (
+        <SendNoteDialog
+          student={noteTarget}
+          onClose={() => setNoteTarget(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+const ATTACHMENT_KINDS: {
+  value: "pdf" | "ppt" | "video" | "doc" | "link";
+  icon: string;
+  label: string;
+}[] = [
+  { value: "link", icon: "🔗", label: "Link" },
+  { value: "pdf", icon: "📄", label: "PDF" },
+  { value: "ppt", icon: "📊", label: "PPT" },
+  { value: "video", icon: "🎞", label: "Video" },
+  { value: "doc", icon: "📝", label: "Doc" },
+];
+
+function SendNoteDialog({
+  student,
+  onClose,
+}: {
+  student: StudentStats;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  const [body, setBody] = useState("");
+  const [attachmentKind, setAttachmentKind] = useState<
+    "pdf" | "ppt" | "video" | "doc" | "link"
+  >("link");
+  const [attachmentUrl, setAttachmentUrl] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onEsc);
+    return () => document.removeEventListener("keydown", onEsc);
+  }, [onClose]);
+
+  const handleSend = async () => {
+    if (!body.trim()) return;
+    setSending(true);
+    try {
+      await api.post("/teacher/notes", {
+        student_id: student.user_id,
+        body: body.trim(),
+        attachment_kind: attachmentUrl ? attachmentKind : null,
+        attachment_url: attachmentUrl || null,
+      });
+      setSent(true);
+      setTimeout(onClose, 900);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-paper border border-bone rounded-xs max-w-xl w-full p-8 space-y-6 shadow-lift"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header>
+          <p className="num-label">{t("teacherHome.noteTo")}</p>
+          <h2 className="font-display text-2xl mt-2 font-bold">
+            {student.user_name || student.user_email.split("@")[0]}
+          </h2>
+          <p className="text-xs text-ink-muted">{student.user_email}</p>
+        </header>
+
+        <label className="block">
+          <span className="num-label mb-2 block">{t("teacherHome.noteBody")}</span>
+          <Textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            rows={5}
+            placeholder={t("teacherHome.notePlaceholder")}
+            autoFocus
+          />
+        </label>
+
+        <div className="space-y-2">
+          <span className="num-label block">{t("teacherHome.attachmentOptional")}</span>
+          <div className="flex gap-2 flex-wrap">
+            {ATTACHMENT_KINDS.map((k) => (
+              <button
+                key={k.value}
+                type="button"
+                onClick={() => setAttachmentKind(k.value)}
+                className={`px-3 py-1.5 border text-xs uppercase tracking-[0.14em] font-mono transition-colors rounded-full ${
+                  attachmentKind === k.value
+                    ? "border-ink bg-ink text-paper"
+                    : "border-bone text-ink-muted hover:border-ink"
+                }`}
+              >
+                {k.icon} {k.label}
+              </button>
+            ))}
+          </div>
+          <Input
+            type="url"
+            value={attachmentUrl}
+            onChange={(e) => setAttachmentUrl(e.target.value)}
+            placeholder="https://drive.google.com/... · https://loom.com/..."
+          />
+          <p className="text-[11px] text-ink-muted">
+            {t("teacherHome.attachmentHint")}
+          </p>
+        </div>
+
+        {sent && (
+          <p className="text-moss text-sm border-l-2 border-moss pl-3">
+            {t("teacherHome.noteSent")}
+          </p>
+        )}
+
+        <div className="flex items-center gap-3 hairline pt-5">
+          <Button
+            variant="ember"
+            onClick={handleSend}
+            disabled={sending || sent || !body.trim()}
+          >
+            {sending ? "…" : sent ? "✓" : t("teacherHome.sendNow")}
+          </Button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-xs uppercase tracking-[0.14em] font-mono text-ink-muted hover:text-ink"
+          >
+            {t("common.cancel")}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -12,6 +12,7 @@ interface Cohort {
   end_date: string;
   status: string;
   max_students: number;
+  slack_invite_url: string | null;
 }
 
 interface ModuleWindow {
@@ -174,10 +175,10 @@ export function AdminCohorts() {
       </section>
 
       {selectedCohort && (
-        <section className="border-t-2 border-ink pt-10 space-y-6">
+        <section className="border-t-2 border-ink pt-10 space-y-10">
           <header className="flex items-baseline justify-between">
             <div>
-              <p className="num-label">Ventanas de módulo</p>
+              <p className="num-label">Cohorte</p>
               <h2 className="font-display text-display-md mt-2">{selectedCohort.name}</h2>
             </div>
             <button
@@ -187,6 +188,21 @@ export function AdminCohorts() {
               cerrar
             </button>
           </header>
+
+          <SlackSettings
+            cohort={selectedCohort}
+            onSaved={async () => {
+              await loadCohorts();
+              setSelectedCohort((prev) =>
+                prev ? { ...prev } : prev,
+              );
+            }}
+          />
+
+          <EnrollmentsSection cohort={selectedCohort} allCohorts={cohorts} />
+
+          <div>
+            <p className="num-label mb-4">Ventanas de módulo</p>
 
           {windows.length === 0 ? (
             <p className="text-ink-muted text-sm">
@@ -253,7 +269,251 @@ export function AdminCohorts() {
               })}
             </ol>
           )}
+          </div>
         </section>
+      )}
+    </div>
+  );
+}
+
+function SlackSettings({
+  cohort,
+  onSaved,
+}: {
+  cohort: Cohort;
+  onSaved: () => Promise<void>;
+}) {
+  const [url, setUrl] = useState(cohort.slack_invite_url || "");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setUrl(cohort.slack_invite_url || "");
+    setSaved(false);
+  }, [cohort.id, cohort.slack_invite_url]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setSaved(false);
+    try {
+      await api.patch(`/cohorts/${cohort.id}`, {
+        slack_invite_url: url.trim() || null,
+      });
+      setSaved(true);
+      await onSaved();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="border border-bone rounded-xs p-5 bg-paper-warm/40 space-y-3">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="num-label">Comunidad Slack</p>
+        {cohort.slack_invite_url && (
+          <a
+            href={cohort.slack_invite_url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-mono uppercase tracking-[0.14em] text-ember hover:underline underline-offset-4"
+          >
+            abrir canal ↗
+          </a>
+        )}
+      </div>
+      <p className="text-xs text-ink-muted">
+        Pega el link público de invitación al canal/workspace de esta cohorte. El alumno lo
+        ve en su dashboard y recibe el link por email cuando lo enrolas.
+      </p>
+      <div className="flex gap-3 items-center">
+        <Input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://join.slack.com/t/…/shared_invite/…"
+        />
+        <Button size="sm" variant="ember" onClick={handleSave} disabled={saving}>
+          {saving ? "…" : saved ? "✓" : "Guardar"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+interface CohortEnrollment {
+  id: number;
+  user_id: number;
+  user_name: string | null;
+  user_email: string;
+  cohort_id: number;
+  status: string;
+  progress_pct: number;
+  enrolled_at: string;
+  completed_at: string | null;
+}
+
+interface StudentUser {
+  id: number;
+  email: string;
+  display_name: string | null;
+  role: string;
+}
+
+function EnrollmentsSection({
+  cohort,
+  allCohorts,
+}: {
+  cohort: Cohort;
+  allCohorts: Cohort[];
+}) {
+  const [enrollments, setEnrollments] = useState<CohortEnrollment[]>([]);
+  const [allStudents, setAllStudents] = useState<StudentUser[]>([]);
+  const [addingId, setAddingId] = useState<number | "">("");
+
+  const load = async () => {
+    const [e, s] = await Promise.all([
+      api.get<CohortEnrollment[]>(`/enrollment/by-cohort/${cohort.id}`),
+      api.get<StudentUser[]>("/users", { params: { role: "student" } }),
+    ]);
+    setEnrollments(e.data);
+    setAllStudents(s.data);
+  };
+
+  useEffect(() => {
+    void load();
+  }, [cohort.id]);
+
+  const enrolledUserIds = new Set(enrollments.map((e) => e.user_id));
+  const addableStudents = allStudents.filter((u) => !enrolledUserIds.has(u.id));
+
+  const addStudent = async () => {
+    if (!addingId || typeof addingId !== "number") return;
+    try {
+      await api.post("/enrollment", { user_id: addingId, cohort_id: cohort.id });
+      setAddingId("");
+      await load();
+    } catch (err) {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } }).response?.data?.detail ||
+        "Error al asignar";
+      window.alert(detail);
+    }
+  };
+
+  const moveStudent = async (enrollmentId: number, toCohortId: number) => {
+    try {
+      await api.patch(`/enrollment/${enrollmentId}`, { cohort_id: toCohortId });
+      await load();
+    } catch (err) {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } }).response?.data?.detail ||
+        "No se pudo mover";
+      window.alert(detail);
+    }
+  };
+
+  const removeStudent = async (enrollmentId: number) => {
+    if (!window.confirm("¿Quitar este alumno de la cohorte?")) return;
+    await api.delete(`/enrollment/${enrollmentId}`);
+    await load();
+  };
+
+  const otherCohorts = allCohorts.filter((c) => c.id !== cohort.id);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-end justify-between flex-wrap gap-4">
+        <p className="num-label">Alumnos de la cohorte ({enrollments.length})</p>
+        <div className="flex items-center gap-2">
+          <select
+            value={addingId}
+            onChange={(e) =>
+              setAddingId(e.target.value === "" ? "" : Number(e.target.value))
+            }
+            className="border-b border-bone-strong bg-transparent py-2 pr-6 text-sm focus:outline-none focus:border-ink min-w-[220px]"
+          >
+            <option value="">
+              {addableStudents.length === 0
+                ? "Sin alumnos disponibles"
+                : "— Agregar alumno —"}
+            </option>
+            {addableStudents.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.display_name || u.email}
+              </option>
+            ))}
+          </select>
+          <Button size="sm" onClick={addStudent} disabled={!addingId}>
+            + Asignar
+          </Button>
+        </div>
+      </div>
+
+      {enrollments.length === 0 ? (
+        <p className="text-ink-muted text-sm">
+          Esta cohorte aún no tiene alumnos. Asigna con el selector de arriba.
+        </p>
+      ) : (
+        <div className="border border-bone rounded-xs overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-paper-tint border-b border-bone">
+              <tr className="text-left font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                <th className="px-4 py-3 font-medium">Alumno</th>
+                <th className="px-4 py-3 font-medium text-right">Avance</th>
+                <th className="px-4 py-3 font-medium">Estado</th>
+                <th className="px-4 py-3 font-medium">Desde</th>
+                <th className="px-4 py-3 font-medium">Mover a</th>
+                <th className="px-4 py-3 font-medium text-right"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-bone">
+              {enrollments.map((e) => (
+                <tr key={e.id}>
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-ink">
+                      {e.user_name || e.user_email.split("@")[0]}
+                    </p>
+                    <p className="text-xs text-ink-muted">{e.user_email}</p>
+                  </td>
+                  <td className="px-4 py-3 text-right tabular-nums font-mono">
+                    {e.progress_pct.toFixed(0)}%
+                  </td>
+                  <td className="px-4 py-3 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                    {e.status}
+                  </td>
+                  <td className="px-4 py-3 text-ink-muted font-mono text-xs">
+                    {new Date(e.enrolled_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3">
+                    <select
+                      className="border-b border-bone bg-transparent py-1 text-xs focus:outline-none focus:border-ink"
+                      value=""
+                      onChange={(ev) => {
+                        const target = Number(ev.target.value);
+                        if (target) void moveStudent(e.id, target);
+                      }}
+                    >
+                      <option value="">— elegir —</option>
+                      {otherCohorts.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <button
+                      onClick={() => void removeStudent(e.id)}
+                      className="text-xs font-mono uppercase tracking-[0.14em] text-ember hover:text-ink"
+                    >
+                      Quitar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

@@ -7,6 +7,8 @@ import { useAuth } from "@/lib/auth-context";
 interface Enrollment {
   id: number;
   cohort_id: number;
+  cohort_name: string | null;
+  slack_invite_url: string | null;
   status: string;
   progress_pct: number;
 }
@@ -84,6 +86,8 @@ export function StudentDashboard() {
         </div>
         <ReferralShare name={me?.display_name || null} />
       </header>
+
+      <SlackCta enrollments={enrollments} />
 
       {enrollments.map((e) => {
         const windows = windowsByCohort[e.cohort_id] || [];
@@ -167,6 +171,45 @@ export function StudentDashboard() {
           </section>
         );
       })}
+    </div>
+  );
+}
+
+function SlackCta({ enrollments }: { enrollments: Enrollment[] }) {
+  const { t } = useTranslation();
+  const withSlack = enrollments.filter((e) => e.slack_invite_url);
+  if (withSlack.length === 0) return null;
+  return (
+    <div className="space-y-3">
+      {withSlack.map((e) => (
+        <div
+          key={e.id}
+          className="border border-bone rounded-xs bg-ember-ghost/60 p-5 flex items-center justify-between gap-5 flex-wrap"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-full bg-ember text-paper flex items-center justify-center flex-shrink-0">
+              <span className="font-display text-lg font-black">#</span>
+            </div>
+            <div>
+              <p className="font-semibold text-ink">
+                {t("student.slackTitle")}{" "}
+                <span className="text-ink-muted font-normal">
+                  · {e.cohort_name || `Cohorte ${e.cohort_id}`}
+                </span>
+              </p>
+              <p className="text-xs text-ink-muted">{t("student.slackSubtitle")}</p>
+            </div>
+          </div>
+          <a
+            href={e.slack_invite_url!}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 bg-ember text-paper hover:bg-ember-soft rounded-full px-5 h-11 text-sm font-semibold transition-colors"
+          >
+            {t("student.slackJoin")} <span aria-hidden>→</span>
+          </a>
+        </div>
+      ))}
     </div>
   );
 }

@@ -12,6 +12,8 @@ class EnrollmentOut(BaseModel):
     id: int
     user_id: int
     cohort_id: int
+    cohort_name: str | None = None
+    slack_invite_url: str | None = None
     status: str
     progress_pct: float
     enrolled_at: datetime
@@ -19,6 +21,25 @@ class EnrollmentOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class EnrollmentUpdate(BaseModel):
+    cohort_id: int | None = None
+    status: str | None = None
+
+
+class EnrollmentAdminOut(BaseModel):
+    """Enriquecida con datos del alumno para la vista admin de cohorte."""
+
+    id: int
+    user_id: int
+    user_name: str | None
+    user_email: str
+    cohort_id: int
+    status: str
+    progress_pct: float
+    enrolled_at: datetime
+    completed_at: datetime | None
 
 
 class LessonProgressUpdate(BaseModel):

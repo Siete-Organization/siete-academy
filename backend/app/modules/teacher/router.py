@@ -5,8 +5,9 @@ the admin analytics counters that still consume the lean SubmissionOut.
 """
 
 from datetime import datetime
+from typing import Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -14,11 +15,12 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.logging import get_logger
 from app.modules.assessments.models import Assessment, Submission, TeacherReview
-from app.modules.auth.dependencies import CurrentUser, require_roles
+from app.modules.auth.dependencies import CurrentUser, get_current_user, require_roles
 from app.modules.certificates.models import Certificate
 from app.modules.cohorts.models import Cohort
 from app.modules.courses.models import Lesson, Module, ModuleTranslation
 from app.modules.enrollment.models import Enrollment, LessonProgress
+from app.modules.teacher.models import TeacherNote
 from app.modules.users.models import User
 
 log = get_logger("app.teacher")
@@ -66,6 +68,28 @@ class DashboardOut(BaseModel):
     pending_reviews: int
     cohorts: list[CohortStats]
     students: list[StudentStats]
+
+
+AttachmentKind = Literal["pdf", "ppt", "video", "doc", "link"]
+
+
+class TeacherNoteCreate(BaseModel):
+    student_id: int
+    body: str
+    attachment_kind: AttachmentKind | None = None
+    attachment_url: str | None = None
+
+
+class TeacherNoteOut(BaseModel):
+    id: int
+    teacher_id: int
+    teacher_name: str | None
+    student_id: int
+    student_name: str | None
+    body: str
+    attachment_kind: str | None
+    attachment_url: str | None
+    created_at: datetime
 
 
 @router.get("/pending", response_model=list[PendingReviewOut])
@@ -257,3 +281,102 @@ def dashboard(
         "cohorts": cohort_stats,
         "students": students,
     }
+
+
+# ──────────────── Notas directas del profesor ────────────────
+
+
+def _note_to_out(note: TeacherNote, db: Session) -> dict:
+    teacher = db.get(User, note.teacher_id)
+    student = db.get(User, note.student_id)
+    return {
+        "id": note.id,
+        "teacher_id": note.teacher_id,
+        "teacher_name": teacher.display_name if teacher else None,
+        "student_id": note.student_id,
+        "student_name": student.display_name if student else None,
+        "body": note.body,
+        "attachment_kind": note.attachment_kind,
+        "attachment_url": note.attachment_url,
+        "created_at": note.created_at,
+    }
+
+
+@router.post("/notes", response_model=TeacherNoteOut, status_code=201)
+def create_note(
+    body: TeacherNoteCreate,
+    current: CurrentUser = Depends(require_roles("teacher", "admin")),
+    db: Session = Depends(get_db),
+) -> dict:
+    student = db.get(User, body.student_id)
+    if not student or student.role != "student":
+        raise HTTPException(404, "Student not found")
+    if not body.body.strip():
+        raise HTTPException(422, "Message body cannot be empty")
+    note = TeacherNote(
+        teacher_id=current.user.id,
+        student_id=body.student_id,
+        body=body.body.strip(),
+        attachment_kind=body.attachment_kind,
+        attachment_url=body.attachment_url or None,
+    )
+    db.add(note)
+    db.commit()
+    db.refresh(note)
+    log.info(
+        "teacher.note_sent",
+        extra={
+            "note_id": note.id,
+            "teacher_id": current.user.id,
+            "student_id": body.student_id,
+            "has_attachment": bool(body.attachment_url),
+        },
+    )
+    return _note_to_out(note, db)
+
+
+@router.get("/notes/student/{student_id}", response_model=list[TeacherNoteOut])
+def notes_for_student(
+    student_id: int,
+    _teacher: CurrentUser = Depends(require_roles("teacher", "admin")),
+    db: Session = Depends(get_db),
+) -> list[dict]:
+    notes = (
+        db.query(TeacherNote)
+        .filter(TeacherNote.student_id == student_id)
+        .order_by(TeacherNote.created_at.desc())
+        .all()
+    )
+    return [_note_to_out(n, db) for n in notes]
+
+
+@router.get("/notes/me", response_model=list[TeacherNoteOut])
+def my_notes(
+    current: CurrentUser = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[dict]:
+    """Notas recibidas por el usuario actual (alumno)."""
+    notes = (
+        db.query(TeacherNote)
+        .filter(TeacherNote.student_id == current.user.id)
+        .order_by(TeacherNote.created_at.desc())
+        .all()
+    )
+    return [_note_to_out(n, db) for n in notes]
+
+
+@router.delete("/notes/{note_id}", status_code=204)
+def delete_note(
+    note_id: int,
+    current: CurrentUser = Depends(require_roles("teacher", "admin")),
+    db: Session = Depends(get_db),
+) -> None:
+    note = db.get(TeacherNote, note_id)
+    if not note:
+        raise HTTPException(404, "Note not found")
+    # Teacher solo puede borrar sus propias notas. Admin borra cualquiera.
+    if current.role != "admin" and note.teacher_id != current.user.id:
+        raise HTTPException(403, "Only the note author can delete this note")
+    db.delete(note)
+    db.commit()
+    log.info("teacher.note_deleted", extra={"note_id": note_id, "actor_id": current.user.id})

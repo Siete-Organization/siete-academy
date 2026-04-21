@@ -1,12 +1,12 @@
 {
   "app": {
     "name": "Siete Academy",
-    "tagline": "We train you. Agencies hire you."
+    "tagline": "We train SDRs. We hire you."
   },
   "home": {
     "eyebrow": "№ 001 · May 2026 cohort",
     "heroLine1": "We train SDRs.",
-    "heroLine2": "Agencies hire them.",
+    "heroLine2": "We hire you.",
     "heroPitch": "Siete has sent 4.2M professional emails across LatAm and works with 180+ active B2B clients. Now we're training the next generation of SDRs in 8 weeks: on-demand content, live sessions with our AEs, team exercises, and a real exam in front of our commercial team. Those who pass get placed.",
     "whatToExpect": "What to expect",
     "expectList": [
@@ -87,7 +87,10 @@
     "reading": "Handbook",
     "readingLock": "In-app only — not downloadable",
     "assessments": "Assessments",
-    "resources": "Support material"
+    "resources": "Support material",
+    "slackTitle": "Your Slack community",
+    "slackSubtitle": "Save this link — it's your fallback if you lose the welcome email.",
+    "slackJoin": "Join"
   },
   "calendar": {
     "eyebrow": "Calendar",
@@ -114,6 +117,9 @@
     "emailHint": "Your email is managed from your account (Google). It's not changed here.",
     "security": "Security",
     "passwordHint": "Your password is managed from your Google account. If you need to change it, do it there and come back — no need to notify Siete.",
+    "communityTitle": "Slack community",
+    "communityHint": "Direct link to your cohort's channel. Use it if you lost the welcome email.",
+    "communityJoin": "Join Slack",
     "save": "Save changes",
     "saving": "Saving…",
     "saved": "Changes saved."
@@ -161,7 +167,15 @@
     "issuing": "issuing…",
     "notYet": "pending",
     "noStudents": "No students in this cohort.",
-    "noCohorts": "No cohorts yet."
+    "noCohorts": "No cohorts yet.",
+    "sendNote": "Send comment",
+    "noteTo": "Comment to",
+    "noteBody": "Message",
+    "notePlaceholder": "Targeted feedback, reminder, or link to extra material.",
+    "attachmentOptional": "Attachment (optional)",
+    "attachmentHint": "Paste public link (Drive/Dropbox/Loom/YouTube). Student sees it in their Feedback tab.",
+    "sendNow": "Send",
+    "noteSent": "Sent."
   },
   "admin": {
     "applications": "Applications",
@@ -244,7 +258,9 @@
     "motto": "Built for people who actually sell."
   },
   "feedback": {
-    "title": "Feedback on your submissions",
+    "title": "Teacher feedback",
+    "submissionsTitle": "Your submissions",
+    "directNotes": "Teacher comments",
     "pending": "Pending review",
     "reviewed": "Reviewed",
     "autoGraded": "Auto-graded",

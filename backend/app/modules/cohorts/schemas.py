@@ -10,6 +10,17 @@ class CohortCreate(BaseModel):
     start_date: date
     end_date: date
     max_students: int = 20
+    slack_invite_url: str | None = None
+
+
+class CohortUpdate(BaseModel):
+    name: str | None = None
+    locale: Literal["es", "en", "pt"] | None = None
+    start_date: date | None = None
+    end_date: date | None = None
+    status: str | None = None
+    max_students: int | None = None
+    slack_invite_url: str | None = None
 
 
 class CohortOut(BaseModel):
@@ -20,6 +31,7 @@ class CohortOut(BaseModel):
     end_date: date
     status: str
     max_students: int
+    slack_invite_url: str | None = None
 
     class Config:
         from_attributes = True

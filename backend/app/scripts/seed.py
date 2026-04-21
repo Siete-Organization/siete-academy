@@ -38,6 +38,7 @@ from app.modules.enrollment import models as _enroll  # noqa: F401
 from app.modules.live_sessions.models import LiveSession
 from app.modules.live_sessions import models as _live  # noqa: F401
 from app.modules.placement.models import PlacementCandidate, PlacementEvent
+from app.modules.teacher import models as _teacher_models  # noqa: F401
 from app.modules.placement import models as _place  # noqa: F401
 from app.modules.users.models import User
 from app.modules.users import models as _users  # noqa: F401
@@ -625,6 +626,7 @@ def seed_cohort(db, mods: dict[int, Module]) -> Cohort:
             "end_date": date(2026, 6, 30),
             "status": "in_progress",
             "max_students": 15,
+            "slack_invite_url": "https://join.slack.com/t/siete-academy-demo/shared_invite/zt-demo-cohort-001",
         },
     )
     now = datetime.now(UTC).replace(tzinfo=None)
@@ -643,6 +645,38 @@ def seed_cohort(db, mods: dict[int, Module]) -> Cohort:
         )
     if created:
         log.info("seed.cohort", extra={"cohort_name": cohort.name})
+
+    # Segunda cohorte vacía — para probar mover alumnos desde admin.
+    cohort2, created2 = _upsert(
+        db,
+        Cohort,
+        lookup={"name": "SDR 002 — Julio 2026"},
+        defaults={
+            "locale": "es",
+            "start_date": date(2026, 7, 1),
+            "end_date": date(2026, 8, 31),
+            "status": "open_applications",
+            "max_students": 20,
+        },
+    )
+    now2 = datetime.now(UTC).replace(tzinfo=None)
+    start2 = now2 + timedelta(days=70)
+    window_specs_2 = [
+        (0, start2, start2 + timedelta(days=14), start2 + timedelta(days=13)),
+        (1, start2 + timedelta(days=14), start2 + timedelta(days=28), start2 + timedelta(days=27)),
+        (2, start2 + timedelta(days=28), start2 + timedelta(days=42), start2 + timedelta(days=41)),
+        (3, start2 + timedelta(days=42), start2 + timedelta(days=56), start2 + timedelta(days=55)),
+    ]
+    for order, opens, closes, live_at in window_specs_2:
+        _upsert(
+            db,
+            ModuleWindow,
+            lookup={"cohort_id": cohort2.id, "module_id": mods[order].id},
+            defaults={"opens_at": opens, "closes_at": closes, "live_session_at": live_at},
+        )
+    if created2:
+        log.info("seed.cohort", extra={"cohort_name": cohort2.name})
+
     return cohort
 
 

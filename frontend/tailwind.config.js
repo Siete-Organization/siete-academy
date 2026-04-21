@@ -4,36 +4,37 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Rebrand 2026 — paleta primaria (AZUL PROFUNDO / COOL STEEL)
-        // Los tokens "paper/ink/bone/ember/moss" se mantienen por compatibilidad,
-        // pero apuntan ahora a los valores oficiales del rebranding.
+        // Rebrand 2026 — paleta de wearesiete.com (System Blue + Glacial Sky).
+        // Muestreado del stylesheet real del sitio (frecuencia descendente):
+        //   #000 (1060x) · #007aff (509x) · #f5f5f7 (470x) · #fff (453x)
+        //   #dbdbdb (113x) · #8fbdff (77x) · #1a1b1f · #bababa
         paper: {
-          DEFAULT: "#F5F5F7",        // OFF WHITE (rebrand)
+          DEFAULT: "#F5F5F7",        // OFF WHITE (site bg)
           warm: "#FFFFFF",
-          tint: "#EDEDF0",
-          deep: "#E4E4E9",
+          tint: "#FAFAFA",
+          deep: "#EDEDF0",
         },
         ink: {
-          DEFAULT: "#000000",        // BLACK (rebrand)
-          soft: "#1a1a1c",
-          muted: "#505058",
-          faint: "#8c8c94",
+          DEFAULT: "#000000",        // BLACK (site text)
+          soft: "#1a1b1f",
+          muted: "#5D6C7B",
+          faint: "#999FAE",
         },
         bone: {
-          DEFAULT: "#E4E4E9",
-          strong: "#CECED4",
+          DEFAULT: "#DBDBDB",        // borders reales del site
+          strong: "#BABABA",
         },
-        // Accent principal — COOL STEEL. Se usa para CTAs y highlights.
+        // Accent principal — SYSTEM BLUE. CTAs, buttons, links, accents.
         ember: {
-          DEFAULT: "#406E8E",        // COOL STEEL (rebrand)
-          soft: "#6A94B0",
-          ghost: "#E9F0F5",
+          DEFAULT: "#007AFF",        // System Blue (wearesiete.com)
+          soft: "#3F9AFF",
+          ghost: "#E5F2FF",
         },
-        // Accent secundario — FROZEN WATER. Para chips suaves y badges info.
+        // Accent secundario — GLACIAL SKY (light blue).
         sky: {
-          DEFAULT: "#B8DBD9",        // FROZEN WATER (rebrand)
-          soft: "#D6EAE9",
-          deep: "#86BAB7",
+          DEFAULT: "#8FBDFF",        // Glacial Sky (wearesiete.com)
+          soft: "#C4DDFF",
+          deep: "#5E9CE6",
         },
         // Semántico: success/warn ajustados para convivir con el azul.
         moss: {
@@ -41,18 +42,17 @@ export default {
           soft: "#5E8873",
         },
         brand: {
-          50: "#E9F0F5",
-          500: "#406E8E",
-          600: "#345A75",
-          700: "#274558",
-          900: "#182C38",
+          50: "#E5F2FF",
+          500: "#007AFF",
+          600: "#0062CC",
+          700: "#004C99",
+          900: "#002B56",
         },
       },
       fontFamily: {
-        // Brand: Montserrat para títulos + cuerpo largo.
-        // Space Grotesk como stand-in del "Road Radio" del rebrand (display).
-        display: ['"Space Grotesk"', '"Montserrat"', "system-ui", "sans-serif"],
-        sans: ['"Montserrat"', "system-ui", "sans-serif"],
+        // wearesiete.com usa Montserrat para TODO. Seguimos el mismo camino.
+        display: ['"Montserrat"', "Arial", "system-ui", "sans-serif"],
+        sans: ['"Montserrat"', "Arial", "system-ui", "sans-serif"],
         mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
       },
       fontSize: {

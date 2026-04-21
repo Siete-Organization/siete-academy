@@ -17,6 +17,9 @@ class Cohort(Base):
     status: Mapped[str] = mapped_column(String(20), default="draft")
     # draft | open_applications | in_progress | completed | archived
     max_students: Mapped[int] = mapped_column(Integer, default=20)
+    # Link de invitación al canal de Slack de la cohorte (ej: https://join.slack.com/t/...).
+    # El alumno lo ve en su dashboard/perfil. Al enrolarse recibe un email con este link.
+    slack_invite_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     module_windows: Mapped[list["ModuleWindow"]] = relationship(

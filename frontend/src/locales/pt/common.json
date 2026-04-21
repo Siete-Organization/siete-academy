@@ -1,12 +1,12 @@
 {
   "app": {
     "name": "Siete Academy",
-    "tagline": "A gente forma. As agências contratam."
+    "tagline": "A gente forma SDRs. A gente contrata."
   },
   "home": {
     "eyebrow": "№ 001 · Turma Maio 2026",
     "heroLine1": "A gente forma SDRs.",
-    "heroLine2": "As agências contratam.",
+    "heroLine2": "A gente contrata.",
     "heroPitch": "A Siete já enviou 4.2M de emails profissionais na LatAm e atende +180 clientes B2B ativos. Agora formamos a próxima geração de SDRs em 8 semanas: conteúdo on-demand, sessões ao vivo com nossos AEs, exercícios em equipe e um exame prático frente ao time comercial. Quem passa, é colocado.",
     "whatToExpect": "O que esperar",
     "expectList": [
@@ -87,7 +87,10 @@
     "reading": "Manual",
     "readingLock": "Conteúdo só na plataforma — não baixável",
     "assessments": "Provas",
-    "resources": "Material de apoio"
+    "resources": "Material de apoio",
+    "slackTitle": "Sua comunidade no Slack",
+    "slackSubtitle": "Guarde este link — serve se você perder o email de boas-vindas.",
+    "slackJoin": "Entrar"
   },
   "calendar": {
     "eyebrow": "Calendário",
@@ -114,6 +117,9 @@
     "emailHint": "Seu email é gerenciado pela sua conta (Google). Não se altera aqui.",
     "security": "Segurança",
     "passwordHint": "Sua senha é gerenciada pela sua conta do Google. Se precisar trocar, faça lá e volte — não precisa avisar a Siete.",
+    "communityTitle": "Comunidade Slack",
+    "communityHint": "Link direto para o canal da sua turma. Use se perdeu o email de boas-vindas.",
+    "communityJoin": "Entrar no Slack",
     "save": "Salvar mudanças",
     "saving": "Salvando…",
     "saved": "Mudanças salvas."
@@ -161,7 +167,15 @@
     "issuing": "emitindo…",
     "notYet": "pendente",
     "noStudents": "Sem alunos nesta turma.",
-    "noCohorts": "Sem turmas ainda."
+    "noCohorts": "Sem turmas ainda.",
+    "sendNote": "Enviar comentário",
+    "noteTo": "Comentário para",
+    "noteBody": "Mensagem",
+    "notePlaceholder": "Feedback pontual, lembrete ou link para material extra.",
+    "attachmentOptional": "Anexo (opcional)",
+    "attachmentHint": "Cole link público (Drive/Dropbox/Loom/YouTube). O aluno vê na aba Feedback.",
+    "sendNow": "Enviar",
+    "noteSent": "Enviado."
   },
   "admin": {
     "applications": "Inscrições",
@@ -244,7 +258,9 @@
     "motto": "Feito para quem vende de verdade."
   },
   "feedback": {
-    "title": "Feedback das suas entregas",
+    "title": "Feedback do professor",
+    "submissionsTitle": "Suas entregas",
+    "directNotes": "Comentários do professor",
     "pending": "Aguardando revisão",
     "reviewed": "Revisada",
     "autoGraded": "Auto-avaliada",

@@ -10,6 +10,7 @@ from app.modules.cohorts.models import Cohort, ModuleWindow
 from app.modules.cohorts.schemas import (
     CohortCreate,
     CohortOut,
+    CohortUpdate,
     ModuleWindowCreate,
     ModuleWindowOut,
     ModuleWindowUpdate,
@@ -46,6 +47,35 @@ def get_cohort(cohort_id: int, db: Session = Depends(get_db)) -> Cohort:
     c = db.get(Cohort, cohort_id)
     if not c:
         raise HTTPException(404, "Cohort not found")
+    return c
+
+
+@router.patch("/{cohort_id}", response_model=CohortOut)
+def update_cohort(
+    cohort_id: int,
+    body: CohortUpdate,
+    current: CurrentUser = Depends(require_roles("admin")),
+    db: Session = Depends(get_db),
+) -> Cohort:
+    c = db.get(Cohort, cohort_id)
+    if not c:
+        raise HTTPException(404, "Cohort not found")
+    changed: dict = {}
+    for field in ("name", "locale", "start_date", "end_date", "status", "max_students", "slack_invite_url"):
+        val = getattr(body, field)
+        if val is not None:
+            setattr(c, field, val)
+            changed[field] = True
+        elif field == "slack_invite_url" and body.model_dump(exclude_unset=True).get("slack_invite_url", "NOT_SET") is None:
+            # Permite borrar explícitamente el slack link pasando null
+            c.slack_invite_url = None
+            changed[field] = True
+    db.commit()
+    db.refresh(c)
+    log.info(
+        "cohort.updated",
+        extra={"cohort_id": cohort_id, "fields": list(changed.keys()), "actor_id": current.user.id},
+    )
     return c
 
 

@@ -14,12 +14,16 @@ router = APIRouter()
 
 @router.get("", response_model=list[UserOut])
 def list_users(
-    limit: int = Query(50, ge=1, le=200),
+    role: str | None = Query(None),
+    limit: int = Query(200, ge=1, le=500),
     offset: int = Query(0, ge=0),
     _admin: CurrentUser = Depends(require_roles("admin")),
     db: Session = Depends(get_db),
 ) -> list[User]:
-    return db.query(User).order_by(User.id.desc()).offset(offset).limit(limit).all()
+    q = db.query(User)
+    if role:
+        q = q.filter(User.role == role)
+    return q.order_by(User.id.desc()).offset(offset).limit(limit).all()
 
 
 @router.patch("/me", response_model=UserOut)

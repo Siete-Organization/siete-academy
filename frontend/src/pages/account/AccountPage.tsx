@@ -1,18 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+interface Enrollment {
+  id: number;
+  cohort_id: number;
+  cohort_name: string | null;
+  slack_invite_url: string | null;
+  status: string;
+}
+
 export function AccountPage() {
   const { t } = useTranslation();
   const { me, refresh } = useAuth();
   const [displayName, setDisplayName] = useState(me?.display_name || "");
   const [photoUrl, setPhotoUrl] = useState(me?.photo_url || "");
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (me?.role !== "student") return;
+    void (async () => {
+      try {
+        const { data } = await api.get<Enrollment[]>("/enrollment/me");
+        setEnrollments(data);
+      } catch {
+        // silencioso — admin/profesor/recruiter no tienen enrollments
+      }
+    })();
+  }, [me?.role]);
 
   if (!me) return null;
 
@@ -101,6 +122,34 @@ export function AccountPage() {
             {t("account.passwordHint")}
           </p>
         </fieldset>
+
+        {enrollments.filter((e) => e.slack_invite_url).length > 0 && (
+          <fieldset className="space-y-3 hairline pt-6">
+            <legend className="num-label mb-2">{t("account.communityTitle")}</legend>
+            <p className="text-sm text-ink-soft leading-relaxed">
+              {t("account.communityHint")}
+            </p>
+            <div className="space-y-2 pt-2">
+              {enrollments
+                .filter((e) => e.slack_invite_url)
+                .map((e) => (
+                  <a
+                    key={e.id}
+                    href={e.slack_invite_url!}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-3 bg-ember text-paper hover:bg-ember-soft rounded-full pl-3 pr-5 h-11 text-sm font-semibold transition-colors"
+                  >
+                    <span className="w-7 h-7 rounded-full bg-paper/20 flex items-center justify-center font-display font-black">
+                      #
+                    </span>
+                    {t("account.communityJoin")} — {e.cohort_name || `Cohorte ${e.cohort_id}`}
+                    <span aria-hidden>→</span>
+                  </a>
+                ))}
+            </div>
+          </fieldset>
+        )}
 
         {error && (
           <p className="text-ember border-l-2 border-ember pl-4 text-sm">{error}</p>

@@ -1,12 +1,12 @@
 {
   "app": {
     "name": "Siete Academy",
-    "tagline": "Te formamos. Las agencias te contratan."
+    "tagline": "Te formamos SDR. Te contratamos."
   },
   "home": {
     "eyebrow": "№ 001 · Cohorte Mayo 2026",
     "heroLine1": "Te formamos SDR.",
-    "heroLine2": "Las agencias te contratan.",
+    "heroLine2": "Te contratamos.",
     "heroPitch": "Siete lleva 4.2M de emails profesionales en LatAm y 180+ clientes B2B activos. Ahora formamos a la próxima generación de SDRs en 8 semanas: contenido on-demand, sesiones en vivo con nuestros AEs, ejercicios en equipo y un examen práctico frente al equipo comercial. Los que aprueban, se colocan.",
     "whatToExpect": "Qué esperar",
     "expectList": [
@@ -87,7 +87,10 @@
     "reading": "Manual",
     "readingLock": "Contenido solo en la plataforma — no descargable",
     "assessments": "Pruebas",
-    "resources": "Material de apoyo"
+    "resources": "Material de apoyo",
+    "slackTitle": "Tu comunidad en Slack",
+    "slackSubtitle": "Guarda este link — te sirve si pierdes el correo de bienvenida.",
+    "slackJoin": "Unirme"
   },
   "calendar": {
     "eyebrow": "Calendario",
@@ -114,6 +117,9 @@
     "emailHint": "Tu email se gestiona desde tu cuenta (Google). No se cambia aquí.",
     "security": "Seguridad",
     "passwordHint": "La contraseña se gestiona desde tu cuenta de Google. Si necesitas cambiarla, hazlo desde allí y vuelve aquí — no es necesario avisar a Siete.",
+    "communityTitle": "Comunidad Slack",
+    "communityHint": "Link directo al canal de tu cohorte. Úsalo si perdiste el email de bienvenida.",
+    "communityJoin": "Unirme a Slack",
     "save": "Guardar cambios",
     "saving": "Guardando…",
     "saved": "Cambios guardados."
@@ -161,7 +167,15 @@
     "issuing": "emitiendo…",
     "notYet": "pendiente",
     "noStudents": "Sin alumnos en esta cohorte.",
-    "noCohorts": "Aún no hay cohortes."
+    "noCohorts": "Aún no hay cohortes.",
+    "sendNote": "Enviar comentario",
+    "noteTo": "Comentario para",
+    "noteBody": "Mensaje",
+    "notePlaceholder": "Feedback puntual, recordatorio, o link a un recurso extra.",
+    "attachmentOptional": "Adjunto (opcional)",
+    "attachmentHint": "Pega link público (Drive/Dropbox/Loom/YouTube). El alumno lo ve en su Feedback.",
+    "sendNow": "Enviar",
+    "noteSent": "Enviado."
   },
   "admin": {
     "applications": "Aplicaciones",
@@ -244,7 +258,9 @@
     "motto": "Hecho para quien vende de verdad."
   },
   "feedback": {
-    "title": "Feedback de tus entregas",
+    "title": "Feedback del profesor",
+    "submissionsTitle": "Tus entregas",
+    "directNotes": "Comentarios del profesor",
     "pending": "Aún sin revisar",
     "reviewed": "Revisada",
     "autoGraded": "Auto-calificada",

@@ -2,6 +2,11 @@
 
 LMS para formación SDR de Siete. Cohortes híbridas estilo Reforge: 70% on-demand + 30% en vivo.
 
+> **Equipo técnico que recibe el proyecto:** empieza por [`HANDOFF.md`](HANDOFF.md). Luego
+> [`RUNBOOK_LOCAL.md`](RUNBOOK_LOCAL.md) para correrlo, [`CHANGELOG_FASE_A.md`](CHANGELOG_FASE_A.md)
+> para entender qué se construyó iterando con el cliente, y [`NEXT_STEPS_PROD.md`](NEXT_STEPS_PROD.md)
+> para el runbook de ir a prod.
+
 ## Stack
 
 - **Backend:** Python 3.12 + FastAPI (monolito modular) + SQLAlchemy + Alembic + Celery + Redis + PostgreSQL
