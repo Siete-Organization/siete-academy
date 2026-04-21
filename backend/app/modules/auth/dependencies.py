@@ -1,6 +1,7 @@
 from fastapi import Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
 from app.core.database import get_db
 from app.core.firebase import verify_id_token
 from app.core.logging import bind_user_id, get_logger
@@ -21,8 +22,30 @@ class CurrentUser:
 
 def get_current_user(
     authorization: str | None = Header(None),
+    x_dev_user: str | None = Header(None, alias="X-Dev-User"),
     db: Session = Depends(get_db),
 ) -> CurrentUser:
+    settings = get_settings()
+
+    # Dev-only bypass: allow login-by-email without Firebase so we can demo
+    # locally without configuring a Firebase project. Disabled in production.
+    if (
+        settings.dev_auth_bypass
+        and settings.app_env == "development"
+        and x_dev_user
+    ):
+        user = db.query(User).filter_by(email=x_dev_user).first()
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Dev user '{x_dev_user}' not found. Run `make seed` first.",
+            )
+        bind_user_id(user.id)
+        log.debug("auth.dev_bypass", extra={"email": x_dev_user, "role": user.role})
+        return CurrentUser(
+            user=user, claims={"role": user.role, "uid": user.firebase_uid, "_dev": True}
+        )
+
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing bearer token")
 
