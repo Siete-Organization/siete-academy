@@ -21,6 +21,14 @@ dist/
 htmlcov/
 .pytest_cache/
 
+# Local SQLite (regenerate with `make seed`)
+*.db
+*.db-journal
+
+# Playwright
+playwright-report/
+test-results/
+
 # IDE
 .idea/
 .vscode/
