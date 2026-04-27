@@ -27,7 +27,7 @@ services:
   api:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file: .env
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-siete}:${POSTGRES_PASSWORD:-siete}@postgres:5432/${POSTGRES_DB:-siete_academy}
@@ -48,7 +48,7 @@ services:
   worker:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file: .env
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-siete}:${POSTGRES_PASSWORD:-siete}@postgres:5432/${POSTGRES_DB:-siete_academy}
@@ -65,7 +65,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file: .env
     ports:
       - "5173:5173"

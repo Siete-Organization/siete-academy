@@ -1,0 +1,36 @@
+# Caddy config for the production frontend.
+# Listens on :80; Coolify (or upstream Cloudflare Worker) terminates TLS.
+
+:80 {
+    encode zstd gzip
+
+    # SPA fallback: anything that doesn't match a real file falls back to index.html
+    handle {
+        root * /usr/share/caddy
+        try_files {path} /index.html
+        file_server
+    }
+
+    # Long cache for hashed assets, no-cache for index.html
+    @hashed path_regexp ^/assets/.+\.[a-f0-9]{8,}\.(js|css|woff2?|svg|png|jpg|webp|avif)$
+    header @hashed Cache-Control "public, max-age=31536000, immutable"
+
+    @html path /index.html /
+    header @html Cache-Control "no-cache"
+
+    # Security headers (CSP allows Firebase, YouTube embeds, Google Drive viewers, Anthropic preview links)
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://apis.google.com https://www.gstatic.com https://www.googletagmanager.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://drive.google.com https://docs.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self';"
+        -Server
+    }
+
+    log {
+        output stdout
+        format console
+    }
+}
