@@ -17,15 +17,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 COPY backend/requirements.txt .
-RUN pip install --upgrade pip && pip install --prefix=/install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # ---------- runtime ----------
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/install/bin:$PATH" \
+    PATH="/opt/venv/bin:$PATH" \
     PYTHONPATH="/app" \
     APP_ENV=production
 
@@ -36,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY --from=builder /install /install
+COPY --from=builder /opt/venv /opt/venv
 COPY --chown=siete:siete backend/ /app/
 COPY --chown=siete:siete --chmod=755 deploy/entrypoint-api.sh /usr/local/bin/entrypoint-api.sh
 COPY --chown=siete:siete --chmod=755 deploy/entrypoint-worker.sh /usr/local/bin/entrypoint-worker.sh
