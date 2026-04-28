@@ -216,7 +216,7 @@ function SlackCta({ enrollments }: { enrollments: Enrollment[] }) {
 
 function ReferralShare({ name }: { name: string | null }) {
   const { t } = useTranslation();
-  const landingUrl = `${window.location.origin}/academy/`;
+  const landingUrl = `${window.location.origin}/`;
   const text = t("student.referralText", {
     name: name?.split(" ")[0] || "",
   });
