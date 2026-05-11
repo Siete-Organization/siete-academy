@@ -13,11 +13,8 @@ vi.mock("@/lib/api", () => ({
 
 import { api } from "@/lib/api";
 
-const wordsOf = (n: number) =>
-  Array.from({ length: n }, (_, i) => `w${i}`).join(" ");
-
 describe("ApplyPage — admission form", () => {
-  it("submit button is disabled until every answer reaches 100 words", async () => {
+  it("submit is enabled once required identity fields + video are filled, regardless of answer length", async () => {
     const user = userEvent.setup();
     renderWithProviders(<ApplyPage />);
 
@@ -26,43 +23,40 @@ describe("ApplyPage — admission form", () => {
 
     await user.type(screen.getByLabelText(/nombre completo/i), "Ana");
     await user.type(screen.getByLabelText(/^email/i), "ana@example.com");
+    await user.type(screen.getByLabelText(/linkedin/i), "https://www.linkedin.com/in/ana");
+    await user.type(screen.getByLabelText(/pa[ií]s/i), "Perú");
     await user.type(screen.getByLabelText(/url de video/i), "https://loom.com/x");
 
     const textareas = screen.getAllByRole("textbox", { name: /quiere|logro|horas/i });
-    expect(textareas).toHaveLength(3);
+    await user.type(textareas[0], "uno");
+    await user.type(textareas[1], "dos");
+    await user.type(textareas[2], "tres");
 
-    // Fill the first two with 100 words — still short on the third
-    await user.type(textareas[0], wordsOf(100));
-    await user.type(textareas[1], wordsOf(100));
-    await user.type(textareas[2], "too short");
-    expect(submit).toBeDisabled();
-
-    // Finish the third
-    await user.clear(textareas[2]);
-    await user.type(textareas[2], wordsOf(100));
     expect(submit).toBeEnabled();
   }, 30_000);
 
-  it("shows the word counter with correct count and threshold styling", async () => {
+  it("shows a plain word counter (informational, not blocking)", async () => {
     const user = userEvent.setup();
     renderWithProviders(<ApplyPage />);
     const textareas = screen.getAllByRole("textbox", { name: /quiere|logro|horas/i });
-    await user.type(textareas[0], wordsOf(50));
-    expect(screen.getAllByText(/50\/100/).length).toBeGreaterThan(0);
+    await user.type(textareas[0], "una dos tres");
+    expect(screen.getAllByText(/3 palabras/).length).toBeGreaterThan(0);
   }, 20_000);
 
-  it("submits the expected payload when valid", async () => {
+  it("submits the expected payload when required fields are present", async () => {
     const user = userEvent.setup();
     renderWithProviders(<ApplyPage />);
 
     await user.type(screen.getByLabelText(/nombre completo/i), "Ana");
     await user.type(screen.getByLabelText(/^email/i), "ana@example.com");
+    await user.type(screen.getByLabelText(/linkedin/i), "https://www.linkedin.com/in/ana");
+    await user.type(screen.getByLabelText(/pa[ií]s/i), "Perú");
     await user.type(screen.getByLabelText(/url de video/i), "https://loom.com/x");
 
     const textareas = screen.getAllByRole("textbox", { name: /quiere|logro|horas/i });
-    await user.type(textareas[0], wordsOf(100));
-    await user.type(textareas[1], wordsOf(100));
-    await user.type(textareas[2], wordsOf(100));
+    await user.type(textareas[0], "uno");
+    await user.type(textareas[1], "dos");
+    await user.type(textareas[2], "tres");
 
     await user.click(screen.getByRole("button", { name: /enviar aplicaci/i }));
 

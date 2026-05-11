@@ -5,9 +5,31 @@ from app.core.config import get_settings
 from app.core.database import get_db
 from app.core.firebase import verify_id_token
 from app.core.logging import bind_user_id, get_logger
+from app.modules.applications.models import Application
 from app.modules.users.models import User
 
 log = get_logger("app.auth")
+
+
+def _resolve_initial_role(db: Session, email: str, admin_emails: list[str]) -> str | None:
+    """Decide qué rol asignar a un usuario que loguea por primera vez.
+
+    Devuelve None si el email no está autorizado (ni en allowlist de admins
+    ni en applications con status 'approved').
+    """
+    email_l = (email or "").lower()
+    if not email_l:
+        return None
+    if email_l in admin_emails:
+        return "admin"
+    approved = (
+        db.query(Application)
+        .filter(Application.applicant_email.ilike(email_l), Application.status == "approved")
+        .first()
+    )
+    if approved is not None:
+        return "student"
+    return None
 
 
 class CurrentUser:
@@ -59,13 +81,31 @@ def get_current_user(
         ) from e
 
     uid = claims.get("uid") or claims.get("sub")
+    email = (claims.get("email") or "").lower()
+    admin_emails = settings.admin_emails_list
+
     user = db.query(User).filter_by(firebase_uid=uid).first()
+    if user is None and email:
+        # Si el firebase_uid es nuevo, intenta enganchar a un User existente por email
+        # (caso: admin seedeado en demo o aplicante que ya tenía cuenta).
+        user = db.query(User).filter(User.email.ilike(email)).first()
+        if user is not None and not user.firebase_uid:
+            user.firebase_uid = uid
+
     if user is None:
+        # Provisioning: solo si el email está autorizado.
+        initial_role = _resolve_initial_role(db, email, admin_emails)
+        if initial_role is None:
+            log.info("auth.not_invited", extra={"email": email})
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={"code": "not_invited", "email": email},
+            )
         user = User(
             firebase_uid=uid,
-            email=claims.get("email", ""),
+            email=email,
             display_name=claims.get("name"),
-            role=claims.get("role", "student"),
+            role=initial_role,
         )
         db.add(user)
         db.commit()
@@ -74,6 +114,17 @@ def get_current_user(
             "auth.user_provisioned",
             extra={"firebase_uid": uid, "email": user.email, "role": user.role},
         )
+    else:
+        # Promote existing user to admin if email matches admin_emails.
+        if email and email in admin_emails and user.role != "admin":
+            prior = user.role
+            user.role = "admin"
+            db.commit()
+            db.refresh(user)
+            log.info(
+                "auth.role_promoted",
+                extra={"user_id": user.id, "from": prior, "to": "admin"},
+            )
 
     bind_user_id(user.id)
     return CurrentUser(user=user, claims=claims)

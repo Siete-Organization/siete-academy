@@ -66,7 +66,7 @@ def list_modules(
 def create_module(
     course_id: int,
     body: ModuleCreate,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> dict:
     if not db.get(Course, course_id):
@@ -98,7 +98,7 @@ def list_lessons(
 def create_lesson(
     module_id: int,
     body: LessonCreate,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> dict:
     if not db.get(Module, module_id):
@@ -122,7 +122,7 @@ def create_lesson(
 @router.get("/{course_id}/admin", response_model=list[ModuleAdminOut])
 def list_modules_admin(
     course_id: int,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> list[dict]:
     if not db.get(Course, course_id):
@@ -141,7 +141,7 @@ def list_modules_admin(
 def patch_module(
     module_id: int,
     body: ModuleUpdate,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> dict:
     m = db.get(Module, module_id)
@@ -164,7 +164,7 @@ def patch_module(
 def patch_lesson(
     lesson_id: int,
     body: LessonUpdate,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> dict:
     le = db.get(Lesson, lesson_id)
@@ -189,7 +189,7 @@ def patch_lesson(
 @router.delete("/lessons/{lesson_id}", status_code=204)
 def delete_lesson(
     lesson_id: int,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> None:
     le = db.get(Lesson, lesson_id)
@@ -224,7 +224,7 @@ def list_resources(
 def create_resource(
     module_id: int,
     body: ResourceCreate,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> ModuleResource:
     if not db.get(Module, module_id):
@@ -246,7 +246,7 @@ def create_resource(
 def patch_resource(
     resource_id: int,
     body: ResourceUpdate,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> ModuleResource:
     r = db.get(ModuleResource, resource_id)
@@ -268,7 +268,7 @@ def patch_resource(
 @router.delete("/resources/{resource_id}", status_code=204)
 def delete_resource(
     resource_id: int,
-    _admin: CurrentUser = Depends(require_roles("admin")),
+    _author: CurrentUser = Depends(require_roles("admin", "teacher")),
     db: Session = Depends(get_db),
 ) -> None:
     r = db.get(ModuleResource, resource_id)

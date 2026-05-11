@@ -1,23 +1,12 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
-
-MIN_WORDS_PER_ANSWER = 100
+from pydantic import BaseModel, EmailStr, Field
 
 
 class ApplicationAnswer(BaseModel):
     question_id: str
     text: str
-
-    @field_validator("text")
-    @classmethod
-    def min_words(cls, v: str) -> str:
-        if len(v.split()) < MIN_WORDS_PER_ANSWER:
-            raise ValueError(
-                f"Each open answer must have at least {MIN_WORDS_PER_ANSWER} words."
-            )
-        return v
 
 
 class ApplicationCreate(BaseModel):

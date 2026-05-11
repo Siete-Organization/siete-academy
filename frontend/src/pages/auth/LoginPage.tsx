@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { loginWithGoogle } from "@/lib/firebase";
+import { loginWithGoogle, logout } from "@/lib/firebase";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +21,7 @@ const DEV_USERS: Array<{
 
 export function LoginPage() {
   const { t } = useTranslation();
-  const { firebaseUser, me, loading, isAuthenticated, devLogin } = useAuth();
+  const { firebaseUser, me, loading, isAuthenticated, notInvited, devLogin } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState<string | null>(null);
 
@@ -33,6 +33,13 @@ export function LoginPage() {
       else navigate("/student");
     }
   }, [firebaseUser, me, loading, isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (notInvited) {
+      void logout();
+      navigate("/apply", { state: { notInvited: true } });
+    }
+  }, [notInvited, navigate]);
 
   const onDevLogin = async (u: (typeof DEV_USERS)[number]) => {
     setSubmitting(u.email);
@@ -62,9 +69,6 @@ export function LoginPage() {
             <span>Continuar con Google</span>
             <span aria-hidden className="font-mono text-xs opacity-60">⌘ ↵</span>
           </Button>
-          <p className="text-xs text-ink-muted leading-relaxed">
-            Firebase para producción. Usamos Google solo para verificar identidad.
-          </p>
 
           {IS_DEV && (
             <div className="hairline pt-6">

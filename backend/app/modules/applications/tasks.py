@@ -5,6 +5,7 @@ Fase 1: agregar pipeline de scoring con Claude.
 """
 
 from app.core.celery_app import celery_app
+from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.core.logging import get_logger
 from app.modules.applications.models import Application
@@ -48,11 +49,15 @@ def notify_decision(application_id: int) -> None:
             extra={"application_id": application_id, "status": app.status},
         )
         if app.status == "approved":
+            login_url = f"{get_settings().public_base_url.rstrip('/')}/login"
             subject = "¡Fuiste aceptado en Siete Academy!"
             body = (
                 f"Hola {app.applicant_name},\n\n"
-                "¡Felicitaciones! Fuiste aceptado en la próxima cohorte. "
-                "Pronto recibirás un link para completar tu registro."
+                "¡Felicitaciones! Fuiste aceptado en la próxima cohorte.\n\n"
+                "Para entrar a la plataforma, inicia sesión con el mismo email "
+                f"con el que aplicaste ({app.applicant_email}):\n"
+                f"{login_url}\n\n"
+                "Si tienes dudas, responde este correo.\n\nEquipo Siete"
             )
         elif app.status == "rejected":
             subject = "Actualización sobre tu aplicación a Siete Academy"

@@ -29,11 +29,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-full flex flex-col relative">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-paper/80 border-b border-bone">
         <div className="container-editorial h-16 flex items-center justify-between">
-          <Link to={logoHref} className="group flex items-baseline gap-2">
-            <span className="font-display text-2xl tracking-editorial leading-none">Siete</span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-muted group-hover:text-ink transition-colors">
-              /academy
-            </span>
+          <Link to={logoHref} className="block">
+            <img
+              src="/img/siete-academy-logo.png"
+              alt="Siete Academy"
+              className="h-8 w-auto"
+            />
           </Link>
           <nav className="flex items-center gap-6 text-sm">
             {me?.role === "student" && (

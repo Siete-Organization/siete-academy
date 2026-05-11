@@ -78,6 +78,20 @@
     content: "7";
     @apply font-display font-black text-ember mr-2 inline-block;
   }
+
+  /* react-phone-number-input — alinear con el resto de inputs editoriales. */
+  .phone-input.PhoneInput {
+    @apply flex w-full items-center gap-3 border-b border-bone-strong py-2.5 h-11;
+  }
+  .phone-input .PhoneInputCountry {
+    @apply flex items-center gap-2;
+  }
+  .phone-input .PhoneInputCountryIcon {
+    @apply w-6 h-4 shadow-none;
+  }
+  .phone-input .PhoneInputInput {
+    @apply flex-1 bg-transparent border-0 outline-none text-[15px] placeholder:text-ink-faint;
+  }
 }
 
 @layer utilities {

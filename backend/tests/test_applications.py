@@ -8,8 +8,6 @@ Covers:
 
 from datetime import datetime
 
-import pytest
-
 from app.modules.applications.models import Application
 from app.modules.applications.schemas import ApplicationAnswer, ApplicationCreate
 from app.modules.applications.services import create_application, review_application
@@ -43,13 +41,11 @@ class TestCreateApplicationService:
             "hours_per_week": _long_answer("c"),
         }
 
-    def test_word_count_validator_rejects_short_answer(self):
-        with pytest.raises(ValueError, match="at least 100 words"):
-            ApplicationAnswer(question_id="why_sales", text="too short")
-
-    def test_word_count_validator_accepts_exactly_100(self):
-        ans = ApplicationAnswer(question_id="x", text=_long_answer("w", 100))
-        assert len(ans.text.split()) == 100
+    def test_short_answers_are_accepted(self):
+        # No imponemos word-count: queremos que el aspirante pueda enviar
+        # aunque escriba poco. El filtro lo hace el equipo en revisión.
+        ans = ApplicationAnswer(question_id="why_sales", text="ok")
+        assert ans.text == "ok"
 
 
 class TestReviewApplicationService:

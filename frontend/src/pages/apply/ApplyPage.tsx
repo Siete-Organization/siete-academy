@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
@@ -14,6 +17,10 @@ function wordCount(s: string): number {
 
 export function ApplyPage() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const notInvited = Boolean(
+    (location.state as { notInvited?: boolean } | null)?.notInvited,
+  );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -30,9 +37,8 @@ export function ApplyPage() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const allQuestionsValid = QUESTION_IDS.every((q) => wordCount(answers[q]) >= 100);
   const canSubmit =
-    name && email && linkedinUrl && country && videoUrl && allQuestionsValid && !submitting;
+    name && email && linkedinUrl && country && videoUrl && !submitting;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,6 +90,15 @@ export function ApplyPage() {
 
   return (
     <div className="container-editorial py-16 md:py-24">
+      {notInvited && (
+        <div className="mb-10 border-l-2 border-ember bg-ember/5 pl-5 py-4">
+          <p className="num-label text-ember">acceso restringido</p>
+          <p className="text-sm text-ink mt-2 leading-relaxed max-w-2xl">
+            Tu cuenta todavía no está aprobada. Empieza por aplicar acá abajo; te
+            avisaremos por email cuando puedas ingresar.
+          </p>
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <header className="lg:col-span-4 lg:sticky lg:top-24 h-max">
           <p className="num-label">Aplicación · cohorte 001</p>
@@ -100,7 +115,7 @@ export function ApplyPage() {
             </p>
             <p>
               <span className="num-label mr-2">ii</span>
-              Mínimo 100 palabras por pregunta.
+              Tómate tu tiempo, sin límite de palabras.
             </p>
             <p>
               <span className="num-label mr-2">iii</span>
@@ -128,7 +143,13 @@ export function ApplyPage() {
                 />
               </Field>
               <Field label={t("apply.phone")}>
-                <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <PhoneInput
+                  international
+                  defaultCountry="PE"
+                  value={phone}
+                  onChange={(v) => setPhone(v ?? "")}
+                  className="phone-input"
+                />
               </Field>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -268,24 +289,10 @@ function Field({
 
 function WordCounter({ text }: { text: string }) {
   const n = wordCount(text);
-  const ok = n >= 100;
-  const pct = Math.min(100, (n / 100) * 100);
   return (
-    <div className="flex items-center gap-3 mt-3">
-      <div className="flex-1 h-px bg-bone relative overflow-hidden">
-        <div
-          className={`absolute inset-y-0 left-0 transition-all duration-500 ${
-            ok ? "bg-moss" : "bg-ink/40"
-          }`}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <span
-        className={`font-mono text-[11px] tabular-nums ${
-          ok ? "text-moss" : "text-ink-faint"
-        }`}
-      >
-        {n}/100
+    <div className="flex items-center justify-end mt-3">
+      <span className="font-mono text-[11px] tabular-nums text-ink-faint">
+        {n} {n === 1 ? "palabra" : "palabras"}
       </span>
     </div>
   );
