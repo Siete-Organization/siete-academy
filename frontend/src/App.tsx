@@ -19,14 +19,13 @@ import { AdminPlacement } from "@/pages/admin/AdminPlacement";
 import { AdminAnalytics } from "@/pages/admin/AdminAnalytics";
 import { AdminHome } from "@/pages/admin/AdminHome";
 import { RecruiterHome } from "@/pages/recruiter/RecruiterHome";
-import { HomePage } from "@/pages/HomePage";
 
 export default function App() {
   return (
     <AuthProvider>
       <Layout>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/apply" element={<ApplyPage />} />
           <Route path="/login" element={<LoginPage />} />
 
