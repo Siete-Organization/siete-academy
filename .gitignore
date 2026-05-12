@@ -19,6 +19,7 @@ dist/
 
 # Coverage / testing
 .coverage
+coverage.xml
 htmlcov/
 .pytest_cache/
 
@@ -36,3 +37,9 @@ test-results/
 
 # Brand assets (se gestionan fuera del repo — viven en Drive/Figma)
 rebranding_2026_Siete.pdf
+
+# Docs / drafts sueltos en root (viven en ../siete-academy-stash/)
+env var siete academy.txt
+EN-homepage-academy.html
+PT-homepage-academy.html
+Siete_Academy_Documentacion.pdf
