@@ -50,7 +50,6 @@ class AnthropicClient:
         messages: list[dict[str, Any]],
         system: str | None = None,
         max_tokens: int = 2048,
-        temperature: float = 0.3,
         stage_run_id: int | None = None,
         purpose: str = "generic",
     ) -> Message:
@@ -64,7 +63,6 @@ class AnthropicClient:
             "messages": messages,
             "system": system,
             "max_tokens": max_tokens,
-            "temperature": temperature,
         }
 
         started = time.monotonic()
@@ -76,7 +74,6 @@ class AnthropicClient:
                 messages=messages,
                 system=system or "",
                 max_tokens=max_tokens,
-                temperature=temperature,
             )
             return response
         except Exception as e:

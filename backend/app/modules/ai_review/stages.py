@@ -102,7 +102,6 @@ class ScoreApplicationStage(Stage):
             messages=[{"role": "user", "content": user_msg}],
             system=APPLICATION_SYSTEM_PROMPT,
             max_tokens=1024,
-            temperature=0.3,
             stage_run_id=stage_run_id,
             purpose="application_scoring",
         )
@@ -184,7 +183,6 @@ class ReviewSubmissionStage(Stage):
             messages=[{"role": "user", "content": user_msg}],
             system=SUBMISSION_SYSTEM_PROMPT,
             max_tokens=1500,
-            temperature=0.4,
             stage_run_id=stage_run_id,
             purpose="submission_review",
         )
