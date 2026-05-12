@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginWithGoogle, logout } from "@/lib/firebase";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -69,6 +69,13 @@ export function LoginPage() {
             <span>Continuar con Google</span>
             <span aria-hidden className="font-mono text-xs opacity-60">⌘ ↵</span>
           </Button>
+
+          <p className="text-sm text-ink-muted text-center">
+            ¿Aún no te has postulado?{" "}
+            <Link to="/apply" className="text-ink underline underline-offset-4 hover:text-ember">
+              Aplica aquí
+            </Link>
+          </p>
 
           {IS_DEV && (
             <div className="hairline pt-6">
