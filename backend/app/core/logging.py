@@ -21,6 +21,7 @@ from __future__ import annotations
 import logging
 import sys
 from contextvars import ContextVar
+from datetime import datetime, timezone
 from typing import Any
 
 from pythonjsonlogger import jsonlogger
@@ -50,7 +51,7 @@ class JsonFormatter(jsonlogger.JsonFormatter):
         message_dict: dict[str, Any],
     ) -> None:
         super().add_fields(log_record, record, message_dict)
-        log_record["ts"] = self.formatTime(record, "%Y-%m-%dT%H:%M:%S.%fZ")
+        log_record["ts"] = datetime.fromtimestamp(record.created, tz=timezone.utc).isoformat()
         log_record["level"] = record.levelname
         log_record["logger"] = record.name
         log_record.setdefault("message", record.getMessage())
@@ -137,9 +138,7 @@ def configure_logging(level: str | None = None) -> None:
     if settings.app_env == "development":
         handler.setFormatter(HumanFormatter())
     else:
-        handler.setFormatter(
-            JsonFormatter("%(message)s", rename_fields={"levelname": "level"})
-        )
+        handler.setFormatter(JsonFormatter("%(message)s"))
 
     root.addHandler(handler)
 
