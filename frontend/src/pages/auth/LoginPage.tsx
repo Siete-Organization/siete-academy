@@ -71,9 +71,9 @@ export function LoginPage() {
           </Button>
 
           <p className="text-sm text-ink-muted text-center">
-            ¿Aún no te has postulado?{" "}
+            {t("login.noApplicationYet")}{" "}
             <Link to="/apply" className="text-ink underline underline-offset-4 hover:text-ember">
-              Aplica aquí
+              {t("login.applyHere")}
             </Link>
           </p>
 
