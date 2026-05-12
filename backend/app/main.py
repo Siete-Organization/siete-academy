@@ -28,7 +28,7 @@ settings = get_settings()
 app = FastAPI(
     title="Siete Academy API",
     version="0.1.0",
-    root_path="/api/academy" if settings.app_env != "development" else "",
+    root_path=settings.api_root_path,
 )
 
 # Rate limiter hook-up

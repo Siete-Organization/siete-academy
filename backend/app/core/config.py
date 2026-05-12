@@ -12,6 +12,11 @@ class Settings(BaseSettings):
     public_base_url: str = "http://localhost:5173"
     allowed_origins: str = "http://localhost:5173"
 
+    # Path prefix bajo el que está servida la API (OpenAPI metadata + URL en swagger).
+    # Vacío significa raíz del subdominio (ej: api-academy.wearesiete.com/auth/me).
+    # NO agrega prefix a las rutas; si necesitás strip-prefix, hacelo en el reverse proxy.
+    api_root_path: str = ""
+
     # When true, get_current_user accepts an `X-Dev-User: <email>` header
     # and skips Firebase verification. ONLY for local demo — must be false in prod.
     dev_auth_bypass: bool = True
