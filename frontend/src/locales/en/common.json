@@ -51,6 +51,10 @@
     "feedback": "Feedback",
     "certificate": "Certificate"
   },
+  "login": {
+    "noApplicationYet": "Haven't applied yet?",
+    "applyHere": "Apply here"
+  },
   "apply": {
     "title": "Apply to Siete Academy",
     "subtitle": "We want to know you before opening the door. Be specific and honest.",

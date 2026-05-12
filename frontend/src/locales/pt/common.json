@@ -51,6 +51,10 @@
     "feedback": "Feedback",
     "certificate": "Certificado"
   },
+  "login": {
+    "noApplicationYet": "Ainda não se inscreveu?",
+    "applyHere": "Inscreva-se aqui"
+  },
   "apply": {
     "title": "Inscreva-se na Siete Academy",
     "subtitle": "Queremos te conhecer antes de abrir a porta. Seja específico e honesto.",
