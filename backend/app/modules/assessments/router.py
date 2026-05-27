@@ -45,6 +45,11 @@ def list_by_module(module_id: int, db: Session = Depends(get_db)) -> list[Assess
     return db.query(Assessment).filter(Assessment.module_id == module_id).all()
 
 
+@router.get("/lesson/{lesson_id}", response_model=list[AssessmentOut])
+def list_by_lesson(lesson_id: int, db: Session = Depends(get_db)) -> list[Assessment]:
+    return db.query(Assessment).filter(Assessment.lesson_id == lesson_id).all()
+
+
 @router.patch("/{assessment_id}", response_model=AssessmentOut)
 def update_assessment(
     assessment_id: int,

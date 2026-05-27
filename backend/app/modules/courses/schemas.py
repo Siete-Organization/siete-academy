@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel
 
@@ -55,6 +55,10 @@ class LessonCreate(BaseModel):
     kind: Literal["video", "reading"] = "video"
     youtube_id: str | None = None
     duration_seconds: int | None = None
+    avatar_audio_url: str | None = None
+    avatar_script: str | None = None
+    presentation_url: str | None = None
+    presentation_blocks: list[dict[str, Any]] | None = None
     translations: list[LessonTranslationIn]
 
 
@@ -65,6 +69,10 @@ class LessonOut(BaseModel):
     kind: str
     youtube_id: str | None
     duration_seconds: int | None
+    avatar_audio_url: str | None = None
+    avatar_script: str | None = None
+    presentation_url: str | None = None
+    presentation_blocks: list[dict[str, Any]] | None = None
     title: str
     body: str | None
 
@@ -74,6 +82,10 @@ class LessonUpdate(BaseModel):
     kind: Literal["video", "reading"] | None = None
     youtube_id: str | None = None
     duration_seconds: int | None = None
+    avatar_audio_url: str | None = None
+    avatar_script: str | None = None
+    presentation_url: str | None = None
+    presentation_blocks: list[dict[str, Any]] | None = None
     translations: list[LessonTranslationIn] | None = None
 
 
@@ -91,6 +103,10 @@ class LessonAdminOut(BaseModel):
     kind: str
     youtube_id: str | None
     duration_seconds: int | None
+    avatar_audio_url: str | None = None
+    avatar_script: str | None = None
+    presentation_url: str | None = None
+    presentation_blocks: list[dict[str, Any]] | None = None
     translations: list[LessonTranslationIn]
 
 
@@ -102,6 +118,7 @@ class ResourceCreate(BaseModel):
     title: str
     url: str
     order_index: int = 0
+    lesson_id: int | None = None
 
 
 class ResourceUpdate(BaseModel):
@@ -109,11 +126,13 @@ class ResourceUpdate(BaseModel):
     title: str | None = None
     url: str | None = None
     order_index: int | None = None
+    lesson_id: int | None = None
 
 
 class ResourceOut(BaseModel):
     id: int
     module_id: int
+    lesson_id: int | None = None
     kind: str
     title: str
     url: str

@@ -11,6 +11,11 @@ class Assessment(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     module_id: Mapped[int] = mapped_column(ForeignKey("modules.id", ondelete="CASCADE"), index=True)
+    # Si está, el assessment cierra una lección específica (paso 5 de la secuencia).
+    # Si es NULL, es examen a nivel módulo.
+    lesson_id: Mapped[int | None] = mapped_column(
+        ForeignKey("lessons.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     # mcq | written | prospection_db | cold_call_video | team_exercise
     type: Mapped[str] = mapped_column(String(30), index=True)
     title: Mapped[str] = mapped_column(String(200))

@@ -8,6 +8,7 @@ AssessmentType = Literal["mcq", "written", "prospection_db", "cold_call_video", 
 
 class AssessmentCreate(BaseModel):
     module_id: int
+    lesson_id: int | None = None
     type: AssessmentType
     title: str
     config: dict[str, Any] = Field(default_factory=dict)
@@ -15,6 +16,7 @@ class AssessmentCreate(BaseModel):
 
 
 class AssessmentUpdate(BaseModel):
+    lesson_id: int | None = None
     type: AssessmentType | None = None
     title: str | None = None
     config: dict[str, Any] | None = None
@@ -24,6 +26,7 @@ class AssessmentUpdate(BaseModel):
 class AssessmentOut(BaseModel):
     id: int
     module_id: int
+    lesson_id: int | None = None
     type: str
     title: str
     config: dict

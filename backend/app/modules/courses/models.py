@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, func
+from sqlalchemy import DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -79,6 +79,12 @@ class Lesson(Base):
     # YouTube unlisted video ID (ej: "dQw4w9WgXcQ"). El front embebe el iframe.
     youtube_id: Mapped[str | None] = mapped_column(String(20), nullable=True)
     duration_seconds: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # Avatar IA con voz en off (paso 2 de la secuencia)
+    avatar_audio_url: Mapped[str | None] = mapped_column(String(600), nullable=True)
+    avatar_script: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Presentación del contenido (paso 3): link a deck + bloques estructurados opcionales
+    presentation_url: Mapped[str | None] = mapped_column(String(600), nullable=True)
+    presentation_blocks: Mapped[list | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     module: Mapped[Module] = relationship(back_populates="lessons")
@@ -112,6 +118,11 @@ class ModuleResource(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     module_id: Mapped[int] = mapped_column(
         ForeignKey("modules.id", ondelete="CASCADE"), index=True
+    )
+    # Si está, el recurso pertenece a una lección específica (paso 4 de la secuencia).
+    # Si es NULL, es material a nivel módulo (modo legacy).
+    lesson_id: Mapped[int | None] = mapped_column(
+        ForeignKey("lessons.id", ondelete="SET NULL"), nullable=True, index=True
     )
     # "pdf" | "ppt" | "video" | "doc" | "link"
     kind: Mapped[str] = mapped_column(String(16), default="link")
