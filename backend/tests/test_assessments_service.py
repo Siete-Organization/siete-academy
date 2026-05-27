@@ -117,6 +117,75 @@ class TestAutoGradeMcq:
         assert auto_grade_mcq(a, {"answers": {"q1": "a"}}) is None
 
 
+class TestAutoGradeMcqQuestionsShape:
+    """Nuevo shape: config["questions"] con type single/multi/match."""
+
+    def _cfg(self):
+        return {
+            "questions": [
+                {"id": "q1", "type": "single", "correct": ["c"]},
+                {"id": "q2", "type": "multi", "correct": ["2", "4", "7"]},
+                {
+                    "id": "q3",
+                    "type": "match",
+                    "correct": {"1": "A", "2": "B", "3": "C"},
+                },
+            ]
+        }
+
+    def test_all_correct(self):
+        a = _build_mcq(config=self._cfg())
+        score = auto_grade_mcq(
+            a,
+            {
+                "answers": {
+                    "q1": "c",
+                    "q2": ["2", "4", "7"],
+                    "q3": {"1": "A", "2": "B", "3": "C"},
+                }
+            },
+        )
+        assert score == 100.0
+
+    def test_multi_partial_not_counted(self):
+        """Multi-select requires the exact set — no partial credit per question."""
+        a = _build_mcq(config=self._cfg())
+        score = auto_grade_mcq(
+            a,
+            {
+                "answers": {
+                    "q1": "c",
+                    "q2": ["2", "4"],  # missing 7
+                    "q3": {"1": "A", "2": "B", "3": "C"},
+                }
+            },
+        )
+        # 2 of 3 correct = 66.67
+        assert score == 66.67
+
+    def test_match_extra_keys_fails(self):
+        a = _build_mcq(config=self._cfg())
+        score = auto_grade_mcq(
+            a,
+            {
+                "answers": {
+                    "q1": "c",
+                    "q2": ["2", "4", "7"],
+                    "q3": {"1": "A", "2": "B", "3": "C", "4": "Z"},
+                }
+            },
+        )
+        assert score == 66.67
+
+    def test_missing_answer_for_a_question(self):
+        a = _build_mcq(config=self._cfg())
+        score = auto_grade_mcq(
+            a,
+            {"answers": {"q1": "c", "q2": ["2", "4", "7"]}},
+        )
+        assert score == 66.67
+
+
 class TestSubmit:
     def test_mcq_submission_is_auto_graded(self, db, mcq_assessment_db, test_user):
         sub = submit(

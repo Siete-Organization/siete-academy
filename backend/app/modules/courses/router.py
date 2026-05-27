@@ -111,6 +111,10 @@ def create_lesson(
         body.duration_seconds,
         [t.model_dump() for t in body.translations],
         kind=body.kind,
+        avatar_audio_url=body.avatar_audio_url,
+        avatar_script=body.avatar_script,
+        presentation_url=body.presentation_url,
+        presentation_blocks=body.presentation_blocks,
     )
     return services.lesson_to_dict(le, "es")
 
@@ -177,6 +181,10 @@ def patch_lesson(
         kind=body.kind,
         youtube_id=body.youtube_id,
         duration_seconds=body.duration_seconds,
+        avatar_audio_url=body.avatar_audio_url,
+        avatar_script=body.avatar_script,
+        presentation_url=body.presentation_url,
+        presentation_blocks=body.presentation_blocks,
         translations=(
             [t.model_dump() for t in body.translations]
             if body.translations is not None
@@ -231,6 +239,7 @@ def create_resource(
         raise HTTPException(404, "Module not found")
     r = ModuleResource(
         module_id=module_id,
+        lesson_id=body.lesson_id,
         kind=body.kind,
         title=body.title,
         url=body.url,
@@ -240,6 +249,21 @@ def create_resource(
     db.commit()
     db.refresh(r)
     return r
+
+
+@router.get("/lessons/{lesson_id}/resources", response_model=list[ResourceOut])
+def list_resources_by_lesson(
+    lesson_id: int,
+    db: Session = Depends(get_db),
+) -> list[ModuleResource]:
+    if not db.get(Lesson, lesson_id):
+        raise HTTPException(404, "Lesson not found")
+    return (
+        db.query(ModuleResource)
+        .filter(ModuleResource.lesson_id == lesson_id)
+        .order_by(ModuleResource.order_index)
+        .all()
+    )
 
 
 @router.patch("/resources/{resource_id}", response_model=ResourceOut)
@@ -260,6 +284,8 @@ def patch_resource(
         r.url = body.url
     if body.order_index is not None:
         r.order_index = body.order_index
+    if body.lesson_id is not None:
+        r.lesson_id = body.lesson_id or None
     db.commit()
     db.refresh(r)
     return r

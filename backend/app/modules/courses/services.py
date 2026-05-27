@@ -45,6 +45,10 @@ def lesson_to_dict(lesson: Lesson, locale: str) -> dict:
         "kind": lesson.kind,
         "youtube_id": lesson.youtube_id,
         "duration_seconds": lesson.duration_seconds,
+        "avatar_audio_url": lesson.avatar_audio_url,
+        "avatar_script": lesson.avatar_script,
+        "presentation_url": lesson.presentation_url,
+        "presentation_blocks": lesson.presentation_blocks,
         "title": pick_translation(translations, locale, "title"),
         "body": pick_translation(translations, locale, "body"),
     }
@@ -106,6 +110,7 @@ def module_admin_dict(module: Module) -> dict:
             {
                 "id": r.id,
                 "module_id": r.module_id,
+                "lesson_id": r.lesson_id,
                 "kind": r.kind,
                 "title": r.title,
                 "url": r.url,
@@ -124,6 +129,10 @@ def lesson_admin_dict(lesson: Lesson) -> dict:
         "kind": lesson.kind,
         "youtube_id": lesson.youtube_id,
         "duration_seconds": lesson.duration_seconds,
+        "avatar_audio_url": lesson.avatar_audio_url,
+        "avatar_script": lesson.avatar_script,
+        "presentation_url": lesson.presentation_url,
+        "presentation_blocks": lesson.presentation_blocks,
         "translations": [
             {"locale": t.locale, "title": t.title, "body": t.body}
             for t in sorted(lesson.translations, key=lambda x: x.locale)
@@ -169,6 +178,10 @@ def update_lesson(
     kind: str | None,
     youtube_id: str | None,
     duration_seconds: int | None,
+    avatar_audio_url: str | None = None,
+    avatar_script: str | None = None,
+    presentation_url: str | None = None,
+    presentation_blocks: list | None = None,
     translations: list[dict] | None,
 ) -> Lesson:
     if order_index is not None:
@@ -179,6 +192,14 @@ def update_lesson(
         lesson.youtube_id = youtube_id or None
     if duration_seconds is not None:
         lesson.duration_seconds = duration_seconds
+    if avatar_audio_url is not None:
+        lesson.avatar_audio_url = avatar_audio_url or None
+    if avatar_script is not None:
+        lesson.avatar_script = avatar_script or None
+    if presentation_url is not None:
+        lesson.presentation_url = presentation_url or None
+    if presentation_blocks is not None:
+        lesson.presentation_blocks = presentation_blocks
     if translations is not None:
         by_locale = {t.locale: t for t in lesson.translations}
         for item in translations:
@@ -218,6 +239,10 @@ def create_lesson(
     duration_seconds: int | None,
     translations: list[dict],
     kind: str = "video",
+    avatar_audio_url: str | None = None,
+    avatar_script: str | None = None,
+    presentation_url: str | None = None,
+    presentation_blocks: list | None = None,
 ) -> Lesson:
     lesson = Lesson(
         module_id=module_id,
@@ -225,6 +250,10 @@ def create_lesson(
         kind=kind,
         youtube_id=youtube_id,
         duration_seconds=duration_seconds,
+        avatar_audio_url=avatar_audio_url,
+        avatar_script=avatar_script,
+        presentation_url=presentation_url,
+        presentation_blocks=presentation_blocks,
     )
     for t in translations:
         lesson.translations.append(LessonTranslation(**t))
