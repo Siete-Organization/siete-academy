@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth-context";
 import { logout } from "@/lib/firebase";
@@ -16,6 +16,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { t, i18n } = useTranslation();
   const { isAuthenticated, me, logoutDev } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const onAuthPage = location.pathname === "/login" || location.pathname.startsWith("/apply");
 
   const handleLogout = async () => {
     logoutDev();
@@ -73,7 +75,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
             {isAuthenticated ? (
               <AccountMenu onLogout={handleLogout} />
-            ) : (
+            ) : onAuthPage ? null : (
               <Link
                 to="/login"
                 className="text-xs uppercase tracking-[0.14em] text-ink hover:text-ember transition-colors"
