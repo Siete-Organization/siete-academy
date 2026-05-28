@@ -30,7 +30,7 @@ install:
 seed:
 	@echo "▶ Reset local SQLite DB"
 	rm -f backend/siete_academy.db
-	@echo "▶ Seed rich demo data"
+	@echo "▶ Seed rich demo data (crea schema via create_all — solo local)"
 	cd backend && DATABASE_URL="sqlite:///siete_academy.db" APP_ENV=development .venv/bin/python -m app.scripts.seed
 
 demo:

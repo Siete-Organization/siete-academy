@@ -13,7 +13,7 @@ Uso:
 
 from __future__ import annotations
 
-from app.core.database import Base, SessionLocal, engine
+from app.core.database import SessionLocal
 from app.core.logging import configure_logging, get_logger
 from app.modules.assessments.models import Assessment
 from app.modules.assessments import models as _assess  # noqa: F401
@@ -497,7 +497,6 @@ def _upsert_assessment(db, module: Module, lesson: Lesson) -> Assessment:
 
 
 def run() -> None:
-    Base.metadata.create_all(engine)
     db = SessionLocal()
     try:
         course = _upsert_course(db)
