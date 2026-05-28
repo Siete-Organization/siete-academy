@@ -3,8 +3,20 @@
 Crea la primera lección con la secuencia dinámica completa:
 Video → Avatar IA → Presentación → Material → Examen.
 
-Contenido extraído de SDR_Academy_Siete_Documento_Maestro.md (bloques 1-6 de
-Semana 1 + 4 micro-pruebas MCQ Capa 1).
+Estrategia de contenido (post-auditoría 2026-05-28):
+- `MCQ_QUESTIONS` (4 preguntas Capa 1): transcripción literal del doc
+  (Parte IV §Micro-pruebas Sem 1). Verificado fiel.
+- `LESSON_BODY_ES`: híbrido. Pregunta central + Bloques 1 y 2 transcriptos
+  literal del doc. Bloques 3-6 como resumen explícito con nota apuntando
+  a la "Guía Semana 1 (PDF)" que vive como recurso descargable.
+- `AVATAR_SCRIPT_ES` y `PRESENTATION_BLOCKS_ES`: **borradores sintetizados**
+  en estilo del doc. Conceptos fieles pero la prosa exacta es invención
+  mía — el doc no tiene estos artefactos (formato avatar/slides es
+  decisión nuestra). Marcar como reemplazables cuando Lua/contenido
+  produzca las versiones finales del pipeline HeyGen.
+- `RESOURCES`: incluye `PLACEHOLDER_W1_GUIA` para el PDF descargable
+  generado a partir de los Bloques 1-6 del doc (división del Maestro en
+  guías de semana, decisión de producto 2026-05-28).
 
 Idempotente — re-ejecutable. Usa el curso `sdr-academy-v1` y el módulo
 `m1-juego-y-jugador` (los crea si no existen).
@@ -40,29 +52,107 @@ COURSE_SLUG = "sdr-academy-v1"
 MODULE_SLUG = "m1-juego-y-jugador"
 
 
-LESSON_BODY_ES = """Pregunta central de la semana: ¿Cómo toman decisiones de compra las empresas y en qué se diferencia estructuralmente de una decisión personal?
+LESSON_BODY_ES = """**Pregunta central de la semana:** ¿Cómo toman decisiones de compra las empresas y en qué se diferencia estructuralmente de una decisión personal?
+
+Al terminar la semana, vas a poder: describir las etapas de un buying cycle B2B con sus duraciones típicas, identificar los stakeholders de una decisión y qué aporta cada uno, explicar el ciclo de vida del prospecto y ubicar el outbound dentro de él, y articular por qué un deal B2B es estructuralmente distinto de una venta B2C.
+
+---
 
 ## Bloque 1 — Por qué el B2B es estructuralmente distinto al B2C
-Las 5 diferencias estructurales: 6-10 personas vs 1, ciclo de meses vs días, separación quien paga / quien usa, racionalidad aparente + emocionalidad real, ticket alto con consecuencias sostenidas.
+
+Empezamos por donde empieza todo: entender que **una empresa compra de forma fundamentalmente diferente a como compra una persona**.
+
+Un estudiante universitario que quiere comprar un notebook entra a Mercado Libre, compara 5 modelos, lee 3 reviews, consulta a un amigo técnico, decide y compra. Tiempo total: horas o días. Decisor: él mismo. Plata: suya.
+
+Una empresa de 300 empleados que quiere comprar un sistema de CRM no hace eso. Tarda 6-12 meses. Participan entre 5 y 12 personas distintas. La que paga no es la que usa. La que decide no siempre es la que aparece en la presentación. Y al final, más de un tercio de estos procesos **termina sin que se compre nada** — no porque el producto sea malo, sino porque el comité no logra consenso.
+
+**Las 5 diferencias estructurales**
+
+**1. Cantidad de personas involucradas.** En B2C compra 1 persona. En B2B compran 6-10 personas en promedio según Gartner (2020-2023, *B2B Buying Journey Report*), y en deals grandes puede llegar a 15-20.
+
+**2. Duración del ciclo.** En B2C el ciclo mide horas o días. En B2B mide semanas, meses o años. Un deal complejo de software empresarial puede tomar 12-18 meses desde el primer contacto hasta la firma.
+
+**3. Separación "quién paga / quién usa".** En B2C suelen ser la misma persona. En B2B casi siempre son distintos: usa marketing, paga finanzas, decide el Director, firma el CEO, revisa legal, certifica IT. Cada uno tiene intereses propios que no siempre se alinean.
+
+**4. Racionalidad aparente + emocionalidad real.** Una compra B2B se justifica con ROI, comparativos, demos técnicas, casos de éxito. Pero la decisión final se mueve por factores menos declarados: carrera del que lo propone, miedo al error visible, peleas internas, lealtades. Esta capa "humana" gobierna más de lo que los brochures sugieren.
+
+**5. Ticket más alto y consecuencias sostenidas.** En B2C si te equivocás con un notebook perdiste plata y tiempo. En B2B si te equivocás con un proveedor de CRM perdés 2 años + afectás el trabajo de 50 personas + explicás el error en el directorio. La aversión al error es mucho mayor — y eso define cómo se compra.
+
+**Por qué esto importa para vos como SDR**
+
+Todo lo que vas a aprender en el curso sobre cómo escribir, cómo llamar, cómo calificar, cómo manejar objeciones — está construido sobre esta realidad. Si no internalizás que del otro lado hay un **sistema de 6-10 personas con intereses distintos**, nunca vas a entender por qué tu email corto y claro (que para vos "debería funcionar") convierte al 1% en lugar del 3%.
+
+La respuesta no es escribir mejor. La respuesta empieza por entender a qué sistema le estás escribiendo.
+
+*Fuentes: Gartner (2020-2023). The B2B Buying Journey. · Dixon, Adamson, Toman & Spenner (2015). The Challenger Customer. · Rackham (1988). SPIN Selling.*
+
+---
 
 ## Bloque 2 — Cómo compra una empresa: racionalidad, política y comité
-La paradoja del comprador B2B (Kahneman, Sistema 1 / Sistema 2). Avance de carrera, status interno, costos no visibles, miedo al error público, lealtades. El 77% de las decisiones B2B requiere consenso de al menos 3 personas (Gartner).
 
-## Bloque 3 — Los buying cycles B2B: las 5 etapas
-Awareness (acá entra el outbound) → Consideración (2-6 sem) → Evaluación (2-6 m, etapa más larga, 40-60% termina en no-decisión) → Decisión (2-8 sem) → Implementación (1-6 m).
+Ahora que ya sabés **que** las empresas compran distinto, vamos al **cómo**.
 
-## Bloque 4 — Los stakeholders de una decisión B2B
-9 roles: Decisor económico, Decisor técnico (puede vetar), Usuario, Coach/champion, Influenciador, Bloqueador, Referidor, Compras, Legal. Cada uno con su motivación y su miedo. El mensaje del SDR le tiene que hablar a la motivación y tocarle el miedo del rol específico.
+**La paradoja del comprador B2B**
 
-## Bloque 5 — El ciclo de vida del prospecto
-Prospect → MQL → SQL → Opportunity → Customer → Renovación/Churn/Expansión. El SDR opera de Prospect a Opportunity. NO confundir con el lifecycle del cliente ya firmado (Onboarding → Use → Renew), que maneja Client Success.
+Si le preguntás a un Director de Tecnología por qué eligió a cierto proveedor, la respuesta va a sonar así:
 
-## Bloque 6 — LOBs y la disociación quien paga / quien usa
-En empresas grandes con líneas de negocio (LOBs) cada una puede tener presupuesto autónomo. Identificar temprano: quién usa, quién aprueba técnicamente, quién paga. Si solo contactás al usuario sin llegar al que paga, el deal se estanca.
+> "Evaluamos 5 opciones, hicimos una matriz comparativa ponderada, el ROI calculado del ganador era 2.3x en 3 años, y después de un piloto de 60 días con 2 equipos, los resultados de métricas X, Y y Z confirmaron la decisión."
 
-**Fuentes:** Gartner (2020-2023). Kahneman (2011). Miller-Heiman (1985+). Ross & Tyler (2011). Bertuzzi (2016). Dixon et al (2015). Rackham (1988)."""
+Eso es **verdad en la justificación pero falso en la secuencia.** La mayoría de las decisiones B2B funcionan al revés: alguien dentro de la empresa **ya eligió** quién quería que ganara, y el proceso formal existió para justificar esa decisión frente a los demás stakeholders.
+
+Esto no es cinismo. Es cómo funciona la cognición humana — incluso en entornos técnicos. Kahneman (2011, *Thinking, Fast and Slow*) documentó cómo el "Sistema 1" (intuitivo, rápido, emocional) toma decisiones que el "Sistema 2" (deliberativo, lento, racional) después justifica. En B2B esto se ve amplificado porque el decisor tiene que **vender esa decisión hacia adentro de su empresa**. La matriz ponderada no convence al decisor — la arma para convencer a los demás.
+
+**Qué entra en la decisión (además del producto)**
+
+Cuando tu copy le llega a alguien en una empresa, detrás de la decisión de responderte (o no) hay más cosas que la relevancia de tu oferta:
+
+- **Avance de carrera:** ¿este proyecto, si lo adopta, lo hace ver mejor frente a sus jefes? ¿O lo expone a un riesgo de fracaso visible?
+- **Status interno:** ¿lo posiciona como "el que trajo la innovación"? ¿O lo opone a otro Director que ya tenía otra postura?
+- **Costos internos no visibles:** cambiar de proveedor exige 3 meses de implementación, coordinar con IT, convencer al equipo. No aparece en el PDF del vendedor.
+- **Miedo al error público:** "si esto sale mal, me lo cargan a mí". Este miedo es enorme — y muchas veces pesa más que el upside esperado.
+- **Lealtades y relaciones:** el proveedor actual puede ser "amigo de alguien del directorio". No aparece en la RFP.
+
+Entender esto no es manipulación — es honestidad sobre cómo funciona el mundo. Un SDR que sabe que del otro lado hay una persona que carga con todo eso escribe distinto, llama distinto, califica distinto.
+
+**La dinámica del comité: nadie decide solo**
+
+Gartner documenta que el 77% de las decisiones B2B requieren consenso de al menos 3 personas (*B2B Buying Journey Report*, 2020+). "Consenso" no significa votación formal — significa **que nadie bloquee**. Es más fácil lograr "sí" de una persona que "no bloqueo" de 5.
+
+Esto tiene una implicación dura para el outbound: tu email no le tiene que "gustar" a 1 persona — le tiene que resultar **presentable** dentro de la empresa. Un email que a tu contacto directo le gusta mucho pero que "no lo puede mostrar al director sin parecer ingenuo" no llega a ningún lado.
+
+*Fuentes: Kahneman (2011). Thinking, Fast and Slow. · Gartner (2020-2023). B2B Buying Journey Report. · Dixon & Adamson (2011). The Challenger Sale.*
+
+---
+
+## Bloques 3 a 6 — Resumen para repaso
+
+> Estos bloques están desarrollados en detalle en la **Guía Semana 1 (PDF descargable)** del material de apoyo. Acá queda el índice como repaso de los conceptos. El alumno debe consumir la guía completa antes de las micro-pruebas.
+
+**Bloque 3 — Los buying cycles B2B: las 5 etapas**
+
+Awareness (acá entra el outbound — el comprador no busca, el SDR le mete la pregunta en la cabeza) → Consideración (2-6 sem, conversaciones exploratorias) → Evaluación (2-6 meses, la etapa más larga, 40-60% termina en no-decisión) → Decisión (2-8 sem, negociación) → Implementación (1-6 meses).
+
+**Bloque 4 — Los 9 stakeholders del comité de compra**
+
+Decisor económico, Decisor técnico (puede vetar), Usuario, Coach/champion, Influenciador, Bloqueador, Referidor, Compras, Legal. Cada rol tiene su motivación y su miedo. El mensaje del SDR debe hablarle a la motivación y tocarle el miedo del rol específico — no se le habla igual a Compras que al Usuario.
+
+**Bloque 5 — El ciclo de vida del prospecto**
+
+Prospect → MQL → SQL → Opportunity → Customer → Renovación/Churn/Expansión. El SDR opera de Prospect a Opportunity. **NO confundir** con el lifecycle del cliente ya firmado (Onboarding → Use → Engage → Adopt → Optimize → Renew), que maneja Client Success post-firma. Confundirlos genera reportes inservibles y handoffs rotos.
+
+**Bloque 6 — LOBs y la disociación quien paga / quien usa**
+
+En empresas grandes con Lines of Business (LOBs) cada unidad puede tener presupuesto autónomo. Identificar temprano: quién usa, quién aprueba técnicamente, quién paga. Si solo contactás al usuario sin llegar al que paga, el deal se estanca. Si solo contactás al pagador sin champion interno, nadie empuja desde adentro.
+
+---
+
+**Fuentes principales del módulo:** Gartner (2020-2023). Kahneman (2011). Miller-Heiman (1985+). Ross & Tyler (2011). Bertuzzi (2016). Dixon et al (2015). Rackham (1988)."""
 
 
+# NOTA: AVATAR_SCRIPT_ES es un BORRADOR sintetizado en estilo del doc.
+# Conceptos fieles a Bloques 1-6 de Semana 1 pero la prosa exacta es del seed,
+# no del Documento Maestro (que no tiene el artefacto "script de avatar").
+# Reemplazar cuando el pipeline HeyGen + Lua provea la versión final.
 AVATAR_SCRIPT_ES = """Hola. Soy tu coach IA para esta primera semana del programa.
 
 Antes de empezar, una pregunta para que la tengas en la cabeza todo este módulo: cuando una empresa compra algo, ¿quién decide realmente?
@@ -80,6 +170,10 @@ Una cosa más: cada concepto que vas a ver acá tiene fuente trazable. Si algo t
 Arrancamos."""
 
 
+# NOTA: PRESENTATION_BLOCKS_ES es un BORRADOR sintetizado. Resume cada bloque
+# del doc en bullets accionables, conceptos fieles, prosa del seed. El doc
+# no tiene slides JSON — formato decidido por nosotros. Reemplazar cuando
+# se produzca la presentación final en Gamma o equivalente.
 PRESENTATION_BLOCKS_ES = [
     {
         "title": "Las 5 diferencias estructurales B2B vs B2C",
@@ -327,21 +421,27 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 1 — Anatomía de la venta B2B (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W1_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — Anatomía de la venta B2B (Semana 1)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W1_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Gartner — The B2B Buying Journey Report",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W1_READING_GARTNER",
-        "order_index": 1,
+        "order_index": 2,
     },
     {
         "kind": "link",
         "title": "Anexo — Landscape de industrias B2B LATAM",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W1_LANDSCAPE_LATAM",
-        "order_index": 2,
+        "order_index": 3,
     },
 ]
 
