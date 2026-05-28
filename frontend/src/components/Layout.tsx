@@ -50,6 +50,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <NavLink to="/student/calendar" className={navCls}>
                   {t("nav.calendar")}
                 </NavLink>
+                <NavLink to="/student/post-academy" className={navCls}>
+                  {t("nav.postAcademy")}
+                </NavLink>
               </>
             )}
             {me?.role === "teacher" && (
