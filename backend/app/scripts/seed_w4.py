@@ -395,13 +395,13 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Dixon et al — The Challenger Customer (libro de referencia)",
-        "url": "https://www.challengerinc.com/the-challenger-customer-book",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W4_READING_CHALLENGER_CUSTOMER",
         "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Kahneman — Thinking, Fast and Slow (resumen práctico)",
-        "url": "https://fs.blog/daniel-kahneman-the-two-systems/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W4_READING_KAHNEMAN_TWO_SYSTEMS",
         "order_index": 2,
     },
     {
@@ -413,7 +413,7 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Apollo + ZoomInfo — guía de intent signals e intent data",
-        "url": "https://www.apollo.io/blog/intent-data-guide",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W4_READING_INTENT_DATA",
         "order_index": 4,
     },
 ]

@@ -449,19 +449,19 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Bridge Group — SDR Metrics Report 2023 (benchmarks por métrica)",
-        "url": "https://bridgegroupinc.com/sdr-metrics/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_READING_SDR_METRICS",
         "order_index": 5,
     },
     {
         "kind": "link",
         "title": "Apple — Mail Privacy Protection documentation (por qué no se mide open rate)",
-        "url": "https://support.apple.com/guide/iphone/protect-mail-activity-iphf084865c7/ios",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_READING_APPLE_MPP",
         "order_index": 6,
     },
     {
         "kind": "link",
         "title": "Ries — Build-Measure-Learn (resumen The Lean Startup)",
-        "url": "https://theleanstartup.com/principles",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_READING_LEAN_PRINCIPLES",
         "order_index": 7,
     },
 ]

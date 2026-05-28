@@ -334,13 +334,13 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Gartner — The B2B Buying Journey Report",
-        "url": "https://www.gartner.com/en/sales/insights/b2b-buying-journey",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W1_READING_GARTNER",
         "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Anexo — Landscape de industrias B2B LATAM",
-        "url": "/docs/landscape-latam",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W1_LANDSCAPE_LATAM",
         "order_index": 2,
     },
 ]

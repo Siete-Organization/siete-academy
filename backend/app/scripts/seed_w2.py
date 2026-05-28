@@ -359,13 +359,13 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Bridge Group — SDR Metrics & Compensation Report 2023",
-        "url": "https://bridgegroupinc.com/sdr-metrics-report",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W2_READING_SDR_METRICS",
         "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Instantly — Cold Email Benchmark Report 2026",
-        "url": "https://instantly.ai/blog/cold-email-benchmarks",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W2_READING_COLD_EMAIL_BENCH",
         "order_index": 2,
     },
     {
