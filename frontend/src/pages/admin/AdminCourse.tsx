@@ -18,6 +18,7 @@ interface LessonTranslation {
   locale: Locale;
   title: string;
   body: string | null;
+  video_url: string | null;
 }
 
 interface AdminLesson {
@@ -27,6 +28,10 @@ interface AdminLesson {
   kind: "video" | "reading";
   youtube_id: string | null;
   duration_seconds: number | null;
+  avatar_audio_url: string | null;
+  avatar_script: string | null;
+  presentation_url: string | null;
+  presentation_blocks: unknown[] | null;
   translations: LessonTranslation[];
 }
 
@@ -74,7 +79,7 @@ interface Course {
   description: string | null;
 }
 
-const DEFAULT_COURSE_SLUG = "sdr-fundamentals";
+const DEFAULT_COURSE_SLUG = "sdr-academy-v1";
 
 export function AdminCourse() {
   const { t } = useTranslation();
@@ -797,10 +802,13 @@ function LessonEditor({
   const { t } = useTranslation();
   const initial = useMemo(() => {
     const by = Object.fromEntries(
-      lesson.translations.map((t) => [t.locale, { title: t.title, body: t.body || "" }]),
-    ) as Record<Locale, { title: string; body: string }>;
+      lesson.translations.map((t) => [
+        t.locale,
+        { title: t.title, body: t.body || "", video_url: t.video_url || "" },
+      ]),
+    ) as Record<Locale, { title: string; body: string; video_url: string }>;
     LOCALES.forEach((l) => {
-      if (!by[l]) by[l] = { title: "", body: "" };
+      if (!by[l]) by[l] = { title: "", body: "", video_url: "" };
     });
     return by;
   }, [lesson]);
@@ -809,6 +817,9 @@ function LessonEditor({
   const [youtubeId, setYoutubeId] = useState(lesson.youtube_id || "");
   const [duration, setDuration] = useState(lesson.duration_seconds || 0);
   const [orderIndex, setOrderIndex] = useState(lesson.order_index);
+  const [avatarAudioUrl, setAvatarAudioUrl] = useState(lesson.avatar_audio_url || "");
+  const [avatarScript, setAvatarScript] = useState(lesson.avatar_script || "");
+  const [presentationUrl, setPresentationUrl] = useState(lesson.presentation_url || "");
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
@@ -819,10 +830,14 @@ function LessonEditor({
         kind,
         youtube_id: kind === "video" ? youtubeId || null : null,
         duration_seconds: kind === "video" ? duration || null : null,
+        avatar_audio_url: avatarAudioUrl || null,
+        avatar_script: avatarScript || null,
+        presentation_url: presentationUrl || null,
         translations: LOCALES.map((l) => ({
           locale: l,
           title: trans[l].title,
           body: trans[l].body || null,
+          video_url: trans[l].video_url || null,
         })),
       });
       await onSaved();
@@ -887,6 +902,40 @@ function LessonEditor({
         </div>
       )}
 
+      {kind === "video" && (
+        <div className="border border-bone rounded-md p-4 space-y-3 bg-paper">
+          <p className="num-label">{t("adminCourse.avatarSectionTitle")}</p>
+          <label className="block">
+            <span className="num-label mb-1 block">{t("adminCourse.avatarAudioUrl")}</span>
+            <Input
+              value={avatarAudioUrl}
+              onChange={(e) => setAvatarAudioUrl(e.target.value)}
+              placeholder="https://…/avatar.mp3"
+            />
+          </label>
+          <label className="block">
+            <span className="num-label mb-1 block">{t("adminCourse.avatarScript")}</span>
+            <Textarea
+              value={avatarScript}
+              onChange={(e) => setAvatarScript(e.target.value)}
+              rows={4}
+              placeholder={t("adminCourse.avatarScriptPlaceholder")}
+            />
+          </label>
+          <label className="block">
+            <span className="num-label mb-1 block">{t("adminCourse.presentationUrl")}</span>
+            <Input
+              value={presentationUrl}
+              onChange={(e) => setPresentationUrl(e.target.value)}
+              placeholder="https://gamma.app/…  ·  https://drive.google.com/…"
+            />
+          </label>
+          <p className="text-[11px] text-ink-muted">
+            {t("adminCourse.avatarHint")}
+          </p>
+        </div>
+      )}
+
       {LOCALES.map((l) => (
         <div key={l} className="space-y-2">
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
@@ -911,6 +960,21 @@ function LessonEditor({
             }
             rows={kind === "reading" ? 10 : 4}
           />
+          {kind === "video" && (
+            <label className="block">
+              <span className="num-label mb-1 block">{t("adminCourse.videoUrl")}</span>
+              <Input
+                value={trans[l].video_url}
+                onChange={(e) =>
+                  setTrans({ ...trans, [l]: { ...trans[l], video_url: e.target.value } })
+                }
+                placeholder="https://…/heygen-{locale}.mp4"
+              />
+              <p className="text-[11px] text-ink-muted mt-1">
+                {t("adminCourse.videoUrlHint")}
+              </p>
+            </label>
+          )}
         </div>
       ))}
 

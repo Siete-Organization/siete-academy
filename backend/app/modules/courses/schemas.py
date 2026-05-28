@@ -48,6 +48,7 @@ class LessonTranslationIn(BaseModel):
     locale: Locale
     title: str
     body: str | None = None
+    video_url: str | None = None
 
 
 class LessonCreate(BaseModel):
@@ -75,6 +76,7 @@ class LessonOut(BaseModel):
     presentation_blocks: list[dict[str, Any]] | None = None
     title: str
     body: str | None
+    video_url: str | None = None
 
 
 class LessonUpdate(BaseModel):

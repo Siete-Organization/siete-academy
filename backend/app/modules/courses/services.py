@@ -37,7 +37,14 @@ def module_to_dict(module: Module, locale: str) -> dict:
 
 
 def lesson_to_dict(lesson: Lesson, locale: str) -> dict:
-    translations = {t.locale: {"title": t.title, "body": t.body or ""} for t in lesson.translations}
+    translations = {
+        t.locale: {
+            "title": t.title,
+            "body": t.body or "",
+            "video_url": t.video_url or "",
+        }
+        for t in lesson.translations
+    }
     return {
         "id": lesson.id,
         "module_id": lesson.module_id,
@@ -51,6 +58,7 @@ def lesson_to_dict(lesson: Lesson, locale: str) -> dict:
         "presentation_blocks": lesson.presentation_blocks,
         "title": pick_translation(translations, locale, "title"),
         "body": pick_translation(translations, locale, "body"),
+        "video_url": pick_translation(translations, locale, "video_url") or None,
     }
 
 
@@ -134,7 +142,7 @@ def lesson_admin_dict(lesson: Lesson) -> dict:
         "presentation_url": lesson.presentation_url,
         "presentation_blocks": lesson.presentation_blocks,
         "translations": [
-            {"locale": t.locale, "title": t.title, "body": t.body}
+            {"locale": t.locale, "title": t.title, "body": t.body, "video_url": t.video_url}
             for t in sorted(lesson.translations, key=lambda x: x.locale)
         ],
     }
@@ -207,12 +215,14 @@ def update_lesson(
             if existing:
                 existing.title = item["title"]
                 existing.body = item.get("body")
+                existing.video_url = item.get("video_url")
             else:
                 lesson.translations.append(
                     LessonTranslation(
                         locale=item["locale"],
                         title=item["title"],
                         body=item.get("body"),
+                        video_url=item.get("video_url"),
                     )
                 )
     db.commit()

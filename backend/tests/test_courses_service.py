@@ -94,3 +94,33 @@ class TestCourseCreationAndSerialization:
         assert module_to_dict(m, "en")["summary"] == "Ideal customers"
         assert module_to_dict(m, "pt")["summary"] == "Clientes ideales"  # fallback
         assert lesson_to_dict(le, "es")["youtube_id"] == "abc123"
+
+    def test_lesson_video_url_per_locale(self, db):
+        c = create_course(
+            db,
+            slug="fundamentos",
+            translations=[{"locale": "es", "title": "Fundamentos"}],
+        )
+        m = create_module(
+            db,
+            course_id=c.id,
+            slug="m1",
+            order_index=0,
+            translations=[{"locale": "es", "title": "M1"}],
+        )
+        le = create_lesson(
+            db,
+            module_id=m.id,
+            order_index=0,
+            youtube_id=None,
+            duration_seconds=None,
+            translations=[
+                {"locale": "es", "title": "L1", "video_url": "https://heygen.com/es.mp4"},
+                {"locale": "en", "title": "L1", "video_url": "https://heygen.com/en.mp4"},
+                {"locale": "pt", "title": "L1"},
+            ],
+        )
+        assert lesson_to_dict(le, "es")["video_url"] == "https://heygen.com/es.mp4"
+        assert lesson_to_dict(le, "en")["video_url"] == "https://heygen.com/en.mp4"
+        # pt sin video_url → None (no fallback: un MP4 en otro idioma sería confuso)
+        assert lesson_to_dict(le, "pt")["video_url"] is None

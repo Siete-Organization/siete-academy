@@ -102,6 +102,8 @@ class LessonTranslation(Base):
     locale: Mapped[str] = mapped_column(String(5))
     title: Mapped[str] = mapped_column(String(200))
     body: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # MP4 generado por HeyGen (avatar + slides + audio embebidos), distinto por idioma.
+    video_url: Mapped[str | None] = mapped_column(String(600), nullable=True)
 
     lesson: Mapped[Lesson] = relationship(back_populates="translations")
 
