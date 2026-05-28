@@ -419,25 +419,25 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Outbound Kitchen — State of Outbound 2025 (232 empresas)",
-        "url": "https://outboundkitchen.com/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_OUTBOUND_KITCHEN",
         "order_index": 4,
     },
     {
         "kind": "link",
         "title": "Google Postmaster Tools (documentación oficial)",
-        "url": "https://postmaster.google.com/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_POSTMASTER",
         "order_index": 5,
     },
     {
         "kind": "link",
         "title": "Instantly — Cold Email Benchmark Report 2026 (cadencias y touches)",
-        "url": "https://instantly.ai/blog/cold-email-benchmarks",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_COLD_EMAIL_BENCH",
         "order_index": 6,
     },
     {
         "kind": "link",
         "title": "Salesloft — State of Sales Engagement (multicanal lift)",
-        "url": "https://salesloft.com/resources/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_SALESLOFT_RESOURCES",
         "order_index": 7,
     },
 ]

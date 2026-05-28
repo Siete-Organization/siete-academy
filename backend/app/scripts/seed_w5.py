@@ -374,19 +374,19 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Cialdini — Los 7 principios de persuasión (resumen)",
-        "url": "https://www.influenceatwork.com/principles-of-persuasion/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W5_READING_CIALDINI",
         "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Instantly — Cold Email Benchmark Report 2026",
-        "url": "https://instantly.ai/blog/cold-email-benchmarks",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W5_READING_COLD_EMAIL_BENCH",
         "order_index": 2,
     },
     {
         "kind": "link",
         "title": "Bad-Ass B2B Growth (Josh Braun) — newsletter de referencia",
-        "url": "https://joshbraun.substack.com/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W5_READING_JOSH_BRAUN",
         "order_index": 3,
     },
     {

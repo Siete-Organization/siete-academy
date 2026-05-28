@@ -335,25 +335,25 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Osterwalder — Business Model Canvas (PDF)",
-        "url": "https://www.strategyzer.com/canvas/business-model-canvas",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_READING_BIZ_MODEL_CANVAS",
         "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Porter — The Five Competitive Forces That Shape Strategy (HBR)",
-        "url": "https://hbr.org/2008/01/the-five-competitive-forces-that-shape-strategy",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_READING_PORTER_5_FORCES",
         "order_index": 2,
     },
     {
         "kind": "link",
         "title": "Skok — SaaS Metrics 2.0 (LTV, CAC, payback)",
-        "url": "https://www.forentrepreneurs.com/saas-metrics-2/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_READING_SAAS_METRICS",
         "order_index": 3,
     },
     {
         "kind": "link",
         "title": "Anexo — Landscape de industrias LATAM (10 industrias)",
-        "url": "/docs/landscape-latam",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_LANDSCAPE_LATAM",
         "order_index": 4,
     },
 ]

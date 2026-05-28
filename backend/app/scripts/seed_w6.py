@@ -427,19 +427,19 @@ RESOURCES = [
     {
         "kind": "link",
         "title": "Voss — Never Split the Difference (resumen mirroring/labeling/tactical empathy)",
-        "url": "https://www.blackswanltd.com/the-edge/topics/negotiation-tactics",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_READING_NEGOTIATION_TACTICS",
         "order_index": 4,
     },
     {
         "kind": "link",
         "title": "Cognism — State of Cold Calling 2025/26 (benchmarks)",
-        "url": "https://www.cognism.com/cold-calling-statistics",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_READING_COLD_CALL_STATS",
         "order_index": 5,
     },
     {
         "kind": "link",
         "title": "Josh Braun — Permission-based openers y pattern interrupts",
-        "url": "https://joshbraun.substack.com/",
+        "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_READING_JOSH_BRAUN",
         "order_index": 6,
     },
 ]
