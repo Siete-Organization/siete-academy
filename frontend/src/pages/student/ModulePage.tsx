@@ -25,6 +25,7 @@ interface Lesson {
   order_index: number;
   kind: "video" | "reading";
   youtube_id: string | null;
+  video_url: string | null;
   duration_seconds: number | null;
   avatar_audio_url: string | null;
   avatar_script: string | null;
@@ -147,7 +148,7 @@ export function ModulePage() {
       return { video: false, avatar: false, presentation: false, material: false, exam: false };
     }
     return {
-      video: Boolean(selectedLesson.youtube_id),
+      video: Boolean(selectedLesson.video_url || selectedLesson.youtube_id),
       avatar: Boolean(selectedLesson.avatar_audio_url || selectedLesson.avatar_script),
       presentation: Boolean(
         selectedLesson.presentation_url ||
@@ -365,19 +366,29 @@ function VideoStep({
   onComplete: () => void;
   t: (k: string) => string;
 }) {
-  if (!lesson.youtube_id) {
+  if (!lesson.video_url && !lesson.youtube_id) {
     return <p className="text-ink-muted">{t("student.stepNoContent")}</p>;
   }
   return (
     <div className="space-y-4">
-      <div className="aspect-video border border-bone shadow-frame overflow-hidden rounded-md">
-        <iframe
-          className="w-full h-full"
-          src={`https://www.youtube-nocookie.com/embed/${lesson.youtube_id}?rel=0&modestbranding=1`}
-          title={lesson.title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
+      <div className="aspect-video border border-bone shadow-frame overflow-hidden rounded-md bg-black">
+        {lesson.video_url ? (
+          <video
+            className="w-full h-full"
+            src={lesson.video_url}
+            controls
+            controlsList="nodownload"
+            playsInline
+          />
+        ) : (
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${lesson.youtube_id}?rel=0&modestbranding=1`}
+            title={lesson.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        )}
       </div>
       <Button variant="outline" onClick={onComplete}>
         {t("student.stepNext")} →
