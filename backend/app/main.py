@@ -8,6 +8,7 @@ from app.core.limiter import limiter
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import RequestIDMiddleware
 from app.modules.ai_review.router import router as ai_review_router
+from app.modules.applications.admission_router import router as admission_router
 from app.modules.applications.router import router as applications_router
 from app.modules.assessments.router import router as assessments_router
 from app.modules.auth.router import router as auth_router
@@ -68,6 +69,7 @@ def health() -> dict:
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(applications_router, prefix="/applications", tags=["applications"])
+app.include_router(admission_router, prefix="/admission", tags=["admission"])
 app.include_router(cohorts_router, prefix="/cohorts", tags=["cohorts"])
 app.include_router(courses_router, prefix="/courses", tags=["courses"])
 app.include_router(enrollment_router, prefix="/enrollment", tags=["enrollment"])

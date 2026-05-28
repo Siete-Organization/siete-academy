@@ -23,6 +23,14 @@ class Application(Base):
     # Verificación min 100 palabras se hace en schema
     video_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
+    # Etapa 1 Prueba de admisión — MCQ + auto-descarte
+    started_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    mcq_answers: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    mcq_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    mcq_excel_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # passed_stage_1 | rejected_text | rejected_mcq_total | rejected_mcq_excel | rejected_speed
+    auto_decision: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
+
     # Scoring Claude (Fase 1). En Fase 0 queda null.
     ai_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
     ai_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
