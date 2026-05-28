@@ -16,6 +16,7 @@ from app.modules.courses import models as _courses  # noqa: F401
 from app.modules.enrollment import models as _enroll  # noqa: F401
 from app.modules.live_sessions import models as _live  # noqa: F401
 from app.modules.placement import models as _place  # noqa: F401
+from app.modules.practica import models as _practica  # noqa: F401
 from app.modules.users import models as _users  # noqa: F401
 
 config = context.config

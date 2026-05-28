@@ -18,6 +18,7 @@ from app.modules.courses.router import router as courses_router
 from app.modules.enrollment.router import router as enrollment_router
 from app.modules.live_sessions.router import router as live_sessions_router
 from app.modules.placement.router import router as placement_router
+from app.modules.practica.router import router as practica_router
 from app.modules.teacher.router import router as teacher_router
 from app.modules.users.router import router as users_router
 
@@ -76,6 +77,7 @@ app.include_router(enrollment_router, prefix="/enrollment", tags=["enrollment"])
 app.include_router(assessments_router, prefix="/assessments", tags=["assessments"])
 app.include_router(live_sessions_router, prefix="/live-sessions", tags=["live-sessions"])
 app.include_router(placement_router, prefix="/placement", tags=["placement"])
+app.include_router(practica_router, prefix="/practica", tags=["practica"])
 app.include_router(certificates_router, prefix="/certificates", tags=["certificates"])
 app.include_router(ai_review_router, prefix="/ai-review", tags=["ai-review"])
 app.include_router(teacher_router, prefix="/teacher", tags=["teacher"])
