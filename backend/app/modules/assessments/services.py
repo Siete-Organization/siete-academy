@@ -19,7 +19,7 @@ def auto_grade_mcq(assessment: Assessment, payload: dict[str, Any]) -> float | N
     En ambos casos la submission del alumno viene en ``payload["answers"]``:
     single → ``{qid: "c"}``, multi → ``{qid: ["b","c"]}``, match → ``{qid: {"1":"A","2":"B"}}``.
     """
-    if assessment.type != "mcq":
+    if assessment.type not in ("mcq", "capa_2"):
         return None
 
     questions = assessment.config.get("questions")
