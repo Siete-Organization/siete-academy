@@ -8,7 +8,8 @@ export function AdminHome() {
     { n: "02", to: "/admin/course", label: t("admin.course"), hint: t("admin.courseHint") },
     { n: "03", to: "/admin/cohorts", label: t("admin.cohorts"), hint: t("admin.cohortsHint") },
     { n: "04", to: "/admin/placement", label: t("admin.placement"), hint: t("admin.placementHint") },
-    { n: "05", to: "/admin/analytics", label: t("admin.analytics"), hint: t("admin.analyticsHint") },
+    { n: "05", to: "/admin/practica", label: t("admin.practica"), hint: t("admin.practicaHint") },
+    { n: "06", to: "/admin/analytics", label: t("admin.analytics"), hint: t("admin.analyticsHint") },
   ];
   return (
     <div className="container-editorial py-16 md:py-24">

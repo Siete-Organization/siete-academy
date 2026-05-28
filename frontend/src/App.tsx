@@ -9,6 +9,7 @@ import { ModulePage } from "@/pages/student/ModulePage";
 import { StudentFeedback } from "@/pages/student/StudentFeedback";
 import { StudentCertificate } from "@/pages/student/StudentCertificate";
 import { StudentCalendar } from "@/pages/student/StudentCalendar";
+import { StudentPostAcademy } from "@/pages/student/StudentPostAcademy";
 import { AccountPage } from "@/pages/account/AccountPage";
 import { TeacherHome } from "@/pages/teacher/TeacherHome";
 import { TeacherReviews } from "@/pages/teacher/TeacherReviews";
@@ -16,6 +17,7 @@ import { AdminApplications } from "@/pages/admin/AdminApplications";
 import { AdminCohorts } from "@/pages/admin/AdminCohorts";
 import { AdminCourse } from "@/pages/admin/AdminCourse";
 import { AdminPlacement } from "@/pages/admin/AdminPlacement";
+import { AdminPractica } from "@/pages/admin/AdminPractica";
 import { AdminAnalytics } from "@/pages/admin/AdminAnalytics";
 import { AdminHome } from "@/pages/admin/AdminHome";
 import { RecruiterHome } from "@/pages/recruiter/RecruiterHome";
@@ -66,6 +68,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["student"]}>
                 <StudentCertificate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/post-academy"
+            element={
+              <ProtectedRoute roles={["student"]}>
+                <StudentPostAcademy />
               </ProtectedRoute>
             }
           />
@@ -132,6 +142,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["admin"]}>
                 <AdminPlacement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/practica"
+            element={
+              <ProtectedRoute roles={["admin"]}>
+                <AdminPractica />
               </ProtectedRoute>
             }
           />
