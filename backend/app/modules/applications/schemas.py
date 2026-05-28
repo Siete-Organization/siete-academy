@@ -18,6 +18,9 @@ class ApplicationCreate(BaseModel):
     locale: Literal["es", "en", "pt"] = "es"
     answers: list[ApplicationAnswer]
     video_url: str | None = None  # URL de YouTube/Loom/Drive
+    # Etapa 1 admisión (opcional para compat con legacy /apply sin MCQ)
+    started_at: datetime | None = None
+    mcq_answers: dict[str, str] | None = None
 
 
 class ApplicationListOut(BaseModel):
@@ -27,6 +30,9 @@ class ApplicationListOut(BaseModel):
     applicant_name: str
     applicant_email: EmailStr
     locale: str
+    mcq_score: int | None = None
+    mcq_excel_score: int | None = None
+    auto_decision: str | None = None
     ai_score: int | None
     status: str
     created_at: datetime
@@ -46,6 +52,11 @@ class ApplicationOut(BaseModel):
     locale: str
     answers: dict
     video_url: str | None
+    started_at: datetime | None = None
+    mcq_answers: dict | None = None
+    mcq_score: int | None = None
+    mcq_excel_score: int | None = None
+    auto_decision: str | None = None
     ai_score: int | None
     ai_notes: str | None
     status: str
