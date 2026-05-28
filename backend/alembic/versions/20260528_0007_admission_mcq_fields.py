@@ -22,7 +22,7 @@ import sqlalchemy as sa
 
 
 revision: str = "0007_admission_mcq"
-down_revision: Union[str, None] = "0006_lesson_translation_video_url"
+down_revision: Union[str, None] = "0006_lesson_video_url"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
