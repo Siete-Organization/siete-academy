@@ -4,9 +4,14 @@ Creates enough data so that an admin/teacher/student/recruiter can log in
 (via dev bypass) and exercise every screen of the product. Idempotent — safe
 to re-run. Reads-first so it only inserts missing rows.
 
+Bootstrap script de uso EXCLUSIVO local (SQLite): crea el schema vía
+`create_all()` porque algunas migraciones alembic no funcionan sobre SQLite
+sin batch mode. En producción el schema lo crea/migra `alembic upgrade head`
+desde `deploy/entrypoint-api.sh` — NO corras este seed en prod.
+
 Usage:
     cd backend && .venv/bin/python -m app.scripts.seed
-    # or
+    # o
     make seed
 """
 
@@ -48,6 +53,7 @@ log = get_logger("seed")
 
 
 def _ensure_schema() -> None:
+    """Solo para uso local con SQLite. En prod el schema lo gestiona alembic."""
     Base.metadata.create_all(engine)
 
 
