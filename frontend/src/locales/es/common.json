@@ -44,6 +44,7 @@
     "teacherFeedback": "Feedback profesor",
     "calendar": "Calendario",
     "postAcademy": "Post-Academy",
+    "library": "Biblioteca",
     "account": "Mi cuenta",
     "admin": "Admin",
     "teacher": "Profesor",
@@ -314,6 +315,25 @@
     "weeksShort": "semanas",
     "criteria": "Criterios evaluados",
     "decisionRule": "Regla de decisión"
+  },
+  "library": {
+    "eyebrow": "Biblioteca",
+    "title": "Industrias B2B en LATAM",
+    "intro": "Anexo de consulta transversal — material de apoyo, no evaluado. Cuando prospectes una industria que no conocés, arrancá por su tarjeta antes de ir al sitio web de la empresa: te da el 20% de contexto que explica el 80% de cómo opera.",
+    "industries": "Industrias",
+    "openCard": "Ver tarjeta completa",
+    "back": "Volver al índice",
+    "fields": {
+      "whatIs": "Qué es",
+      "howMakesMoney": "Cómo se gana plata",
+      "whatSells": "Qué vende",
+      "sellsTo": "A quién le vende",
+      "buysToOperate": "Qué compra para operar",
+      "dynamics": "Dinámicas clave",
+      "examples": "Ejemplos LATAM",
+      "deepenIn": "Dónde profundizar"
+    },
+    "notFound": "Esa industria no está en la biblioteca."
   },
   "adminPractica": {
     "title": "Post-Academy",

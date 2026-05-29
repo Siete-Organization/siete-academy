@@ -16,6 +16,7 @@ from app.modules.certificates.router import router as certificates_router
 from app.modules.cohorts.router import router as cohorts_router
 from app.modules.courses.router import router as courses_router
 from app.modules.enrollment.router import router as enrollment_router
+from app.modules.library.router import router as library_router
 from app.modules.live_sessions.router import router as live_sessions_router
 from app.modules.placement.router import router as placement_router
 from app.modules.practica.router import router as practica_router
@@ -75,6 +76,7 @@ app.include_router(cohorts_router, prefix="/cohorts", tags=["cohorts"])
 app.include_router(courses_router, prefix="/courses", tags=["courses"])
 app.include_router(enrollment_router, prefix="/enrollment", tags=["enrollment"])
 app.include_router(assessments_router, prefix="/assessments", tags=["assessments"])
+app.include_router(library_router, prefix="/library", tags=["library"])
 app.include_router(live_sessions_router, prefix="/live-sessions", tags=["live-sessions"])
 app.include_router(placement_router, prefix="/placement", tags=["placement"])
 app.include_router(practica_router, prefix="/practica", tags=["practica"])

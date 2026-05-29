@@ -44,6 +44,7 @@
     "teacherFeedback": "Teacher feedback",
     "calendar": "Calendar",
     "postAcademy": "Post-Academy",
+    "library": "Library",
     "account": "My account",
     "admin": "Admin",
     "teacher": "Teacher",
@@ -314,6 +315,25 @@
     "weeksShort": "weeks",
     "criteria": "Evaluated criteria",
     "decisionRule": "Decision rule"
+  },
+  "library": {
+    "eyebrow": "Library",
+    "title": "B2B industries in LATAM",
+    "intro": "Cross-cutting reference annex — support material, not graded. When prospecting an industry you don't know, start with its card before hitting the company website: it gives you the 20% of context that explains 80% of how it operates.",
+    "industries": "Industries",
+    "openCard": "Open full card",
+    "back": "Back to index",
+    "fields": {
+      "whatIs": "What it is",
+      "howMakesMoney": "How it makes money",
+      "whatSells": "What it sells",
+      "sellsTo": "Who it sells to",
+      "buysToOperate": "What it buys to operate",
+      "dynamics": "Key dynamics",
+      "examples": "LATAM examples",
+      "deepenIn": "Where to dig deeper"
+    },
+    "notFound": "That industry is not in the library."
   },
   "adminPractica": {
     "title": "Post-Academy",

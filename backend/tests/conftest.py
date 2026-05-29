@@ -46,6 +46,7 @@ from app.modules.audit import models as _audit  # noqa: F401, E402
 from app.modules.cohorts import models as _cohorts  # noqa: F401, E402
 from app.modules.courses import models as _courses  # noqa: F401, E402
 from app.modules.enrollment import models as _enroll  # noqa: F401, E402
+from app.modules.library import models as _library  # noqa: F401, E402
 from app.modules.live_sessions import models as _live  # noqa: F401, E402
 from app.modules.users import models as _users  # noqa: F401, E402
 
