@@ -225,3 +225,58 @@ class TestSubmit:
     def test_submit_raises_on_unknown_assessment(self, db, test_user):
         with pytest.raises(ValueError, match="Assessment not found"):
             submit(db, assessment_id=99999, user_id=test_user.id, payload={}, file_url=None)
+
+    def test_capa2_submission_stays_pending_review_even_with_mcq(
+        self, db, test_user
+    ):
+        """Capa_2 mezcla MCQ (auto-grade) + video (manual). El auto-grado del MCQ
+        no debe sacar la entrega de la cola del teacher — el video tiene que ser
+        revisado para que la fórmula 70/30 funcione.
+        """
+        module_id = _seed_module(db)
+        a = Assessment(
+            module_id=module_id,
+            type="capa_2",
+            title="Prueba M1",
+            config={
+                "questions": [{"id": "q1", "type": "single", "correct": ["a"]}],
+            },
+            passing_score=65.0,
+        )
+        db.add(a)
+        db.commit()
+        db.refresh(a)
+        sub = submit(
+            db,
+            assessment_id=a.id,
+            user_id=test_user.id,
+            payload={"answers": {"q1": "a"}, "video_url": "https://loom.com/x"},
+            file_url=None,
+        )
+        assert sub.status == "pending_review"
+        # MCQ ya tiene puntaje calculado para que el teacher lo use
+        assert sub.auto_score == 100.0
+
+    def test_final_test_submission_stays_pending_review(self, db, test_user):
+        """Igual que capa_2, la Prueba Final requiere review humano del video."""
+        module_id = _seed_module(db)
+        a = Assessment(
+            module_id=module_id,
+            type="final_test",
+            title="Prueba Final",
+            config={
+                "questions": [{"id": "q1", "type": "single", "correct": ["b"]}],
+            },
+            passing_score=60.0,
+        )
+        db.add(a)
+        db.commit()
+        db.refresh(a)
+        sub = submit(
+            db,
+            assessment_id=a.id,
+            user_id=test_user.id,
+            payload={"answers": {"q1": "b"}},
+            file_url=None,
+        )
+        assert sub.status == "pending_review"

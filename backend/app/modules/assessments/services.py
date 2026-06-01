@@ -19,7 +19,7 @@ def auto_grade_mcq(assessment: Assessment, payload: dict[str, Any]) -> float | N
     En ambos casos la submission del alumno viene en ``payload["answers"]``:
     single → ``{qid: "c"}``, multi → ``{qid: ["b","c"]}``, match → ``{qid: {"1":"A","2":"B"}}``.
     """
-    if assessment.type not in ("mcq", "capa_2"):
+    if assessment.type not in ("mcq", "capa_2", "final_test"):
         return None
 
     questions = assessment.config.get("questions")
@@ -82,7 +82,13 @@ def submit(
         raise ValueError("Assessment not found")
 
     auto = auto_grade_mcq(assessment, payload)
-    status = "auto_graded" if auto is not None else "pending_review"
+    # Capa_2 y final_test SIEMPRE requieren review humano del video, incluso si
+    # el MCQ ya autocorrigió. Solo mcq puro va directo a auto_graded.
+    requires_review = assessment.type in ("capa_2", "final_test")
+    if auto is not None and not requires_review:
+        status = "auto_graded"
+    else:
+        status = "pending_review"
 
     s = Submission(
         assessment_id=assessment_id,
