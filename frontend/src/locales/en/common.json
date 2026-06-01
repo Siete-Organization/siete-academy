@@ -421,7 +421,6 @@
   "adminResults": {
     "eyebrow": "Admin · Results",
     "title": "Grades by student",
-    "subtitle": "Dense table: each student × each module. Tier 1 (micro-tests), Tier 2 (module test) and Tier 3 (final test). Course total appears only when all 3 tiers are present.",
     "selectCohort": "Cohort",
     "noCohorts": "No cohorts yet.",
     "noStudents": "No students in this cohort.",
