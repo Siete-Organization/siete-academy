@@ -421,7 +421,6 @@
   "adminResults": {
     "eyebrow": "Admin · Resultados",
     "title": "Notas por aluno",
-    "subtitle": "Tabela densa: cada aluno × cada módulo. Camada 1 (micro-provas), Camada 2 (prova de módulo) e Camada 3 (prova final). O total do curso aparece somente quando as 3 camadas estão presentes.",
     "selectCohort": "Coorte",
     "noCohorts": "Ainda não há coortes.",
     "noStudents": "Sem alunos nesta coorte.",

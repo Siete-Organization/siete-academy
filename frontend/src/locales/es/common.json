@@ -421,7 +421,6 @@
   "adminResults": {
     "eyebrow": "Admin · Resultados",
     "title": "Notas por alumno",
-    "subtitle": "Tabla densa: cada alumno × cada módulo. Capa 1 (micro-pruebas), Capa 2 (prueba de módulo) y Capa 3 (prueba final). El total del curso aparece solo cuando las 3 capas están presentes.",
     "selectCohort": "Cohorte",
     "noCohorts": "Aún no hay cohortes.",
     "noStudents": "Sin alumnos en esta cohorte.",

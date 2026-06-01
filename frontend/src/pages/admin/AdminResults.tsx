@@ -100,9 +100,6 @@ export function AdminResults() {
         <h1 className="font-display text-display-md mt-3">
           {t("adminResults.title")}
         </h1>
-        <p className="text-ink-muted mt-4 max-w-3xl">
-          {t("adminResults.subtitle")}
-        </p>
       </header>
 
       <section className="flex flex-wrap items-end gap-6">
