@@ -10,6 +10,10 @@ import { StudentFeedback } from "@/pages/student/StudentFeedback";
 import { StudentCertificate } from "@/pages/student/StudentCertificate";
 import { StudentCalendar } from "@/pages/student/StudentCalendar";
 import { StudentPostAcademy } from "@/pages/student/StudentPostAcademy";
+import {
+  StudentLibrary,
+  StudentLibraryIndustryDetail,
+} from "@/pages/student/StudentLibrary";
 import { AccountPage } from "@/pages/account/AccountPage";
 import { TeacherHome } from "@/pages/teacher/TeacherHome";
 import { TeacherReviews } from "@/pages/teacher/TeacherReviews";
@@ -76,6 +80,22 @@ export default function App() {
             element={
               <ProtectedRoute roles={["student"]}>
                 <StudentPostAcademy />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/library"
+            element={
+              <ProtectedRoute roles={["student"]}>
+                <StudentLibrary />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/library/industries/:slug"
+            element={
+              <ProtectedRoute roles={["student"]}>
+                <StudentLibraryIndustryDetail />
               </ProtectedRoute>
             }
           />

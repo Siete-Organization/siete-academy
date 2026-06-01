@@ -42,6 +42,7 @@
     "dashboard": "Meu progresso",
     "myProgress": "Meu progresso",
     "postAcademy": "Pós-Academy",
+    "library": "Biblioteca",
     "teacherFeedback": "Feedback professor",
     "calendar": "Calendário",
     "account": "Minha conta",
@@ -314,6 +315,25 @@
     "weeksShort": "semanas",
     "criteria": "Critérios avaliados",
     "decisionRule": "Regra de decisão"
+  },
+  "library": {
+    "eyebrow": "Biblioteca",
+    "title": "Indústrias B2B na LATAM",
+    "intro": "Anexo de consulta transversal — material de apoio, não avaliado. Quando prospectar uma indústria que você não conhece, comece pelo card dela antes de ir ao site da empresa: dá 20% do contexto que explica 80% de como ela opera.",
+    "industries": "Indústrias",
+    "openCard": "Ver card completo",
+    "back": "Voltar ao índice",
+    "fields": {
+      "whatIs": "O que é",
+      "howMakesMoney": "Como ganha dinheiro",
+      "whatSells": "O que vende",
+      "sellsTo": "Para quem vende",
+      "buysToOperate": "O que compra para operar",
+      "dynamics": "Dinâmicas-chave",
+      "examples": "Exemplos LATAM",
+      "deepenIn": "Onde se aprofundar"
+    },
+    "notFound": "Essa indústria não está na biblioteca."
   },
   "adminPractica": {
     "title": "Pós-Academy",
