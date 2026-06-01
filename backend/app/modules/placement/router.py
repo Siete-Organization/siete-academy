@@ -10,6 +10,7 @@ from app.modules.placement.schemas import (
     AssignAdmin,
     CandidateCreate,
     CandidateDetailOut,
+    CandidateListOut,
     CandidateOut,
     CandidateRecruiterOut,
     CandidateUpdate,
@@ -64,23 +65,39 @@ def create_candidate(
     )
 
 
-@router.get("/candidates", response_model=list[CandidateOut])
+@router.get("/candidates", response_model=list[CandidateListOut])
 def list_candidates(
     stage: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     _admin: CurrentUser = Depends(require_roles("admin")),
     db: Session = Depends(get_db),
-) -> list[PlacementCandidate]:
-    q = db.query(PlacementCandidate)
-    if stage:
-        q = q.filter(PlacementCandidate.stage == stage)
-    return (
-        q.order_by(PlacementCandidate.updated_at.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
+) -> list[dict]:
+    """Kanban view — un solo barrido con JOIN a User para que la card muestre nombre."""
+    from sqlalchemy import select
+
+    stmt = (
+        select(PlacementCandidate, User)
+        .outerjoin(User, User.id == PlacementCandidate.user_id)
+        .order_by(PlacementCandidate.updated_at.desc())
     )
+    if stage:
+        stmt = stmt.where(PlacementCandidate.stage == stage)
+    rows = db.execute(stmt.offset(offset).limit(limit)).all()
+    return [
+        {
+            "id": c.id,
+            "user_id": c.user_id,
+            "user_name": u.display_name if u else None,
+            "user_email": u.email if u else None,
+            "cohort_id": c.cohort_id,
+            "stage": c.stage,
+            "summary": c.summary,
+            "portfolio_url": c.portfolio_url,
+            "updated_at": c.updated_at,
+        }
+        for c, u in rows
+    ]
 
 
 @router.get("/candidates/{candidate_id}", response_model=CandidateDetailOut)

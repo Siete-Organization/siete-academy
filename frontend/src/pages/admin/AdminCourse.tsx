@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
+import { BackLink } from "@/components/BackLink";
 
 type Locale = "es" | "en" | "pt";
 const LOCALES: Locale[] = ["es", "en", "pt"];
@@ -108,6 +109,7 @@ export function AdminCourse() {
 
   return (
     <div className="container-editorial py-16 md:py-20 space-y-10">
+      <BackLink to="/admin">{t("nav.admin")}</BackLink>
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="num-label">{t("adminCourse.eyebrow")}</p>

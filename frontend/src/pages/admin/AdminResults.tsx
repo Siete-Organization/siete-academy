@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { BackLink } from "@/components/BackLink";
 
 interface Cohort {
   id: number;
@@ -95,6 +96,7 @@ export function AdminResults() {
 
   return (
     <div className="container-editorial py-16 space-y-12">
+      <BackLink to="/admin">{t("nav.admin")}</BackLink>
       <header>
         <p className="num-label">{t("adminResults.eyebrow")}</p>
         <h1 className="font-display text-display-md mt-3">

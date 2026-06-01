@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { BackLink } from "@/components/BackLink";
 
 const RESOURCE_ICONS: Record<string, string> = {
   pdf: "📄",
@@ -188,7 +189,9 @@ export function ModulePage() {
   };
 
   return (
-    <div className="container-editorial py-12 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12">
+    <div className="container-editorial py-12">
+      <BackLink to="/student" className="mb-8">{t("nav.myProgress")}</BackLink>
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12">
       <aside className="lg:sticky lg:top-24 h-max space-y-8">
         <div>
           <p className="num-label mb-4">Lecciones</p>
@@ -285,6 +288,7 @@ export function ModulePage() {
           <p className="text-ink-muted">{t("common.loading")}</p>
         )}
       </main>
+      </div>
     </div>
   );
 }
