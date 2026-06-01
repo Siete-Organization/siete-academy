@@ -237,6 +237,8 @@
     "practicaHint": "Path interno de práctica (E1 → E2 → planta T2 → T1).",
     "analytics": "Analytics",
     "analyticsHint": "Números clave del programa.",
+    "results": "Resultados",
+    "resultsHint": "Notas por alumno × módulo × capa: micro-pruebas, pruebas de módulo y prueba final.",
     "approve": "Aprobar",
     "reject": "Rechazar",
     "status": {
@@ -415,5 +417,29 @@
     "pendingReviews": "Entregas pendientes",
     "graduates": "Graduados",
     "placed": "Colocados"
+  },
+  "adminResults": {
+    "eyebrow": "Admin · Resultados",
+    "title": "Notas por alumno",
+    "subtitle": "Tabla densa: cada alumno × cada módulo. Capa 1 (micro-pruebas), Capa 2 (prueba de módulo) y Capa 3 (prueba final). El total del curso aparece solo cuando las 3 capas están presentes.",
+    "selectCohort": "Cohorte",
+    "noCohorts": "Aún no hay cohortes.",
+    "noStudents": "Sin alumnos en esta cohorte.",
+    "colStudent": "Alumno",
+    "colMicros": "Micro",
+    "colModule": "Módulo",
+    "colFinal": "Final",
+    "colCourse": "Curso",
+    "colStatus": "Estatus",
+    "moduleN": "M{{n}}",
+    "statusDistinction": "Distinción",
+    "statusBasic": "Básico",
+    "statusFailing": "Reprueba",
+    "statusInProgress": "En curso",
+    "legendTitle": "Leyenda",
+    "legendDistinction": "≥85 — distinción",
+    "legendBasic": "65–84 — básico",
+    "legendBelow": "<65",
+    "legendMissing": "— (sin entrega)"
   }
 }

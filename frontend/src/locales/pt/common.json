@@ -237,6 +237,8 @@
     "placementHint": "ATS Kanban do pipeline de placement.",
     "analytics": "Analytics",
     "analyticsHint": "Números chave do programa.",
+    "results": "Resultados",
+    "resultsHint": "Notas por aluno × módulo × camada: micro-provas, provas de módulo e prova final.",
     "approve": "Aprovar",
     "reject": "Rejeitar",
     "status": {
@@ -415,5 +417,29 @@
     "pendingReviews": "Entregas pendentes",
     "graduates": "Graduados",
     "placed": "Colocados"
+  },
+  "adminResults": {
+    "eyebrow": "Admin · Resultados",
+    "title": "Notas por aluno",
+    "subtitle": "Tabela densa: cada aluno × cada módulo. Camada 1 (micro-provas), Camada 2 (prova de módulo) e Camada 3 (prova final). O total do curso aparece somente quando as 3 camadas estão presentes.",
+    "selectCohort": "Coorte",
+    "noCohorts": "Ainda não há coortes.",
+    "noStudents": "Sem alunos nesta coorte.",
+    "colStudent": "Aluno",
+    "colMicros": "Micro",
+    "colModule": "Módulo",
+    "colFinal": "Final",
+    "colCourse": "Curso",
+    "colStatus": "Status",
+    "moduleN": "M{{n}}",
+    "statusDistinction": "Distinção",
+    "statusBasic": "Básico",
+    "statusFailing": "Reprova",
+    "statusInProgress": "Em andamento",
+    "legendTitle": "Legenda",
+    "legendDistinction": "≥85 — distinção",
+    "legendBasic": "65–84 — básico",
+    "legendBelow": "<65",
+    "legendMissing": "— (sem entrega)"
   }
 }

@@ -24,6 +24,7 @@ import { AdminPlacement } from "@/pages/admin/AdminPlacement";
 import { AdminPractica } from "@/pages/admin/AdminPractica";
 import { AdminAnalytics } from "@/pages/admin/AdminAnalytics";
 import { AdminHome } from "@/pages/admin/AdminHome";
+import { AdminResults } from "@/pages/admin/AdminResults";
 import { RecruiterHome } from "@/pages/recruiter/RecruiterHome";
 
 export default function App() {
@@ -178,6 +179,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["admin"]}>
                 <AdminAnalytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/results"
+            element={
+              <ProtectedRoute roles={["admin", "teacher"]}>
+                <AdminResults />
               </ProtectedRoute>
             }
           />
