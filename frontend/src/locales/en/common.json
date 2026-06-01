@@ -237,6 +237,8 @@
     "practicaHint": "Internal practice path (E1 → E2 → in-house T2 → T1).",
     "analytics": "Analytics",
     "analyticsHint": "Program key numbers.",
+    "results": "Results",
+    "resultsHint": "Grades per student × module × tier: micro-tests, module tests and the final test.",
     "approve": "Approve",
     "reject": "Reject",
     "status": {
@@ -415,5 +417,29 @@
     "pendingReviews": "Pending reviews",
     "graduates": "Graduates",
     "placed": "Placed"
+  },
+  "adminResults": {
+    "eyebrow": "Admin · Results",
+    "title": "Grades by student",
+    "subtitle": "Dense table: each student × each module. Tier 1 (micro-tests), Tier 2 (module test) and Tier 3 (final test). Course total appears only when all 3 tiers are present.",
+    "selectCohort": "Cohort",
+    "noCohorts": "No cohorts yet.",
+    "noStudents": "No students in this cohort.",
+    "colStudent": "Student",
+    "colMicros": "Micro",
+    "colModule": "Module",
+    "colFinal": "Final",
+    "colCourse": "Course",
+    "colStatus": "Status",
+    "moduleN": "M{{n}}",
+    "statusDistinction": "Distinction",
+    "statusBasic": "Basic",
+    "statusFailing": "Failing",
+    "statusInProgress": "In progress",
+    "legendTitle": "Legend",
+    "legendDistinction": "≥85 — distinction",
+    "legendBasic": "65–84 — basic",
+    "legendBelow": "<65",
+    "legendMissing": "— (no submission)"
   }
 }
