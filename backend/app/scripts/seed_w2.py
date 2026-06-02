@@ -1,10 +1,20 @@
 """Seed: Semana 2 del Módulo 1 (Rol del SDR, hitos, reunión calificada).
 
-Cierra el Módulo 1. Contenido extraído de SDR_Academy_Siete_Documento_Maestro.md
-(bloques 1-7 de Semana 2 + 4 micro-pruebas MCQ Capa 1).
+Cierra el Módulo 1.
 
-Crea la segunda lección del módulo `m1-juego-y-jugador` (order_index=1) con la
-secuencia dinámica completa.
+Estrategia de contenido (Option C híbrida — replica el pattern de seed_w1):
+- `MCQ_QUESTIONS` (4 preguntas Capa 1): transcripción literal del doc
+  (Parte IV §Micro-pruebas Sem 2). Fiel.
+- `LESSON_BODY_ES`: híbrido. Pregunta central + Bloques 1 y 2 transcriptos
+  literal del doc (lines 3219-3316). Bloques 3-7 como resumen explícito
+  con nota apuntando a la "Guía Semana 2 (PDF)" que vive como recurso
+  descargable.
+- `AVATAR_SCRIPT_ES` y `PRESENTATION_BLOCKS_ES`: borradores sintetizados
+  en estilo del doc. Conceptos fieles pero la prosa exacta es invención
+  nuestra — el doc no tiene estos artefactos. Reemplazar cuando se
+  produzcan las versiones finales del pipeline HeyGen.
+- `RESOURCES`: incluye `PLACEHOLDER_W2_GUIA` para el PDF descargable
+  generado a partir de los Bloques 1-7 del doc.
 
 Uso:
     cd backend && .venv/bin/python -m app.scripts.seed_w2
@@ -37,30 +47,91 @@ COURSE_SLUG = "sdr-academy-v1"
 MODULE_SLUG = "m1-juego-y-jugador"
 
 
-LESSON_BODY_ES = """Pregunta central de la semana: ¿Qué vende un SDR realmente y hasta dónde llega su responsabilidad?
+LESSON_BODY_ES = """**Pregunta central de la semana:** ¿Qué vende un SDR realmente y hasta dónde llega su responsabilidad?
+
+Al terminar, vas a poder: ubicar al SDR dentro de una función comercial B2B completa, distinguir los 5 canales de generación de demanda y cuándo aplica cada uno, explicar qué es el outbound y cuándo tiene sentido, separar los hitos que vende el SDR de los que vende el AE, aplicar los 4 criterios de una "reunión calificada" a un caso concreto, y articular qué significa un buen handoff entre SDR y AE.
+
+---
 
 ## Bloque 1 — La arquitectura de la función comercial B2B
-4 roles principales: Marketing (genera demanda, métrica MQLs), SDR (prospecta + agenda, métrica reuniones calificadas), AE (cierra deals, métrica revenue), CSM (retiene, métrica net retention). La separación SDR/AE permite escalar (Predictable Revenue, Ross 2011): mezclar prospect + close hace que el pipeline entre en olas.
+
+En la Semana 1 viste que del otro lado hay un comité de 6-10 personas. Del tuyo también hay un equipo — aunque a veces no se ve así desde afuera. Entender **qué hace cada rol de tu lado** te evita cruzar líneas que queman deals.
+
+La función comercial moderna B2B se organiza alrededor de **4 roles principales**, cada uno con un propósito específico:
+
+**Marketing** — genera conciencia de marca y demanda entrante (inbound). Produce contenido, webinars, ads, SEO. Opera *antes del primer contacto comercial*. Métrica principal: MQLs entregados, costo por lead.
+
+**SDR (Sales Development Representative)** — prospecta en frío, califica leads (de marketing o generados por él mismo), agenda reuniones. Opera *de MQL/prospecto a SQL/oportunidad*. Métrica principal: reuniones calificadas agendadas.
+
+**AE (Account Executive)** — cierra deals. Toma la reunión calificada del SDR, hace demo/discovery, negocia y firma. Opera *de oportunidad a cliente*. Métrica principal: revenue cerrado, win rate.
+
+**CSM (Customer Success Manager)** — maneja al cliente post-venta: onboarding, uso, renovación, expansión. Opera *de cliente a renovación/churn*. Métrica principal: retención, NPS, expansión.
+
+**Por qué existen separados**
+
+El libro fundacional del modelo SDR moderno es *Predictable Revenue* de Aaron Ross (2011). Ross, que implementó este modelo en Salesforce, argumenta que la separación prospector/closer es lo que permite escalar. La razón tiene que ver con economía de la atención: **prospectar en frío requiere un mindset y disciplina distintos a cerrar deals**. Mezclar ambas tareas en la misma persona genera que una de las dos se sacrifique.
+
+Un AE que también prospecta: cuando tiene deals activos (que pagan las comisiones), deja de prospectar. Resultado: pipeline que entra en olas — mucho por 2 meses, nada por 3. La empresa no puede forecastear ni planificar headcount.
+
+Un SDR dedicado: prospecta todo el día. Pipeline que entra estable. El AE se concentra en cerrar. Los números se vuelven predecibles.
+
+**Implicación para vos**
+
+No sos un "AE chico". No sos un "asistente de ventas". Sos un rol específico con métricas propias. El SDR bueno que entiende esto se concentra en **lo que su rol produce** y no intenta cerrar el deal (eso es del AE) ni hacer marketing de contenido (eso es de marketing).
+
+*Fuentes: Ross & Tyler (2011). Predictable Revenue. Capítulos 1-3. · Bertuzzi (2016). The Sales Development Playbook. Definición de los 4 roles.*
+
+---
 
 ## Bloque 2 — Los 5 canales de generación de demanda B2B
-Inbound (vienen a vos), Outbound (vos contactás en frío), Referidos (10× conversión pero no escalan), ABM (cuentas estratégicas 20-50, hiper-personalizado), Partnerships (apalanca pero lento). El SDR opera principalmente en outbound pero entiende los otros porque se cruzan.
 
-## Bloque 3 — Qué es outbound (y cuándo NO aplica)
-Definición: identificar empresas ICP + contactar en frío por múltiples canales + agendar reunión con AE. Funciona si: ICP identificable + ticket que justifica costo + ciclo que soporta el modelo. NO aplica: commodity de bajo ticket, ICP masivo indiferenciado, ventas que dependen 100% de demo visual. Benchmarks realistas: 15 reuniones calificadas/mes, conversión empresa→reunión 1-3%, ramp 3-4 meses.
+No todo lead entra por el mismo camino. Una empresa B2B típica usa **5 canales** (o combinaciones) para generar demanda. Cada uno tiene lógica, velocidad y costo propio.
 
-## Bloque 4 — Venta por hitos: la cadena completa
-6 hitos secuenciales: (1) Reunión [SDR], (2) Asistencia + Precalificación [SDR], (3) Demo [AE], (4) Propuesta [AE], (5) Cierre [AE], (6) Renovación [CSM]. El SDR vende SOLO hitos 1 y 2. Cruzar hitos (dar precio, hacer demo, ofrecer descuento) arruina la venta del AE. Regla: redirigir hacia la reunión, no cortar al prospecto.
+**1. Inbound.** El prospecto viene a vos. Motivado por contenido (blog, SEO, webinars), anuncios (Google Ads, LinkedIn Ads), referencias orgánicas. Cuando llega, ya investigó — suele estar en consideración o evaluación. El rol del SDR acá es **calificar** (filtrar entre los que entraron pero no son ICP vs los que sí). Ventaja: menor fricción, mayor tasa de conversión. Desventaja: volumen limitado, caro de construir.
 
-## Bloque 5 — Reunión calificada: los 4 criterios
-Acumulativos: (1) Empresa dentro del ICP (industria + tamaño + geografía + características), (2) Contacto es KDM o champion validado, (3) Asiste a la reunión, (4) Pasa precalificación mínima (problema existe + no hay bloqueador absoluto + timing razonable). Si falta uno, NO califica — la reunión no debió generarse. Métrica del SDR: reuniones calificadas, no agendadas.
+**2. Outbound.** Vos contactás al prospecto en frío. Típicamente en awareness — no te estaba buscando. El rol del SDR es **todo el ciclo** (prospección + calificación + agendamiento). Es lo que vas a hacer los próximos 6 meses. Ventaja: escalable, predecible, focalizable (elegís a quién le hablás). Desventaja: alta fricción, tasas de respuesta bajas (1-3% típico), exige volumen.
 
-## Bloque 6 — El handoff al AE como momento sagrado
-Información que pasa: empresa + contacto + señal + contexto del outreach + precalificación (situación/necesidad/timing) + advertencias. NO pasa: especulaciones sin base, info irrelevante, chismes. Cabe en 1 página. Un handoff pobre quema deals que el AE podría haber cerrado.
+**3. Referidos.** Alguien dentro de la empresa (un cliente feliz, un empleado, un partner) te presenta al prospecto. Es el canal de **mayor tasa de conversión** — a veces 10x más que outbound — pero de volumen variable. No se puede "forzar".
 
-## Bloque 7 — Mindset del SDR: ejecutor con criterio
-El SDR es ejecutor (volumen, disciplina) Y con criterio (cada acción es decisión). NO es: operario, cazador de comisiones, asistente del AE. El path típico: SDR → AE → Senior AE → Sales Manager → Director. Los fundamentos del módulo sirven los próximos 10 años de carrera B2B.
+**4. ABM (Account-Based Marketing).** En vez de prospectar muchas empresas genéricamente, elegís un grupo chico de cuentas muy estratégicas (típicamente 20-50) y trabajás campañas hiper-personalizadas sobre ellas. El SDR participa, pero con lógica artesanal (no masiva).
 
-**Fuentes:** Ross & Tyler (2011) Predictable Revenue. Bertuzzi (2016) Sales Development Playbook. Blount (2015) Fanatical Prospecting. Bridge Group (2023). Instantly (2026)."""
+**5. Partnerships.** Otra empresa (integrador, proveedor complementario, canal de distribución) te trae leads calificados. Es el canal de mayor apalancamiento pero el más lento de construir.
+
+**Por qué ninguno reemplaza al otro**
+
+Cada canal tiene una **estructura de costo y velocidad distinta**. Inbound es barato por lead pero caro de construir. Outbound es caro por lead pero rápido de arrancar. Los referidos convierten 10x pero no se escalan. ABM genera deals grandes pero tarda meses. Partnerships apalanca pero depende de otros.
+
+Una empresa B2B madura usa **3-5 canales en paralelo**. El SDR opera principalmente en outbound, pero entiende los otros porque muchas veces se cruzan en su trabajo (prospecto que originalmente vino por inbound y no respondió, ahora lo retoma el SDR; cuenta ABM que necesita aceleración outbound; etc.).
+
+---
+
+## Bloques 3 a 7 — Resumen para repaso
+
+> Estos bloques están desarrollados en detalle en la **Guía Semana 2 (PDF descargable)** del material de apoyo. Acá queda el índice como repaso de los conceptos. El alumno debe consumir la guía completa antes de las micro-pruebas y la prueba del módulo.
+
+**Bloque 3 — Qué es outbound específicamente (y cuándo NO aplica)**
+
+Outbound B2B = proceso sistemático para identificar empresas ICP, contactarlas en frío por múltiples canales (email + llamada + LinkedIn + WhatsApp), y llevarlas a aceptar una reunión con el AE. Funciona cuando se cumplen 3 condiciones simultáneas: (1) ICP identificable y alcanzable, (2) ticket que justifica el costo del SDR, (3) ciclo de venta que soporta múltiples touchpoints. NO aplica para productos commodity de bajo ticket, ICP masivo indiferenciado, ni ventas que dependen 100% de demo visual. Benchmarks realistas (Bridge Group 2023): 15 reuniones calificadas/mes, conversión empresa→reunión 1-3%, ramp 3-4 meses hasta productividad plena.
+
+**Bloque 4 — Venta por hitos: la cadena completa y qué vende el SDR**
+
+Un deal B2B completo pasa por **6 hitos secuenciales**: (1) Reunión [SDR], (2) Asistencia + Precalificación [SDR], (3) Demo [AE], (4) Propuesta [AE], (5) Cierre [AE], (6) Renovación/Expansión [CSM]. El SDR vende **solo hitos 1 y 2** — no la demo, no la propuesta, no el cierre, no la renovación. Cruzar hitos (dar precio, hacer mini-demos por teléfono, ofrecer descuentos) arruina la venta del AE. Regla práctica: ante preguntas de producto/precio/concesión, redirigir al AE — "Excelente pregunta, [AE] tiene visibilidad completa; en la reunión lo discuten".
+
+**Bloque 5 — Reunión calificada: los 4 criterios**
+
+Una reunión es **calificada** si y solo si cumple los 4 criterios acumulativamente: (1) Empresa dentro del ICP (industria + tamaño + geografía + características relevantes), (2) Contacto es KDM o champion/referidor validado con llegada al decisor, (3) Asiste a la reunión el día agendado, (4) Pasa la precalificación mínima (existe el problema, no hay bloqueador absoluto, timing razonable). Si falta uno, no cuenta como calificada — y no debió generarse. La métrica del SDR es reuniones calificadas, no reuniones agendadas. Agendar 10 reuniones basura es peor que agendar 5 calificadas.
+
+**Bloque 6 — El handoff al AE como momento sagrado**
+
+El handoff es la transferencia formal del prospecto del SDR al AE. Información que pasa (en 1 página): empresa (nombre, industria, tamaño, señal usada), contacto (rol, responsabilidad, LinkedIn), contexto del outreach (qué ángulo funcionó), precalificación con framework Situación → Necesidad → Timing, advertencias (otros stakeholders, bloqueadores potenciales). NO pasa: especulaciones sin base, info irrelevante, chismes. Un handoff pobre quema deals que el AE podría haber cerrado — entra a ciegas a la reunión, pregunta cosas que el SDR ya validó, pierde la confianza del prospecto.
+
+**Bloque 7 — Mindset del SDR: ejecutor con criterio**
+
+El SDR es **ejecutor** (volumen, disciplina, consistencia es la variable #1 del rendimiento) Y **con criterio** (cada acción exige decisión: a quién contactar, cómo abrir, cómo redirigir cruces de hito, qué calificar). NO es operario (mandar 200 emails idénticos sin pensar), NO es cazador de comisiones (cualquier reunión vale), NO es asistente del AE (no es subordinado). El path típico de carrera: SDR → AE → Senior AE → Sales Manager → Director Comercial. Los fundamentos del módulo (anatomía B2B, hitos, calificación, handoff) sirven los próximos 10 años de carrera en ventas B2B.
+
+---
+
+**Fuentes principales del módulo:** Ross & Tyler (2011). Predictable Revenue. · Bertuzzi (2016). The Sales Development Playbook. · Blount (2015). Fanatical Prospecting. · Bridge Group (2023). SDR Metrics & Compensation Report. · Instantly (2026). Cold Email Benchmark Report."""
 
 
 AVATAR_SCRIPT_ES = """Bienvenido a la semana 2 del Módulo 1. Esta semana cerramos el módulo.
@@ -352,9 +423,15 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 2 — Rol del SDR, hitos y reunión calificada (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W2_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — Rol del SDR e hitos (Semana 2)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W2_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "link",
