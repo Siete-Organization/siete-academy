@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
+import { BackLink } from "@/components/BackLink";
 
 interface Candidate {
   id: number;
@@ -87,6 +88,7 @@ export function AdminPractica() {
 
   return (
     <div className="container-editorial py-16">
+      <BackLink to="/admin" className="mb-8">{t("nav.admin")}</BackLink>
       <header className="mb-12 flex items-baseline justify-between gap-6 flex-wrap">
         <div>
           <p className="num-label">Admin · Post-Academy</p>

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
+import { BackLink } from "@/components/BackLink";
 
 const STAGES = [
   "applying",
@@ -18,11 +19,12 @@ type Stage = (typeof STAGES)[number];
 interface Candidate {
   id: number;
   user_id: number;
+  user_name: string | null;
+  user_email: string | null;
   cohort_id: number | null;
   stage: Stage;
   summary: string | null;
   portfolio_url: string | null;
-  notes: string | null;
   updated_at: string;
 }
 
@@ -35,8 +37,7 @@ interface EventOut {
 }
 
 interface CandidateDetail extends Candidate {
-  user_name: string | null;
-  user_email: string | null;
+  notes: string | null;
   events: EventOut[];
 }
 
@@ -102,6 +103,7 @@ export function AdminPlacement() {
 
   return (
     <div className="container-editorial py-12">
+      <BackLink to="/admin" className="mb-8">{t("nav.admin")}</BackLink>
       <header className="mb-10">
         <p className="num-label">Admin · placement</p>
         <h1 className="font-display text-display-md mt-3">{t("placement.title")}</h1>
@@ -129,10 +131,10 @@ export function AdminPlacement() {
                       }`}
                     >
                       <p className="font-display text-base leading-tight">
-                        Candidate #{c.id}
+                        {c.user_name || c.user_email || `Candidate #${c.id}`}
                       </p>
-                      <p className="text-xs text-ink-muted mt-1">
-                        user {c.user_id} · {new Date(c.updated_at).toLocaleDateString(i18n.language)}
+                      <p className="text-[10px] font-mono text-ink-faint mt-1 tabular-nums">
+                        #{c.id} · {new Date(c.updated_at).toLocaleDateString(i18n.language)}
                       </p>
                     </button>
                   </li>
@@ -202,8 +204,8 @@ export function AdminPlacement() {
                   <div>
                     <p className="font-medium">{e.event_type.replace(/_/g, " ")}</p>
                     {Object.keys(e.data || {}).length > 0 && (
-                      <p className="text-xs text-ink-muted font-mono mt-0.5">
-                        {JSON.stringify(e.data)}
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        {formatEventData(e.event_type, e.data, t)}
                       </p>
                     )}
                   </div>
@@ -215,4 +217,34 @@ export function AdminPlacement() {
       )}
     </div>
   );
+}
+
+/** Formato legible para eventos del timeline — preferible al JSON crudo. */
+function formatEventData(
+  eventType: string,
+  data: Record<string, unknown>,
+  t: (key: string) => string,
+): string {
+  if (eventType === "stage_changed") {
+    const from = data.from ? t(`placement.stages.${data.from}` as never) : "—";
+    const to = data.to ? t(`placement.stages.${data.to}` as never) : "—";
+    const note = data.note ? ` · ${data.note}` : "";
+    return `${from} → ${to}${note}`;
+  }
+  if (eventType === "assigned") {
+    const adminId = data.admin_id;
+    return adminId === null || adminId === undefined
+      ? "sin asignar"
+      : `asignado a #${adminId}`;
+  }
+  if (eventType === "note_added" && typeof data.note === "string") {
+    return data.note;
+  }
+  if (eventType === "created" && data.cohort_id !== undefined) {
+    return `cohorte #${data.cohort_id}`;
+  }
+  // Fallback: pares clave-valor legibles, no JSON crudo
+  return Object.entries(data)
+    .map(([k, v]) => `${k}: ${String(v)}`)
+    .join(" · ");
 }

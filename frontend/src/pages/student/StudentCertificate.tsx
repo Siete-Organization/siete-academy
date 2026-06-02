@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
+import { BackLink } from "@/components/BackLink";
 
 interface Certificate {
   id: number;
@@ -43,6 +44,7 @@ export function StudentCertificate() {
 
   return (
     <div className="container-editorial py-16 md:py-24 space-y-10">
+      <BackLink to="/student">{t("nav.myProgress")}</BackLink>
       <header>
         <p className="num-label">Reconocimiento</p>
         <h1 className="font-display text-display-lg mt-4">{t("certificate.title")}</h1>

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { BackLink } from "@/components/BackLink";
 
 interface Cohort {
   id: number;
@@ -82,56 +83,61 @@ export function AdminCohorts() {
 
   return (
     <div className="container-editorial py-16 space-y-14">
+      <BackLink to="/admin">{t("nav.admin")}</BackLink>
       <header>
         <p className="num-label">Admin</p>
         <h1 className="font-display text-display-md mt-3">{t("admin.cohorts")}</h1>
       </header>
 
       <section>
-        <p className="num-label mb-6">Nueva cohorte</p>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
-          <div className="md:col-span-4">
-            <label className="num-label block mb-1">Nombre</label>
-            <Input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="SDR 001 — Mayo 2026"
-            />
+        <details className="group">
+          <summary className="num-label cursor-pointer list-none flex items-center gap-2 select-none">
+            <span className="text-ink-muted group-open:text-ink transition-colors">+ Nueva cohorte</span>
+          </summary>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end mt-6">
+            <div className="md:col-span-4">
+              <label className="num-label block mb-1">Nombre</label>
+              <Input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="SDR 001 — Mayo 2026"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="num-label block mb-1">Inicio</label>
+              <Input
+                type="date"
+                value={form.start_date}
+                onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="num-label block mb-1">Fin</label>
+              <Input
+                type="date"
+                value={form.end_date}
+                onChange={(e) => setForm({ ...form, end_date: e.target.value })}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="num-label block mb-1">Idioma</label>
+              <select
+                className="w-full h-11 bg-transparent border-0 border-b border-bone-strong focus:border-ink focus:outline-none font-mono text-xs uppercase tracking-[0.2em]"
+                value={form.locale}
+                onChange={(e) => setForm({ ...form, locale: e.target.value })}
+              >
+                <option value="es">es</option>
+                <option value="en">en</option>
+                <option value="pt">pt</option>
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <Button onClick={create} className="w-full">
+                {t("common.save")}
+              </Button>
+            </div>
           </div>
-          <div className="md:col-span-2">
-            <label className="num-label block mb-1">Inicio</label>
-            <Input
-              type="date"
-              value={form.start_date}
-              onChange={(e) => setForm({ ...form, start_date: e.target.value })}
-            />
-          </div>
-          <div className="md:col-span-2">
-            <label className="num-label block mb-1">Fin</label>
-            <Input
-              type="date"
-              value={form.end_date}
-              onChange={(e) => setForm({ ...form, end_date: e.target.value })}
-            />
-          </div>
-          <div className="md:col-span-2">
-            <label className="num-label block mb-1">Idioma</label>
-            <select
-              className="w-full h-11 bg-transparent border-0 border-b border-bone-strong focus:border-ink focus:outline-none font-mono text-xs uppercase tracking-[0.2em]"
-              value={form.locale}
-              onChange={(e) => setForm({ ...form, locale: e.target.value })}
-            >
-              <option value="es">es</option>
-              <option value="en">en</option>
-              <option value="pt">pt</option>
-            </select>
-          </div>
-          <div className="md:col-span-2">
-            <Button onClick={create} className="w-full">
-              {t("common.save")}
-            </Button>
-          </div>
-        </div>
+        </details>
       </section>
 
       <section className="hairline pt-10">
@@ -223,21 +229,29 @@ export function AdminCohorts() {
                     <div className="col-span-4">
                       <label className="num-label block mb-1">Abre</label>
                       <Input
+                        key={`opens-${w.id}-${w.opens_at}`}
                         type="datetime-local"
-                        value={w.opens_at.slice(0, 16)}
-                        onChange={(e) =>
-                          void patchWindow(w, { opens_at: new Date(e.target.value).toISOString() })
-                        }
+                        defaultValue={w.opens_at.slice(0, 16)}
+                        onBlur={(e) => {
+                          const next = new Date(e.target.value).toISOString();
+                          if (next !== w.opens_at) {
+                            void patchWindow(w, { opens_at: next });
+                          }
+                        }}
                       />
                     </div>
                     <div className="col-span-4">
                       <label className="num-label block mb-1">Cierra</label>
                       <Input
+                        key={`closes-${w.id}-${w.closes_at}`}
                         type="datetime-local"
-                        value={w.closes_at.slice(0, 16)}
-                        onChange={(e) =>
-                          void patchWindow(w, { closes_at: new Date(e.target.value).toISOString() })
-                        }
+                        defaultValue={w.closes_at.slice(0, 16)}
+                        onBlur={(e) => {
+                          const next = new Date(e.target.value).toISOString();
+                          if (next !== w.closes_at) {
+                            void patchWindow(w, { closes_at: next });
+                          }
+                        }}
                       />
                     </div>
                     <div className="col-span-3 flex items-center gap-2 justify-end">

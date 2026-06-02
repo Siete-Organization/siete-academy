@@ -63,6 +63,20 @@ class CandidateOut(BaseModel):
         from_attributes = True
 
 
+class CandidateListOut(BaseModel):
+    """Card del kanban: incluye nombre/email del candidato para no mostrar solo el ID."""
+
+    id: int
+    user_id: int
+    user_name: str | None
+    user_email: str | None
+    cohort_id: int | None
+    stage: str
+    summary: str | None
+    portfolio_url: str | None
+    updated_at: datetime
+
+
 class CandidateDetailOut(CandidateOut):
     # Enriquecido con datos del usuario y eventos para el detalle admin/recruiter
     user_name: str | None

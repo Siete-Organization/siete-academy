@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
+import { BackLink } from "@/components/BackLink";
+import { cn } from "@/lib/utils";
 
 type CountsByStatus = Record<string, number>;
 
@@ -48,27 +51,57 @@ export function AdminAnalytics() {
   const placed = metrics.candidatesByStage["placed"] || 0;
   const approved = metrics.candidatesByStage["approved"] || 0;
 
+  // Pending reviews va primero: es el único KPI accionable (admin tiene que ir a hacer algo).
   const kpis = [
-    { label: t("analytics.applications"), value: metrics.applications },
-    { label: t("analytics.pendingReviews"), value: metrics.pendingReviews },
-    { label: t("analytics.graduates"), value: approved + placed },
-    { label: t("analytics.placed"), value: placed },
+    {
+      label: t("analytics.pendingReviews"),
+      value: metrics.pendingReviews,
+      href: metrics.pendingReviews > 0 ? "/teacher/reviews" : null,
+      actionable: metrics.pendingReviews > 0,
+    },
+    { label: t("analytics.applications"), value: metrics.applications, href: null, actionable: false },
+    { label: t("analytics.graduates"), value: approved + placed, href: null, actionable: false },
+    { label: t("analytics.placed"), value: placed, href: null, actionable: false },
   ];
 
   return (
     <div className="container-editorial py-16 md:py-24 space-y-14">
+      <BackLink to="/admin">{t("nav.admin")}</BackLink>
       <header>
         <p className="num-label">Admin</p>
         <h1 className="font-display text-display-lg mt-3">{t("analytics.title")}</h1>
       </header>
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 hairline pt-10">
-        {kpis.map((k) => (
-          <div key={k.label}>
-            <p className="num-label">{k.label}</p>
-            <p className="font-display text-5xl tabular-nums mt-2">{k.value}</p>
-          </div>
-        ))}
+        {kpis.map((k) => {
+          const content = (
+            <>
+              <p className="num-label">{k.label}</p>
+              <p
+                className={cn(
+                  "font-display text-5xl tabular-nums mt-2",
+                  k.actionable && "text-ember",
+                )}
+              >
+                {k.value}
+              </p>
+              {k.actionable && (
+                <p className="num-label mt-2 text-ember">revisar →</p>
+              )}
+            </>
+          );
+          return k.href ? (
+            <Link
+              key={k.label}
+              to={k.href}
+              className="block group hover:opacity-80 transition-opacity"
+            >
+              {content}
+            </Link>
+          ) : (
+            <div key={k.label}>{content}</div>
+          );
+        })}
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-12 hairline pt-10">

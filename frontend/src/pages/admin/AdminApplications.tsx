@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
+import { BackLink } from "@/components/BackLink";
 
 interface Application {
   id: number;
@@ -111,6 +112,7 @@ export function AdminApplications() {
 
   return (
     <div className="container-editorial py-16">
+      <BackLink to="/admin" className="mb-8">{t("nav.admin")}</BackLink>
       <header className="mb-12">
         <p className="num-label">Admin · cohorte 001</p>
         <h1 className="font-display text-display-md mt-3">{t("admin.applications")}</h1>
