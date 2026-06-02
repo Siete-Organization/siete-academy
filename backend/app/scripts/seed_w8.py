@@ -418,51 +418,57 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 8 — Proceso, métricas y mejora continua (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W8_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — Del proceso al mindset de mejora continua (Semana 8)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W8_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "doc",
         "title": "Checklist — Proceso outbound end-to-end (10 etapas)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_PROCESS",
-        "order_index": 1,
+        "order_index": 2,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Diagnóstico por descarte (recorrido de funnel)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_DIAGNOSIS",
-        "order_index": 2,
+        "order_index": 3,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Formulación de hipótesis testeable (3 condiciones)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_HYPOTHESIS",
-        "order_index": 3,
+        "order_index": 4,
     },
     {
         "kind": "doc",
         "title": "Tablero de métricas semanal — plantilla SDR (bounce/reply/meeting/show/precal)",
         "url": "https://docs.google.com/spreadsheets/d/PLACEHOLDER_W8_DASHBOARD",
-        "order_index": 4,
+        "order_index": 5,
     },
     {
         "kind": "link",
         "title": "Bridge Group — SDR Metrics Report 2023 (benchmarks por métrica)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_READING_SDR_METRICS",
-        "order_index": 5,
+        "order_index": 6,
     },
     {
         "kind": "link",
         "title": "Apple — Mail Privacy Protection documentation (por qué no se mide open rate)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_READING_APPLE_MPP",
-        "order_index": 6,
+        "order_index": 7,
     },
     {
         "kind": "link",
         "title": "Ries — Build-Measure-Learn (resumen The Lean Startup)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W8_READING_LEAN_PRINCIPLES",
-        "order_index": 7,
+        "order_index": 8,
     },
 ]
 
