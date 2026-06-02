@@ -367,39 +367,45 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 5 — Escritura persuasiva en frío (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W5_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — Escritura persuasiva en frío (Semana 5)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W5_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Cialdini — Los 7 principios de persuasión (resumen)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W5_READING_CIALDINI",
-        "order_index": 1,
+        "order_index": 2,
     },
     {
         "kind": "link",
         "title": "Instantly — Cold Email Benchmark Report 2026",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W5_READING_COLD_EMAIL_BENCH",
-        "order_index": 2,
+        "order_index": 3,
     },
     {
         "kind": "link",
         "title": "Bad-Ass B2B Growth (Josh Braun) — newsletter de referencia",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W5_READING_JOSH_BRAUN",
-        "order_index": 3,
+        "order_index": 4,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Grid de 6 criterios para evaluar copy",
         "url": "https://docs.google.com/spreadsheets/d/PLACEHOLDER_W5_GRID",
-        "order_index": 4,
+        "order_index": 5,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Estructura de cold email outbound (4 partes)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W5_TEMPLATE",
-        "order_index": 5,
+        "order_index": 6,
     },
 ]
 

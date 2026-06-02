@@ -388,33 +388,39 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 4 — Entender al comprador (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W4_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — Entender al comprador (Semana 4)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W4_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Dixon et al — The Challenger Customer (libro de referencia)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W4_READING_CHALLENGER_CUSTOMER",
-        "order_index": 1,
+        "order_index": 2,
     },
     {
         "kind": "link",
         "title": "Kahneman — Thinking, Fast and Slow (resumen práctico)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W4_READING_KAHNEMAN_TWO_SYSTEMS",
-        "order_index": 2,
+        "order_index": 3,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Clasificación NO FIT / NO LISTO (Bloque 4)",
         "url": "https://docs.google.com/spreadsheets/d/PLACEHOLDER_W4_PIPELINE",
-        "order_index": 3,
+        "order_index": 4,
     },
     {
         "kind": "link",
         "title": "Apollo + ZoomInfo — guía de intent signals e intent data",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W4_READING_INTENT_DATA",
-        "order_index": 4,
+        "order_index": 5,
     },
 ]
 

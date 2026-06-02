@@ -394,51 +394,57 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 7 — La maquinaria del outbound (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W7_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — La maquinaria del outbound (Semana 7)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W7_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Diseño de secuencia multicanal con reglas de ramificación",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_SEQUENCE",
-        "order_index": 1,
+        "order_index": 2,
     },
     {
         "kind": "doc",
         "title": "Diagnóstico — Las 6 variantes de acceso al decisor (decision tree)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_VARIANTS",
-        "order_index": 2,
+        "order_index": 3,
     },
     {
         "kind": "doc",
         "title": "Checklist — Diagnóstico de deliverability (orden de verificación)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_DELIVERABILITY",
-        "order_index": 3,
+        "order_index": 4,
     },
     {
         "kind": "link",
         "title": "Outbound Kitchen — State of Outbound 2025 (232 empresas)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_OUTBOUND_KITCHEN",
-        "order_index": 4,
+        "order_index": 5,
     },
     {
         "kind": "link",
         "title": "Google Postmaster Tools (documentación oficial)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_POSTMASTER",
-        "order_index": 5,
+        "order_index": 6,
     },
     {
         "kind": "link",
         "title": "Instantly — Cold Email Benchmark Report 2026 (cadencias y touches)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_COLD_EMAIL_BENCH",
-        "order_index": 6,
+        "order_index": 7,
     },
     {
         "kind": "link",
         "title": "Salesloft — State of Sales Engagement (multicanal lift)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W7_READING_SALESLOFT_RESOURCES",
-        "order_index": 7,
+        "order_index": 8,
     },
 ]
 

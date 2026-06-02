@@ -402,45 +402,51 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 6 — Conversación y mensajería asíncrona (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W6_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — Conversación, calificación y mensajería asíncrona (Semana 6)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W6_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Permission-based opener (5 partes)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_OPENER",
-        "order_index": 1,
+        "order_index": 2,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Protocolo reconocer/reformular/reconducir (objeciones universales)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_OBJ_PROTOCOL",
-        "order_index": 2,
+        "order_index": 3,
     },
     {
         "kind": "doc",
         "title": "Plantilla — Guion de precalificación (Situación → Necesidad → Timing)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_SNT",
-        "order_index": 3,
+        "order_index": 4,
     },
     {
         "kind": "link",
         "title": "Voss — Never Split the Difference (resumen mirroring/labeling/tactical empathy)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_READING_NEGOTIATION_TACTICS",
-        "order_index": 4,
+        "order_index": 5,
     },
     {
         "kind": "link",
         "title": "Cognism — State of Cold Calling 2025/26 (benchmarks)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_READING_COLD_CALL_STATS",
-        "order_index": 5,
+        "order_index": 6,
     },
     {
         "kind": "link",
         "title": "Josh Braun — Permission-based openers y pattern interrupts",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W6_READING_JOSH_BRAUN",
-        "order_index": 6,
+        "order_index": 7,
     },
 ]
 
