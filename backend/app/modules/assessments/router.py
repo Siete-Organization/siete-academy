@@ -18,6 +18,8 @@ from app.modules.assessments.schemas import (
     SubmissionWithReview,
 )
 from app.modules.auth.dependencies import CurrentUser, get_current_user, require_roles
+from app.modules.courses.models import Module
+from app.modules.notifications.tasks import send_slack_video_notify_task
 
 log = get_logger("app.assessments.router")
 router = APIRouter()
@@ -118,7 +120,57 @@ def submit(
                 "ai.review_queue_failed",
                 extra={"submission_id": s.id, "error": str(e)},
             )
+
+    # Notificación Slack al subir video de fin de módulo o Prueba Final
+    _maybe_notify_slack_video(db, submission=s, student=current.user)
+
     return s
+
+
+def _maybe_notify_slack_video(
+    db: Session, *, submission: Submission, student
+) -> None:
+    """Dispara la notificación Slack si la entrega es un video de capa_2 / final_test.
+
+    Falla suave: cualquier excepción al encolar la task se loguea y se ignora.
+    El alumno nunca debería ver un 5xx por culpa de un webhook caído.
+    """
+    a = db.get(Assessment, submission.assessment_id)
+    if a is None or a.type not in ("capa_2", "final_test"):
+        return
+
+    video_url = submission.file_url or (submission.payload or {}).get("video_url")
+    if not video_url:
+        return
+
+    if a.type == "final_test":
+        module_label = "Prueba Final"
+    else:
+        module = db.get(Module, a.module_id)
+        n = (module.order_index if module else None) or "?"
+        module_label = f"Módulo {n}"
+
+    try:
+        send_slack_video_notify_task.delay(
+            student_name=student.display_name or "",
+            student_email=student.email,
+            module_label=module_label,
+            video_url=str(video_url),
+            assessment_title=a.title,
+        )
+        log.info(
+            "slack_video.queued",
+            extra={
+                "submission_id": submission.id,
+                "assessment_type": a.type,
+                "module_label": module_label,
+            },
+        )
+    except Exception as e:
+        log.warning(
+            "slack_video.queue_failed",
+            extra={"submission_id": submission.id, "error": str(e)},
+        )
 
 
 @router.get("/submissions/pending", response_model=list[SubmissionOut])

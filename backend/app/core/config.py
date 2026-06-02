@@ -40,6 +40,11 @@ class Settings(BaseSettings):
     smtp_password: str | None = None
     smtp_from: str = "Siete Academy <noreply@siete.com>"
 
+    # Slack incoming webhook que recibe la notificación cuando un alumno sube
+    # el video de fin de módulo (capa_2) o de la Prueba Final. Si no está set,
+    # las notificaciones quedan stubeadas (logueadas, no enviadas).
+    slack_video_notify_url: str | None = None
+
     # Comma-separated emails que reciben rol "admin" automáticamente al loguear.
     # Setear en .env / Coolify, no hardcodear identidades aquí.
     admin_emails: str = ""
