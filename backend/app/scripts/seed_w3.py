@@ -1,11 +1,14 @@
 """Seed: Semana 3 del Módulo 2 (Business Acumen: leer un negocio).
 
-Apertura del Módulo 2 — "El otro lado". Contenido extraído de
-SDR_Academy_Siete_Documento_Maestro.md (bloques 1-7 de Semana 3 + 4 micro-pruebas
-MCQ Capa 1).
+Apertura del Módulo 2 — "El otro lado".
 
-Crea el módulo `m2-el-otro-lado` (order_index=1) si no existe, y dentro la primera
-lección (order_index=0) con la secuencia dinámica completa.
+Estrategia de contenido (Option C híbrida — replica el pattern de seed_w1):
+- `MCQ_QUESTIONS` (4 preguntas Capa 1): transcripción literal del doc.
+- `LESSON_BODY_ES`: híbrido. Pregunta central + Bloques 1 y 2 transcriptos
+  literal del doc (lines 5228-5332). Bloques 3-7 como resumen explícito
+  con nota apuntando a la "Guía Semana 3 (PDF)" como recurso descargable.
+- `AVATAR_SCRIPT_ES` y `PRESENTATION_BLOCKS_ES`: borradores sintetizados.
+- `RESOURCES`: incluye `PLACEHOLDER_W3_GUIA`.
 
 Uso:
     cd backend && .venv/bin/python -m app.scripts.seed_w3
@@ -38,30 +41,101 @@ COURSE_SLUG = "sdr-academy-v1"
 MODULE_SLUG = "m2-el-otro-lado"
 
 
-LESSON_BODY_ES = """Pregunta central de la semana: ¿Cómo se lee un negocio lo suficientemente bien para hablarle a su dueño como un par?
+LESSON_BODY_ES = """**Pregunta central de la semana:** ¿Cómo se lee un negocio lo suficientemente bien para hablarle a su dueño como un par?
+
+Al terminar, vas a poder: analizar un negocio desconocido en 30 minutos y describir cómo gana plata, qué lo hace crecer y qué lo frena; leer una industria e identificar sus fuerzas dominantes; conectar un dolor específico del prospecto con una solución específica del cliente al que representás.
+
+---
 
 ## Bloque 1 — Qué es business acumen y por qué separa al SDR mediocre del excelente
-La brecha: dos SDRs con el mismo lead generan resultados 6× distintos (0.5% vs 3%) por lo que entienden del negocio del otro. Business acumen = leer cómo gana plata una empresa, qué la hace crecer, qué la frena. Es la variable individual que más mueve la carrera comercial B2B a 5 años.
 
-## Bloque 2 — Business Model Canvas (Osterwalder)
-9 componentes para leer cualquier empresa en 30 minutos: segmentos, propuesta de valor, canales, relación con cliente, fuentes de ingresos, recursos clave, actividades clave, alianzas clave, estructura de costos. Proceso: 10 min web + 10 min LinkedIn/News + 10 min pensando.
+En el Módulo 1 aprendiste **cómo compra** una empresa B2B. Ahora toca aprender a **leer la empresa que tenés enfrente**.
 
-## Bloque 3 — Unit economics: LTV, CAC, payback
-LTV (lifetime value) = ingreso promedio × meses de permanencia. CAC = costo total comercial / clientes nuevos. Payback = meses para recuperar CAC. Regla de oro SaaS B2B: LTV/CAC ≥ 3x (Skok). El SDR no calcula pero entiende el lenguaje del CFO. Benchmarks payback: PLG 6-9m, mid-market 12-18m, enterprise 18-24m.
+**La brecha real**
 
-## Bloque 4 — Las 5 fuerzas de Porter (industria)
-Rivalidad entre competidores, amenaza de nuevos entrantes, amenaza de sustitutos, poder de compradores, poder de proveedores. Cuando todas son altas, industria dura (margen bajo). El gancho del cold email cambia según qué fuerza presiona más: retail compite por costo, banca tradicional se defiende de fintech, minería reduce costo por tonelada.
+Dos SDRs reciben el mismo lead: una empresa de logística de 300 empleados en Perú. Contactan al COO. Ambos escriben un email. Las respuestas son distintas.
 
-## Bloque 5 — Jobs to Be Done (Christensen)
-La gente no compra productos, los contrata para hacer un trabajo. Un CFO no quiere reportes — quiere llegar tranquilo al board. 3 dimensiones del job: funcional (qué hace), emocional (cómo se siente al hacerlo), social (cómo se ve ante otros). Un SDR que integra las 3 dimensiones conecta con motivación real, no con el brochure.
+**SDR-1** escribe: "Hola Javier, vi que tu empresa está creciendo. Trabajamos con empresas de logística ayudándoles a optimizar sus operaciones. ¿Tenés 20 minutos esta semana para ver si podemos ayudar?"
 
-## Bloque 6 — Mapeo dolor-solución
-3 elementos: dolor específico del prospecto (no genérico) + impacto cuantificado + conexión con la oferta sin sobreprometer. Sin BMC + Porter + Jobs to Be Done previos, no hay mapeo — solo pitch disfrazado.
+**SDR-2** escribe: "Hola Javier, vi que abrieron centro logístico en Arequipa el mes pasado. En logística que se expande a regiones, lo que suele pesar fuerte en el primer año es el calibrado de la demanda local — hasta que el modelo se ajusta, conviven sobrestock y quiebre en los distintos puntos. ¿Les está pasando algo así o ya tienen métricas estables por local?"
 
-## Bloque 7 — El error #1 del SDR nuevo
-Vender la solución sin haber entendido el problema. 3 filtros antes de cada outreach: (1) ¿identifiqué un dolor específico? (2) ¿los 2 primeros párrafos hablan del prospecto o de mí? (3) ¿la propuesta implícita es "esto PODRÍA aplicar" o "esto TE SIRVE"? Si alguno falla, rehacés.
+**SDR-1** convierte al 0.5%. **SDR-2** al 3%. No cambió el producto, no cambió la empresa objetivo. Cambió **lo que el SDR entiende del negocio del otro**.
 
-**Fuentes:** Osterwalder & Pigneur (2010). Porter (1979). Christensen et al (2016). Skok SaaS Metrics 2.0. Bertuzzi (2016). Dixon & Adamson (2011)."""
+Eso es business acumen: la capacidad de **leer cómo funciona un negocio** lo suficiente como para identificar qué lo preocupa hoy. No es saber "sobre logística" en abstracto — es saber cómo gana plata una empresa de logística, qué la hace crecer, qué la frena, y cómo eso se traduce en dolores que alguien tiene que resolver.
+
+**Por qué el 80% de SDRs nunca lo construyen**
+
+Construir business acumen requiere **leer afuera del script de ventas**. Leer informes de industria, analizar los números públicos de empresas, entender cómo funcionan ciclos, costos, márgenes. La mayoría de los SDRs no lo hace porque:
+
+- No sienten que es "su trabajo" (creen que es trabajo del AE o del product marketing).
+- Les parece intimidante meterse con finanzas, economía, estrategia.
+- No lo ven premiado en incentivos de corto plazo.
+
+El resultado es un SDR "profesional" que hace volumen pero nunca diferencia. Cuando cambia de industria o de producto, **arranca desde cero** — porque no construyó nada transferible.
+
+El SDR que invierte en business acumen convierte mejor, crece más rápido a AE, y cuando cambia de empresa lleva un activo conceptual que no se deprecia. Es, probablemente, **la variable individual que más mueve la carrera comercial B2B a 5 años**.
+
+*Fuentes: Bridge Group (2023). Sales Development Metrics & Compensation Research Report. · Dixon & Adamson (2011). The Challenger Sale. El perfil "Challenger" es el que más convierte — su característica principal es teaching basado en entender el negocio del comprador.*
+
+---
+
+## Bloque 2 — Anatomía de un negocio: Business Model Canvas
+
+Necesitás un framework para leer cualquier empresa rápido. El estándar de la industria es el **Business Model Canvas** (Osterwalder & Pigneur, 2010). 9 componentes. 30 minutos para aplicarlo a una empresa que no conocés.
+
+**Los 9 componentes**
+
+1. **Segmentos de clientes.** ¿A quién le vende? Edad / tamaño / industria / geografía. Una misma empresa puede tener varios segmentos (ej: un banco vende a retail y a corporate).
+2. **Propuesta de valor.** ¿Qué problema resuelve o qué necesidad cubre? No la versión del marketing — la versión real (Jobs to Be Done).
+3. **Canales.** ¿Cómo entrega el producto/servicio? Tiendas físicas, online, app, distribuidores, fuerza de ventas directa.
+4. **Relación con el cliente.** ¿Cómo se vincula? Autoservicio, atención personalizada, comunidad, self-service.
+5. **Fuentes de ingresos.** ¿Cómo cobra? Venta única, suscripción, comisión, licencia, uso (pay-per-use), publicidad, freemium.
+6. **Recursos clave.** ¿Qué necesita para operar? Físicos (fábricas, tiendas), intelectuales (patentes, marca), humanos (talento), financieros (capital).
+7. **Actividades clave.** ¿Qué hace todos los días? Producción, distribución, marketing, soporte.
+8. **Alianzas clave.** ¿Con quién se asocia? Proveedores, partners estratégicos, joint ventures.
+9. **Estructura de costos.** ¿Dónde se le va la plata? Costos fijos (rent, salarios) vs variables (materia prima, pagos por transacción). Economías de escala o scope.
+
+**Cómo usarlo en 30 minutos**
+
+Para leer una empresa nueva:
+
+1. **10 min en su sitio web:** sección "Quiénes somos", "Productos", "Clientes". Completá segmentos + propuesta de valor + canales.
+2. **10 min en LinkedIn + Google News:** tamaño, contrataciones recientes, noticias. Completá recursos clave + actividades + alianzas.
+3. **10 min pensando:** con la información, ¿cómo gana plata? ¿Dónde están sus costos mayores? ¿Qué economía de escala o scope puede estar buscando? Completá ingresos + costos.
+
+Al terminar, tenés un **modelo mental** de la empresa. No perfecto, pero **suficiente para hablarle al COO como par en un primer email**.
+
+*Fuentes: Osterwalder & Pigneur (2010). Business Model Generation. Wiley. · Blank & Dorf (2012). The Startup Owner's Manual.*
+
+---
+
+## Bloques 3 a 7 — Resumen para repaso
+
+> Estos bloques están desarrollados en detalle en la **Guía Semana 3 (PDF descargable)** del material de apoyo. Acá queda el índice como repaso. El alumno debe consumir la guía completa antes de las micro-pruebas y la prueba del módulo.
+
+**Bloque 3 — Unit economics básico: LTV, CAC, payback**
+
+Las 3 métricas que cualquier empresa B2B mira obsesivamente. **LTV** (Lifetime Value): cuánto dinero genera un cliente promedio durante toda su relación (ticket × permanencia, ajustado por margen). **CAC** (Customer Acquisition Cost): costo total de adquirir un cliente nuevo (marketing + comercial / nuevos clientes). **Payback**: meses para recuperar el CAC. Regla estándar SaaS B2B (Skok, *SaaS Metrics 2.0*): **LTV/CAC ≥ 3x**. Si LTV/CAC < 1, la empresa pierde plata con cada cliente. El SDR no calcula unit economics pero entiende el lenguaje del CFO. Benchmarks payback: PLG 6-9m, mid-market 12-18m, enterprise 18-24m.
+
+**Bloque 4 — Leer una industria: las 5 fuerzas de Porter**
+
+Cualquier industria está definida por la intensidad de 5 fuerzas (Porter, 1979): (1) Rivalidad entre competidores existentes, (2) Amenaza de nuevos entrantes, (3) Amenaza de sustitutos, (4) Poder de negociación de compradores, (5) Poder de negociación de proveedores. Cuando son altas, industria dura (margen bajo); cuando son bajas, atractiva. El gancho del cold email cambia según qué fuerza presiona más: retail LATAM (rivalidad intensa, margen bajo) → "optimizar inventario por local"; banca tradicional (sustitutos fintech alta) → "acelerar onboarding digital"; minería (poder comprador alto, precios commodity) → "reducir costo por tonelada".
+
+**Bloque 5 — Jobs to Be Done (Christensen): entender la oferta del cliente**
+
+La gente no compra productos — contrata productos para hacer un trabajo. Un CFO no quiere reportes, quiere llegar tranquilo al board meeting. 3 dimensiones del job: (1) **Funcional** (¿qué tarea concreta debe cumplir?), (2) **Emocional** (¿cómo quiere sentirse mientras la hace?), (3) **Social** (¿cómo quiere verse ante otros?). En B2B las tres importan. Un SDR que solo vende funcional ("reducimos 17 horas") pierde las otras dos. Un SDR que integra las 3 conecta con motivación real.
+
+**Bloque 6 — Mapeo dolor-solución**
+
+Con BMC + Porter + JTBD, podés construir un mapeo dolor-solución bien hecho: (1) **Dolor específico** del prospecto (no genérico — "en [situación específica], la dinámica que genera dolor es Y"), (2) **Impacto cuantificado** (cuánto cuesta no resolverlo), (3) **Conexión con oferta sin prometer**. Sin los 3 bloques anteriores hechos, no hay mapeo — solo pitch disfrazado.
+
+**Bloque 7 — El error #1 del SDR nuevo**
+
+Vender la solución sin haber entendido el problema. Es el síntoma del que tiene cold emails que "explican bien lo que hace el producto" pero convierten al 0.4% vs el benchmark del equipo de 1.8%. 3 filtros antes de cada outreach: (1) ¿Identifiqué un dolor específico del prospecto? (2) ¿Los 2 primeros párrafos hablan del prospecto o de mí? (3) ¿La propuesta implícita es "esto PODRÍA aplicar" o "esto TE SIRVE"? Si alguno falla, rehacés.
+
+---
+
+**Fuentes principales del módulo:** Osterwalder & Pigneur (2010). Business Model Generation. · Porter (1979). HBR. · Christensen et al (2016). Competing Against Luck. · Skok. SaaS Metrics 2.0. · Bertuzzi (2016). The Sales Development Playbook. · Dixon & Adamson (2011). The Challenger Sale."""
 
 
 AVATAR_SCRIPT_ES = """Arrancamos el Módulo 2. Si el Módulo 1 te enseñó cómo se compra en B2B, este módulo te enseña a leer el otro lado: la empresa que tenés enfrente y la persona que decide.
@@ -328,33 +402,39 @@ MCQ_QUESTIONS = [
 RESOURCES = [
     {
         "kind": "pdf",
+        "title": "Guía Semana 3 — Business Acumen (PDF descargable)",
+        "url": "https://drive.google.com/file/d/PLACEHOLDER_W3_GUIA",
+        "order_index": 0,
+    },
+    {
+        "kind": "pdf",
         "title": "Handout — Business acumen (Semana 3)",
         "url": "https://drive.google.com/file/d/PLACEHOLDER_W3_HANDOUT",
-        "order_index": 0,
+        "order_index": 1,
     },
     {
         "kind": "link",
         "title": "Osterwalder — Business Model Canvas (PDF)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_READING_BIZ_MODEL_CANVAS",
-        "order_index": 1,
+        "order_index": 2,
     },
     {
         "kind": "link",
         "title": "Porter — The Five Competitive Forces That Shape Strategy (HBR)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_READING_PORTER_5_FORCES",
-        "order_index": 2,
+        "order_index": 3,
     },
     {
         "kind": "link",
         "title": "Skok — SaaS Metrics 2.0 (LTV, CAC, payback)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_READING_SAAS_METRICS",
-        "order_index": 3,
+        "order_index": 4,
     },
     {
         "kind": "link",
         "title": "Anexo — Landscape de industrias LATAM (10 industrias)",
         "url": "https://docs.google.com/document/d/PLACEHOLDER_W3_LANDSCAPE_LATAM",
-        "order_index": 4,
+        "order_index": 5,
     },
 ]
 
