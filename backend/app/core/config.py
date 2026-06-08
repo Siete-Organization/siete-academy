@@ -45,17 +45,9 @@ class Settings(BaseSettings):
     # las notificaciones quedan stubeadas (logueadas, no enviadas).
     slack_video_notify_url: str | None = None
 
-    # Comma-separated emails que reciben rol "admin" automáticamente al loguear.
-    # Setear en .env / Coolify, no hardcodear identidades aquí.
-    admin_emails: str = ""
-
     @property
     def cors_origins(self) -> list[str]:
         return [o.strip() for o in self.allowed_origins.split(",") if o.strip()]
-
-    @property
-    def admin_emails_list(self) -> list[str]:
-        return [e.strip().lower() for e in self.admin_emails.split(",") if e.strip()]
 
 
 @lru_cache

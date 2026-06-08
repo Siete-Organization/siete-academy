@@ -11,17 +11,17 @@ from app.modules.users.models import User
 log = get_logger("app.auth")
 
 
-def _resolve_initial_role(db: Session, email: str, admin_emails: list[str]) -> str | None:
+def _resolve_initial_role(db: Session, email: str) -> str | None:
     """Decide qué rol asignar a un usuario que loguea por primera vez.
 
-    Devuelve None si el email no está autorizado (ni en allowlist de admins
-    ni en applications con status 'approved').
+    Solo autoprovisiona como 'student' si hay una Application aprobada
+    para ese email. Cualquier otro rol (admin/teacher/recruiter) debe
+    pre-existir en la BD: se crea vía `app.scripts.add_user` o se
+    promueve desde el panel admin (PATCH /users/{id}/role).
     """
     email_l = (email or "").lower()
     if not email_l:
         return None
-    if email_l in admin_emails:
-        return "admin"
     approved = (
         db.query(Application)
         .filter(Application.applicant_email.ilike(email_l), Application.status == "approved")
@@ -82,19 +82,22 @@ def get_current_user(
 
     uid = claims.get("uid") or claims.get("sub")
     email = (claims.get("email") or "").lower()
-    admin_emails = settings.admin_emails_list
 
     user = db.query(User).filter_by(firebase_uid=uid).first()
     if user is None and email:
         # Si el firebase_uid es nuevo, intenta enganchar a un User existente por email
-        # (caso: admin seedeado en demo o aplicante que ya tenía cuenta).
+        # (caso: usuario pre-seedeado vía `add_user` con uid placeholder, o aplicante
+        # que ya tenía cuenta). Reconcilia el uid real en el row existente.
         user = db.query(User).filter(User.email.ilike(email)).first()
-        if user is not None and not user.firebase_uid:
+        if user is not None and user.firebase_uid != uid:
             user.firebase_uid = uid
+            db.commit()
+            db.refresh(user)
 
     if user is None:
-        # Provisioning: solo si el email está autorizado.
-        initial_role = _resolve_initial_role(db, email, admin_emails)
+        # Provisioning: solo si el email tiene Application aprobada (rol 'student').
+        # admin/teacher/recruiter deben pre-existir en BD.
+        initial_role = _resolve_initial_role(db, email)
         if initial_role is None:
             log.info("auth.not_invited", extra={"email": email})
             raise HTTPException(
@@ -114,17 +117,6 @@ def get_current_user(
             "auth.user_provisioned",
             extra={"firebase_uid": uid, "email": user.email, "role": user.role},
         )
-    else:
-        # Promote existing user to admin if email matches admin_emails.
-        if email and email in admin_emails and user.role != "admin":
-            prior = user.role
-            user.role = "admin"
-            db.commit()
-            db.refresh(user)
-            log.info(
-                "auth.role_promoted",
-                extra={"user_id": user.id, "from": prior, "to": "admin"},
-            )
 
     bind_user_id(user.id)
     return CurrentUser(user=user, claims=claims)

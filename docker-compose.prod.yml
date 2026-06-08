@@ -64,7 +64,6 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       SMTP_FROM: ${SMTP_FROM:-Siete Academy <noreply@siete.com>}
-      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
       WEB_CONCURRENCY: ${WEB_CONCURRENCY:-3}
     expose:
       - "8000"
