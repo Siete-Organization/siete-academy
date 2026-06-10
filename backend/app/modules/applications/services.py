@@ -1,5 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.core.logging import get_logger
@@ -13,9 +14,37 @@ from app.modules.applications.schemas import ApplicationCreate
 log = get_logger("app.applications")
 
 
-def create_application(db: Session, data: ApplicationCreate) -> Application:
+def create_application(db: Session, data: ApplicationCreate) -> tuple[Application, bool]:
+    """Crea la aplicación o devuelve la existente si el email ya aplicó.
+
+    Una aplicación por email (la prueba da resultado al instante, así que
+    permitir reenvíos abriría la puerta a re-tomar el MCQ). El reenvío del
+    mismo email es idempotente: devuelve la fila original con su resultado.
+
+    Returns (application, created): `created=False` cuando se devolvió una
+    aplicación previa — el router usa esto para no re-notificar ni re-scorear.
+    """
+    existing = (
+        db.query(Application)
+        .filter(func.lower(Application.applicant_email) == str(data.applicant_email).lower())
+        .order_by(Application.created_at.asc())
+        .first()
+    )
+    if existing is not None:
+        log.info(
+            "application.duplicate_submit",
+            extra={"application_id": existing.id, "email": existing.applicant_email},
+        )
+        return existing, False
+
     answers_dict = {a.question_id: a.text for a in data.answers}
     submitted_at = datetime.utcnow()
+    # El front manda started_at en ISO con 'Z' (tz-aware); submitted_at y la
+    # columna DateTime son naive-UTC. Normalizamos a naive-UTC para no romper
+    # el speed check con "can't subtract offset-naive and offset-aware".
+    started_at = data.started_at
+    if started_at is not None and started_at.tzinfo is not None:
+        started_at = started_at.astimezone(timezone.utc).replace(tzinfo=None)
     mcq_grade: dict[str, int] | None = None
     auto_decision: str | None = None
     if data.mcq_answers is not None:
@@ -24,7 +53,7 @@ def create_application(db: Session, data: ApplicationCreate) -> Application:
             open_answers=answers_dict,
             mcq_score=mcq_grade["mcq_score"],
             mcq_excel_score=mcq_grade["mcq_excel_score"],
-            started_at=data.started_at,
+            started_at=started_at,
             submitted_at=submitted_at,
         )
     app = Application(
@@ -36,7 +65,7 @@ def create_application(db: Session, data: ApplicationCreate) -> Application:
         locale=data.locale,
         answers=answers_dict,
         video_url=data.video_url,
-        started_at=data.started_at,
+        started_at=started_at,
         mcq_answers=data.mcq_answers,
         mcq_score=mcq_grade["mcq_score"] if mcq_grade else None,
         mcq_excel_score=mcq_grade["mcq_excel_score"] if mcq_grade else None,
@@ -57,7 +86,7 @@ def create_application(db: Session, data: ApplicationCreate) -> Application:
             "mcq_score": app.mcq_score,
         },
     )
-    return app
+    return app, True
 
 
 def review_application(

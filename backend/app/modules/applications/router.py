@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -23,14 +23,33 @@ router = APIRouter()
 @router.post("", response_model=ApplicationOut, status_code=201)
 @limiter.limit("5/hour")
 def submit_application(
-    body: ApplicationCreate, request: Request, db: Session = Depends(get_db)
+    body: ApplicationCreate,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
 ) -> Application:
     """Endpoint público — no requiere auth. El aspirante aún no tiene cuenta.
 
     Rate-limited to 5/hour/IP to prevent spam.
+
+    Devuelve 201 cuando se crea la aplicación y 200 cuando el email ya había
+    aplicado (el front usa ese status para avisar amigablemente al aspirante).
     """
-    app = services.create_application(db, body)
-    notify_submitted.delay(app.id)
+    app, created = services.create_application(db, body)
+    # Reenvío del mismo email: devolvemos la aplicación existente sin
+    # re-notificar ni re-scorear (idempotente). 200 ⇒ "ya aplicaste".
+    if not created:
+        response.status_code = 200
+        return app
+    # La aplicación ya está persistida: un fallo al encolar notificaciones o
+    # scoring no debe romper el envío del aspirante (si no, ve "Network Error").
+    try:
+        notify_submitted.delay(app.id)
+    except Exception as e:
+        log.warning(
+            "notify.submit_queue_failed",
+            extra={"application_id": app.id, "error": str(e)},
+        )
     try:
         score_application_task.delay(app.id)
     except Exception as e:

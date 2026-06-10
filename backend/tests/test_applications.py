@@ -6,8 +6,9 @@ Covers:
   * admin guard on review endpoint
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
+from app.modules.applications.admission_questions_es import MCQ, OPEN_PROMPTS
 from app.modules.applications.models import Application
 from app.modules.applications.schemas import ApplicationAnswer, ApplicationCreate
 from app.modules.applications.services import create_application, review_application
@@ -24,6 +25,8 @@ class TestCreateApplicationService:
             applicant_name="Ana Ejemplo",
             applicant_email="ana@example.com",
             applicant_phone=None,
+            linkedin_url="https://www.linkedin.com/in/ana",
+            country="Perú",
             locale="es",
             answers=[
                 ApplicationAnswer(question_id="why_sales", text=_long_answer("a")),
@@ -32,7 +35,8 @@ class TestCreateApplicationService:
             ],
             video_url="https://loom.com/x",
         )
-        app_obj = create_application(db, data)
+        app_obj, created = create_application(db, data)
+        assert created is True
         assert app_obj.id is not None
         assert app_obj.status == "submitted"
         assert app_obj.answers == {
@@ -40,6 +44,60 @@ class TestCreateApplicationService:
             "achievement": _long_answer("b"),
             "hours_per_week": _long_answer("c"),
         }
+
+    def test_timezone_aware_started_at_does_not_crash(self, db):
+        """Regresión: el front manda started_at en ISO con 'Z' (tz-aware).
+
+        El speed check restaba `datetime.utcnow()` (naive) − started_at (aware)
+        → TypeError → 500 sin CORS → "Network Error" en el navegador. Solo le
+        pasaba a quien pasaba los pisos (llega a la regla de velocidad).
+        """
+        data = ApplicationCreate(
+            applicant_name="Aspirante Real",
+            applicant_email="real@example.com",
+            linkedin_url="https://www.linkedin.com/in/real",
+            country="Perú",
+            locale="es",
+            answers=[
+                ApplicationAnswer(
+                    question_id=p["id"],
+                    text=" ".join(["palabra"] * (p["min_words"] + 5)),
+                )
+                for p in OPEN_PROMPTS
+            ],
+            mcq_answers={q["id"]: q["correct"] for q in MCQ},
+            # tz-aware, 70 min atrás — exactamente lo que envía el browser.
+            started_at=datetime.now(timezone.utc) - timedelta(minutes=70),
+            video_url="https://www.youtube.com/watch?v=x",
+        )
+        app_obj, created = create_application(db, data)
+        assert created is True
+        assert app_obj.auto_decision == "passed_stage_1"
+        # started_at quedó normalizado a naive-UTC.
+        assert app_obj.started_at.tzinfo is None
+
+    def test_resubmit_same_email_returns_existing(self, db):
+        def _build(name: str) -> ApplicationCreate:
+            return ApplicationCreate(
+                applicant_name=name,
+                applicant_email="dup@example.com",
+                linkedin_url="https://www.linkedin.com/in/dup",
+                country="Perú",
+                locale="es",
+                answers=[
+                    ApplicationAnswer(question_id="why_sales", text=_long_answer("a")),
+                ],
+                video_url="https://loom.com/x",
+            )
+
+        first, created_first = create_application(db, _build("Primera"))
+        second, created_second = create_application(db, _build("Segunda vez"))
+
+        assert created_first is True
+        assert created_second is False
+        # Idempotente: misma fila, conserva el primer envío.
+        assert second.id == first.id
+        assert second.applicant_name == "Primera"
 
     def test_short_answers_are_accepted(self):
         # No imponemos word-count: queremos que el aspirante pueda enviar
@@ -95,6 +153,8 @@ class TestApplicationsEndpoint:
         body = {
             "applicant_name": "Luis",
             "applicant_email": "luis@example.com",
+            "linkedin_url": "https://www.linkedin.com/in/luis",
+            "country": "Perú",
             "locale": "es",
             "video_url": "https://loom.com/x",
             "answers": [
@@ -109,22 +169,39 @@ class TestApplicationsEndpoint:
         assert data["applicant_name"] == "Luis"
         assert data["status"] == "submitted"
 
-    def test_post_application_rejects_short_answer(self, client):
+    def test_resubmit_same_email_returns_200_not_201(self, client):
+        body = {
+            "applicant_name": "Luis",
+            "applicant_email": "dup-endpoint@example.com",
+            "linkedin_url": "https://www.linkedin.com/in/luis",
+            "country": "Perú",
+            "locale": "es",
+            "video_url": "https://loom.com/x",
+            "answers": [{"question_id": "why_sales", "text": _long_answer("a")}],
+        }
+        first = client.post("/applications", json=body)
+        assert first.status_code == 201, first.text
+        # Reenvío del mismo email → 200 con la aplicación existente.
+        again = client.post("/applications", json=body)
+        assert again.status_code == 200, again.text
+        assert again.json()["id"] == first.json()["id"]
+
+    def test_post_application_rejects_missing_required_field(self, client):
+        # linkedin_url y country son obligatorios en el schema actual.
         body = {
             "applicant_name": "Luis",
             "applicant_email": "luis@example.com",
+            "country": "Perú",
             "locale": "es",
             "video_url": "https://loom.com/x",
             "answers": [
-                {"question_id": "why_sales", "text": "too short"},
-                {"question_id": "achievement", "text": _long_answer("b")},
-                {"question_id": "hours_per_week", "text": _long_answer("c")},
+                {"question_id": "why_sales", "text": _long_answer("a")},
             ],
         }
         resp = client.post("/applications", json=body)
         assert resp.status_code == 422
         detail = resp.json()["detail"]
-        assert any("at least 100 words" in str(d.get("msg", "")) for d in detail)
+        assert any(d.get("loc", [])[-1:] == ["linkedin_url"] for d in detail)
 
     def test_review_endpoint_requires_admin(self, client, db, login_as):
         app_obj = Application(
