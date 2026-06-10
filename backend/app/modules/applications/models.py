@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Text, func
+from sqlalchemy import JSON, DateTime, ForeignKey, Index, Integer, String, Text, func, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -8,6 +8,15 @@ from app.core.database import Base
 
 class Application(Base):
     __tablename__ = "applications"
+    # Una aplicación por email (case-insensitive). Respaldo a nivel BD del
+    # chequeo idempotente en services.create_application.
+    __table_args__ = (
+        Index(
+            "uq_applications_email_lower",
+            text("lower(applicant_email)"),
+            unique=True,
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     # Aspirante aún no tiene User (aplicación es pre-registro)

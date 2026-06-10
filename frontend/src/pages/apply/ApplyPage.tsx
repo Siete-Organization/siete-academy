@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -92,6 +92,7 @@ export function ApplyPage() {
   const [videoUrl, setVideoUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<ApplicationResponse | null>(null);
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch admission content on mount. started_at se setea cuando llega el payload.
@@ -146,7 +147,7 @@ export function ApplyPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const { data } = await api.post<ApplicationResponse>("/applications", {
+      const resp = await api.post<ApplicationResponse>("/applications", {
         applicant_name: name,
         applicant_email: email,
         applicant_phone: phone || null,
@@ -161,7 +162,9 @@ export function ApplyPage() {
         })),
         mcq_answers: mcqAnswers,
       });
-      setResult(data);
+      // 200 ⇒ el email ya había aplicado (devolvió la aplicación existente).
+      setAlreadyApplied(resp.status === 200);
+      setResult(resp.data);
     } catch (err: unknown) {
       let message: string = t("common.error");
       if (axios.isAxiosError(err)) {
@@ -178,7 +181,8 @@ export function ApplyPage() {
     }
   };
 
-  if (result) return <ResultView result={result} t={t} />;
+  if (result)
+    return <ResultView result={result} alreadyApplied={alreadyApplied} t={t} />;
 
   if (loadError) {
     return (
@@ -491,11 +495,33 @@ function WordRangeCounter({
 
 function ResultView({
   result,
+  alreadyApplied,
   t,
 }: {
   result: ApplicationResponse;
+  alreadyApplied: boolean;
   t: (k: string, opts?: Record<string, unknown>) => string;
 }) {
+  // Ya aprobado: lo mejor es mandarlo a iniciar sesión, no re-mostrar la prueba.
+  if (alreadyApplied && result.status === "approved") {
+    return (
+      <div className="container-editorial py-32 max-w-2xl">
+        <p className="num-label text-ember">{t("apply.alreadyApprovedTitle")}</p>
+        <h1 className="font-display text-display-lg mt-5 text-balance">
+          {t("apply.resultPassed")}
+        </h1>
+        <p className="text-ink-soft text-lg mt-6 leading-relaxed">
+          {t("apply.alreadyApprovedBody")}
+        </p>
+        <Link
+          to="/login"
+          className="inline-block mt-8 text-ink border-b border-ink pb-1 font-mono text-xs uppercase tracking-[0.18em] hover:text-ember hover:border-ember transition-colors"
+        >
+          {t("apply.goToLogin")} →
+        </Link>
+      </div>
+    );
+  }
   const decision = result.auto_decision;
   const passed = decision === "passed_stage_1";
   const titleKey =
@@ -512,6 +538,14 @@ function ResultView({
       : `apply.reason_${decision}`;
   return (
     <div className="container-editorial py-32 max-w-2xl">
+      {alreadyApplied && (
+        <div className="mb-8 border-l-2 border-ember bg-ember/5 pl-5 py-4">
+          <p className="num-label text-ember">{t("apply.alreadyAppliedTitle")}</p>
+          <p className="text-sm text-ink mt-2 leading-relaxed">
+            {t("apply.alreadyAppliedBody")}
+          </p>
+        </div>
+      )}
       <p className="num-label">№ {String(result.id).padStart(3, "0")} · acuse de recibo</p>
       <h1 className="font-display text-display-lg mt-5 text-balance">{t(titleKey)}</h1>
       <p className="text-ink-soft text-lg mt-6 leading-relaxed">{t(bodyKey)}</p>
