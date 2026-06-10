@@ -168,10 +168,17 @@ export function ApplyPage() {
     } catch (err: unknown) {
       let message: string = t("common.error");
       if (axios.isAxiosError(err)) {
-        const detail = err.response?.data?.detail;
-        if (Array.isArray(detail) && detail[0]?.msg) message = String(detail[0].msg);
-        else if (typeof detail === "string") message = detail;
-        else message = err.message;
+        if (err.response?.status === 429) {
+          message = t("apply.rateLimited");
+        } else if (!err.response) {
+          // Sin respuesta del servidor = problema de red/conexión real.
+          message = t("apply.connectionError");
+        } else {
+          const detail = err.response?.data?.detail;
+          if (Array.isArray(detail) && detail[0]?.msg) message = String(detail[0].msg);
+          else if (typeof detail === "string") message = detail;
+          else message = err.message;
+        }
       } else if (err instanceof Error) {
         message = err.message;
       }

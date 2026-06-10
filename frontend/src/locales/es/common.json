@@ -83,6 +83,8 @@
     "submitReady": "Listo para enviar. Recibirás resultado de Etapa 1 al instante.",
     "submitIncomplete": "Completa todos los campos, las 3 abiertas en rango y las 26 MCQ para habilitar el envío.",
     "loadError": "No pudimos cargar la prueba. Refresca la página o avísanos.",
+    "rateLimited": "Recibimos varios intentos desde tu red en poco tiempo. Espera unos minutos y vuelve a enviar — si el problema sigue, escríbenos.",
+    "connectionError": "No pudimos conectar con el servidor. Revisa tu conexión y vuelve a enviar; tus respuestas siguen acá.",
     "resultPassed": "Pasaste la Etapa 1.",
     "resultPassedBody": "Tus respuestas escritas y MCQ entraron dentro del piso. Vamos a revisar tu video y te avisaremos los siguientes pasos en un plazo máximo de siete días.",
     "resultRejected": "Esta vez no avanzas.",

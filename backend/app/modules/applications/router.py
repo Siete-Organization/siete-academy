@@ -21,7 +21,11 @@ router = APIRouter()
 
 
 @router.post("", response_model=ApplicationOut, status_code=201)
-@limiter.limit("5/hour")
+# 20/hour/IP: las universidades comparten una IP pública (NAT), así que el
+# límite tiene que dar aire a varios postulantes de la misma red. El "una
+# aplicación por persona" lo garantiza la dedup por email, no este límite,
+# que solo frena spam de bots.
+@limiter.limit("20/hour")
 def submit_application(
     body: ApplicationCreate,
     request: Request,
@@ -30,7 +34,8 @@ def submit_application(
 ) -> Application:
     """Endpoint público — no requiere auth. El aspirante aún no tiene cuenta.
 
-    Rate-limited to 5/hour/IP to prevent spam.
+    Rate-limited to 20/hour/IP to prevent bot spam (shared university NATs need
+    headroom; duplicate real applications are prevented by per-email dedup).
 
     Devuelve 201 cuando se crea la aplicación y 200 cuando el email ya había
     aplicado (el front usa ese status para avisar amigablemente al aspirante).
