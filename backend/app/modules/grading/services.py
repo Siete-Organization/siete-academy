@@ -41,6 +41,7 @@ GRAD_BASIC_FINAL = 60.0
 GRAD_DISTINCTION_COURSE = 85.0
 GRAD_DISTINCTION_MODULE = 80.0
 GRAD_DISTINCTION_FINAL = 85.0
+GRAD_DISTINCTION_DIFFERENTIATOR = 75.0  # ≥75% acumulado en preguntas diferenciadoras
 
 
 def classify_tier(assessment: Assessment) -> Tier:
@@ -123,6 +124,69 @@ def final_video_score(config: dict, details: dict | None) -> float | None:
     return round(points / max_total * 100, 2)
 
 
+def differentiator_score(
+    config: dict,
+    payload: dict | None,
+    details: dict | None,
+) -> float | None:
+    """% acumulado en las preguntas diferenciadoras del caso (req. de distinción).
+
+    `differentiator_ids` mezcla MCQ (1 pto c/u, auto) y respuestas cortas (puntos
+    del profesor /max). Devuelve None si falta el grading manual (`details`).
+    """
+    diff_ids = config.get("differentiator_ids") or []
+    if not diff_ids:
+        return None
+    if details is None:
+        return None
+
+    questions = {q.get("id"): q for q in (config.get("questions") or [])}
+    shorts = {s.get("id"): s for s in (config.get("short_answers") or [])}
+    tables = {t.get("id"): t for t in (config.get("tables") or [])}
+    answers = (payload or {}).get("answers", {}) or {}
+    d_short = details.get("short_answers") or {}
+    d_tables = details.get("tables") or {}
+
+    earned = 0.0
+    max_pts = 0.0
+    for qid in diff_ids:
+        if qid in questions:
+            max_pts += 1
+            earned += assess_services.count_mcq_correct([questions[qid]], answers)
+        elif qid in shorts:
+            m = _num(shorts[qid].get("max_points", 2))
+            max_pts += m
+            earned += min(_num(d_short.get(qid)), m)
+        elif qid in tables:
+            m = _num(tables[qid].get("max_points", 0))
+            max_pts += m
+            earned += min(_num(d_tables.get(qid)), m)
+    if max_pts <= 0:
+        return None
+    return round(earned / max_pts * 100, 2)
+
+
+def video_critical_ok(config: dict, details: dict | None) -> bool | None:
+    """¿El video alcanza el piso en las dimensiones críticas (req. de distinción)?
+
+    Lee `video_rubric.critical_dimensions_for_distinction` (ids de dimensión) y el
+    umbral `video_rubric.min_critical_points`; si no está, exige ~90% del máximo
+    crítico (el doc dice "11/12 o 12/12" — bar casi perfecto en las críticas).
+    """
+    rubric = config.get("video_rubric") or {}
+    crit = rubric.get("critical_dimensions_for_distinction") or []
+    if not crit:
+        return None
+    d_video = (details or {}).get("video_rubric")
+    if not d_video:
+        return None
+    crit_max = 2 * len(crit)
+    threshold = rubric.get("min_critical_points")
+    threshold = _num(threshold) if threshold is not None else round(0.9 * crit_max)
+    earned = sum(_num(d_video.get(str(dim))) for dim in crit)
+    return earned >= threshold
+
+
 def course_final_score(
     *,
     micros_avg: float | None,
@@ -149,10 +213,14 @@ def graduation_status(
     course_final: float | None,
     per_module_scores: list[float | None],
     final_pct: float | None,
+    differentiator_pct: float | None = None,
+    video_critical_ok: bool | None = None,
 ) -> Literal["distinction", "basic", "failing", "in_progress"]:
     """Determina el estatus de graduación según umbrales del doc (líneas 1032-1043).
 
-    - **distinction**: nota final ≥85% + los 4 módulos ≥80% + prueba final ≥85%.
+    - **distinction** (5 condiciones): nota final ≥85% + los 4 módulos ≥80% +
+      prueba final ≥85% + ≥75% en preguntas diferenciadoras + rúbrica de video
+      por encima del piso en las dimensiones críticas.
     - **basic**: nota final ≥70% + ≥3 de 4 módulos ≥65% + prueba final ≥60%.
     - **failing**: terminó el curso (todas las capas presentes) y no llega a básico.
     - **in_progress**: aún no completó (alguna capa con None).
@@ -167,6 +235,9 @@ def graduation_status(
         course_final >= GRAD_DISTINCTION_COURSE
         and final_pct >= GRAD_DISTINCTION_FINAL
         and all(s >= GRAD_DISTINCTION_MODULE for s in modules)
+        and differentiator_pct is not None
+        and differentiator_pct >= GRAD_DISTINCTION_DIFFERENTIATOR
+        and video_critical_ok is True
     ):
         return "distinction"
 

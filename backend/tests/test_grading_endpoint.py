@@ -107,7 +107,11 @@ def scenario(db):
         "questions": [
             {"id": f"q{i}", "type": "single", "correct": ["a"]} for i in range(10)
         ],
-        "video_rubric": {"max_total": 30},
+        "differentiator_ids": ["q0", "q1", "q2", "q3"],
+        "video_rubric": {
+            "max_total": 30,
+            "critical_dimensions_for_distinction": [1, 2, 3, 4],
+        },
     }
     final_a = Assessment(
         module_id=mods[-1].id, lesson_id=None, type="final_test",
@@ -221,11 +225,12 @@ def test_distinction_path(client, login_as, db, scenario):
     # Pruebas módulo: 90 MCQ + 90 video → 90% ≥ 80
     for a in scenario["capa2"]:
         _submit(db, assessment_id=a.id, user_id=alice.id, auto_score=90.0, review_score=90.0)
-    # Prueba final: caso 10/10 = 100% + video 24/30 = 80% → 100*0.7 + 80*0.3 = 94 ≥ 85
+    # Prueba final: caso 10/10 = 100% + video 24/30 = 80% → 100*0.7 + 80*0.3 = 94 ≥ 85.
+    # Distinción: diferenciadores q0-q3 correctos (100% ≥75) + dims críticas 1-4 = 2 c/u (8 ≥ umbral).
     _submit(
         db, assessment_id=scenario["final"].id, user_id=alice.id, auto_score=None,
         payload=_final_payload(10), review_score=80.0,
-        review_details={"video_rubric": {"total": 24}},
+        review_details={"video_rubric": {str(i): 2 for i in range(1, 13)}},
     )
 
     r = client.get("/grading/results", params={"cohort_id": scenario["cohort"].id})
