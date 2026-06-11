@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -218,6 +218,21 @@ export function ModulePage() {
               </li>
             ))}
           </ol>
+        </div>
+        <div className="hairline pt-6 space-y-2">
+          <p className="num-label mb-2">{t("exam.evaluations")}</p>
+          <Link
+            to={`/student/module/${moduleId}/exam`}
+            className="block text-sm py-2 px-3 -mx-3 rounded hover:bg-paper-tint transition-colors"
+          >
+            → {t("exam.moduleTitle")}
+          </Link>
+          <Link
+            to="/student/final"
+            className="block text-sm py-2 px-3 -mx-3 rounded hover:bg-paper-tint transition-colors"
+          >
+            → {t("exam.finalTitle")}
+          </Link>
         </div>
       </aside>
 

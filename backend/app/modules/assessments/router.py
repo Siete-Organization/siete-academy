@@ -52,6 +52,15 @@ def list_by_lesson(lesson_id: int, db: Session = Depends(get_db)) -> list[Assess
     return db.query(Assessment).filter(Assessment.lesson_id == lesson_id).all()
 
 
+@router.get("/final", response_model=AssessmentOut)
+def get_final_test(db: Session = Depends(get_db)) -> Assessment:
+    """Prueba Final del curso (Capa 3). El motor la identifica por type, no por módulo."""
+    a = db.query(Assessment).filter(Assessment.type == "final_test").first()
+    if a is None:
+        raise HTTPException(404, "Final test not configured")
+    return a
+
+
 @router.patch("/{assessment_id}", response_model=AssessmentOut)
 def update_assessment(
     assessment_id: int,
@@ -285,3 +294,13 @@ def review_submission(
     db.commit()
     db.refresh(review)
     return review
+
+
+# Declarado al final para no ensombrecer rutas literales (/final, /module/..., /lesson/...).
+@router.get("/{assessment_id}", response_model=AssessmentOut)
+def get_assessment(assessment_id: int, db: Session = Depends(get_db)) -> Assessment:
+    """Un assessment por id — usado por la vista de alumno (final) y el preview admin."""
+    a = db.get(Assessment, assessment_id)
+    if a is None:
+        raise HTTPException(404, "Assessment not found")
+    return a
