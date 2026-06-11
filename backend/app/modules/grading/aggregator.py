@@ -242,13 +242,16 @@ def _build_student_result(
 
         module_results.append(mr)
 
-    # Capa 3 — prueba final
+    # Capa 3 — prueba final (caso híbrido por ítem + video con rúbrica /30)
     final = FinalResult()
     if final_assessment is not None:
         view = _latest_submission(subs_by_asmt.get(final_assessment.id, []))
         if view is not None:
-            final.case = view.submission.auto_score
-            final.video = view.review.score if view.review else None
+            details = view.review.details if view.review else None
+            final.case = grading.final_case_score(
+                final_assessment.config, view.submission.payload, details
+            )
+            final.video = grading.final_video_score(final_assessment.config, details)
             final.score = grading.final_test_score(final.case, final.video)
 
     # Curso total — solo si tenemos las 3 capas

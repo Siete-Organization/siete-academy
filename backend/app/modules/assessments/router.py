@@ -261,6 +261,7 @@ def review_submission(
         existing.score = body.score
         existing.feedback = body.feedback
         existing.attachment_url = body.attachment_url
+        existing.details = body.details
         existing.teacher_id = current.user.id
         review = existing
         log.info(
@@ -279,6 +280,7 @@ def review_submission(
             score=body.score,
             feedback=body.feedback,
             attachment_url=body.attachment_url,
+            details=body.details,
         )
         db.add(review)
         log.info(

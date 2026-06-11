@@ -51,6 +51,10 @@ class TeacherReview(Base):
     )
     teacher_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     score: Mapped[float] = mapped_column(Float)
+    # Desglose por ítem para grading híbrido del caso final (Capa 3):
+    # {"short_answers": {qid: pts}, "tables": {tid: pts}, "video_rubric": {dim: pts}}.
+    # NULL para capa_2 / written (esos usan `score` como % del video directo).
+    details: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     feedback: Mapped[str] = mapped_column(Text)
     # Archivo opcional que el profesor sube al dar feedback (PDF anotado, audio, etc.)
     attachment_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

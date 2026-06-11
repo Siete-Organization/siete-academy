@@ -29,14 +29,7 @@ def auto_grade_mcq(assessment: Assessment, payload: dict[str, Any]) -> float | N
         total = len(questions)
         if total == 0:
             return None
-        hits = 0
-        for q in questions:
-            qid = q.get("id")
-            qtype = q.get("type", "single")
-            correct = q.get("correct")
-            given = student.get(qid)
-            if _question_is_correct(qtype, correct, given):
-                hits += 1
+        hits = count_mcq_correct(questions, student)
         return round((hits / total) * 100, 2)
 
     # Legacy single-choice fallback
@@ -51,6 +44,18 @@ def auto_grade_mcq(assessment: Assessment, payload: dict[str, Any]) -> float | N
         if str(student.get(qid)) == str(right):
             hits += 1
     return round((hits / total) * 100, 2) if total else None
+
+
+def count_mcq_correct(questions: list[dict], answers: dict[str, Any]) -> int:
+    """Cuenta cuántas preguntas (shape `questions`) están correctas. Usado por el
+    auto-grado y por el grading híbrido del caso final (Capa 3)."""
+    hits = 0
+    for q in questions:
+        if _question_is_correct(
+            q.get("type", "single"), q.get("correct"), answers.get(q.get("id"))
+        ):
+            hits += 1
+    return hits
 
 
 def _question_is_correct(qtype: str, correct: Any, given: Any) -> bool:

@@ -88,6 +88,53 @@ def test_final_score_returns_none_when_video_missing():
     assert grading.final_test_score(70.0, None) is None
 
 
+# ───────────────────────── final_case_score / final_video_score ─────────────────────────
+
+_FINAL_CFG = {
+    "questions": [
+        {"id": "m1", "type": "single", "correct": ["a"]},
+        {"id": "m2", "type": "single", "correct": ["b"]},
+    ],
+    "short_answers": [
+        {"id": "s1", "max_points": 2},
+        {"id": "s2", "max_points": 2},
+    ],
+    "tables": [{"id": "t1", "max_points": 3}],
+    "video_rubric": {"max_total": 30},
+}
+
+
+def test_final_case_none_until_teacher_grades():
+    # Sin details (profesor no calificó el caso) → incompleto.
+    payload = {"answers": {"m1": "a", "m2": "b"}}
+    assert grading.final_case_score(_FINAL_CFG, payload, None) is None
+
+
+def test_final_case_combines_mcq_and_manual_over_max():
+    # max = 2 MCQ + (2+2) cortas + 3 tabla = 9.
+    # MCQ 2/2 + cortas 2+1 + tabla 2 = 7 → 77.78%.
+    payload = {"answers": {"m1": "a", "m2": "b"}}
+    details = {"short_answers": {"s1": 2, "s2": 1}, "tables": {"t1": 2}}
+    assert grading.final_case_score(_FINAL_CFG, payload, details) == 77.78
+
+
+def test_final_case_counts_wrong_mcq():
+    # MCQ 1/2 (m2 mal) + cortas 0 + tabla 0 = 1/9 → 11.11%.
+    payload = {"answers": {"m1": "a", "m2": "z"}}
+    details = {"short_answers": {}, "tables": {}}
+    assert grading.final_case_score(_FINAL_CFG, payload, details) == 11.11
+
+
+def test_final_video_score_from_rubric():
+    # 24/30 → 80%.
+    details = {"video_rubric": {str(i): 2 for i in range(12)}}  # 12 dims × 2 = 24
+    assert grading.final_video_score(_FINAL_CFG, details) == 80.0
+
+
+def test_final_video_none_without_rubric():
+    assert grading.final_video_score(_FINAL_CFG, {"short_answers": {}}) is None
+
+
 # ───────────────────────── course_final_score ─────────────────────────
 
 
