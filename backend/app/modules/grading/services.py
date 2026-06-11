@@ -13,11 +13,20 @@ La UI/aggregator decide cómo mostrar incompletos.
 """
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
+from app.modules.assessments import services as assess_services
 from app.modules.assessments.models import Assessment
 
 Tier = Literal["capa_1", "capa_2", "capa_3", "other"]
+
+
+def _num(v: Any) -> float:
+    """Coerción tolerante a número (los puntos del profesor pueden venir como str)."""
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 # Pesos del documento maestro
@@ -63,6 +72,55 @@ def final_test_score(case_pct: float | None, video_pct: float | None) -> float |
     if case_pct is None or video_pct is None:
         return None
     return round(case_pct * _FINAL_WEIGHTS["case"] + video_pct * _FINAL_WEIGHTS["video"], 2)
+
+
+def final_case_score(
+    config: dict,
+    payload: dict | None,
+    details: dict | None,
+) -> float | None:
+    """Nota del CASO de la Prueba Final (híbrido por ítem, doc líneas 12671-13503).
+
+    caso% = (MCQ aciertos + puntos respuestas cortas + puntos tablas) ÷ máximo × 100.
+
+    - MCQ: auto-gradable (aciertos sobre el payload del alumno).
+    - Respuestas cortas + tablas: las califica el profesor (`details`). Si todavía
+      no hay `details`, el caso está incompleto → None (no inferimos parcial).
+    """
+    if details is None:
+        return None
+    questions = config.get("questions") or []
+    short = config.get("short_answers") or []
+    tables = config.get("tables") or []
+
+    mcq_total = len(questions)
+    mcq_hits = assess_services.count_mcq_correct(
+        questions, (payload or {}).get("answers", {}) or {}
+    )
+
+    d_short = details.get("short_answers") or {}
+    d_tables = details.get("tables") or {}
+    sa_points = sum(_num(d_short.get(sa.get("id"))) for sa in short)
+    sa_max = sum(_num(sa.get("max_points", 2)) for sa in short)
+    tbl_points = sum(_num(d_tables.get(tb.get("id"))) for tb in tables)
+    tbl_max = sum(_num(tb.get("max_points", 0)) for tb in tables)
+
+    total_max = mcq_total + sa_max + tbl_max
+    if total_max <= 0:
+        return None
+    earned = mcq_hits + sa_points + tbl_points
+    return round(earned / total_max * 100, 2)
+
+
+def final_video_score(config: dict, details: dict | None) -> float | None:
+    """Nota del VIDEO de defensa (rúbrica /30 → %). Doc: 15 dimensiones × 0-2."""
+    rubric = config.get("video_rubric") or {}
+    max_total = _num(rubric.get("max_total"))
+    d_video = (details or {}).get("video_rubric")
+    if not d_video or max_total <= 0:
+        return None
+    points = sum(_num(v) for v in d_video.values())
+    return round(points / max_total * 100, 2)
 
 
 def course_final_score(

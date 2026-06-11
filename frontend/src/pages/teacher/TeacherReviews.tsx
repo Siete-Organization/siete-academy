@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
+import { FinalCaseGrader } from "@/components/exam/FinalCaseGrader";
 
 interface PendingReview {
   submission_id: number;
@@ -296,6 +297,22 @@ export function TeacherReviews() {
               </section>
             )}
 
+            {selected.assessment_type === "final_test" && detail ? (
+              <div className="hairline pt-6">
+                <FinalCaseGrader
+                  submissionId={selected.submission_id}
+                  assessmentId={selected.assessment_id}
+                  payload={detail.payload}
+                  mcqAutoScore={detail.auto_score}
+                  onSubmitted={async () => {
+                    setSelected(null);
+                    setDetail(null);
+                    setAiDraft(null);
+                    await load();
+                  }}
+                />
+              </div>
+            ) : (
             <section className="hairline pt-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-6">
                 <label>
@@ -342,6 +359,7 @@ export function TeacherReviews() {
                 {t("teacher.approve")} <span aria-hidden>→</span>
               </Button>
             </section>
+            )}
           </article>
         )}
       </div>

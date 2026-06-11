@@ -68,6 +68,8 @@ class ReviewCreate(BaseModel):
     score: float = Field(ge=0, le=100)
     feedback: str = Field(min_length=1)
     attachment_url: str | None = None
+    # Desglose por ítem (grading híbrido del caso final). NULL para capa_2/written.
+    details: dict[str, Any] | None = None
 
 
 class ReviewOut(BaseModel):
@@ -77,6 +79,7 @@ class ReviewOut(BaseModel):
     score: float
     feedback: str
     attachment_url: str | None = None
+    details: dict[str, Any] | None = None
     approved_at: datetime
 
     class Config:

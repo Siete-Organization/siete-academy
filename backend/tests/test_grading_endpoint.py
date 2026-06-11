@@ -101,10 +101,17 @@ def scenario(db):
         db.refresh(a)
         capa2.append(a)
 
-    # Capa 3 — prueba final asignada al último módulo
+    # Capa 3 — prueba final asignada al último módulo.
+    # Caso = 10 MCQ (auto) + video con rúbrica /30 (manual por el profesor).
+    final_config = {
+        "questions": [
+            {"id": f"q{i}", "type": "single", "correct": ["a"]} for i in range(10)
+        ],
+        "video_rubric": {"max_total": 30},
+    }
     final_a = Assessment(
         module_id=mods[-1].id, lesson_id=None, type="final_test",
-        title="Prueba Final", config={}, passing_score=60.0,
+        title="Prueba Final", config=final_config, passing_score=60.0,
     )
     db.add(final_a)
     db.commit()
@@ -122,25 +129,34 @@ def scenario(db):
     }
 
 
-def _submit(db, *, assessment_id, user_id, auto_score, review_score=None):
+def _submit(
+    db, *, assessment_id, user_id, auto_score, review_score=None,
+    payload=None, review_details=None,
+):
+    reviewed = review_score is not None or review_details is not None
     s = Submission(
         assessment_id=assessment_id,
         user_id=user_id,
-        payload={},
+        payload=payload or {},
         auto_score=auto_score,
-        status="auto_graded" if review_score is None else "reviewed",
+        status="reviewed" if reviewed else "auto_graded",
     )
     db.add(s)
     db.commit()
     db.refresh(s)
-    if review_score is not None:
+    if reviewed:
         tr = TeacherReview(
-            submission_id=s.id, teacher_id=user_id, score=review_score,
-            feedback="ok",
+            submission_id=s.id, teacher_id=user_id,
+            score=review_score if review_score is not None else 0.0,
+            feedback="ok", details=review_details,
         )
         db.add(tr)
         db.commit()
     return s
+
+
+def _final_payload(correct: int, total: int = 10) -> dict:
+    return {"answers": {f"q{i}": ("a" if i < correct else "z") for i in range(total)}}
 
 
 # ────────────────────────────  Tests  ────────────────────────────
@@ -205,10 +221,11 @@ def test_distinction_path(client, login_as, db, scenario):
     # Pruebas módulo: 90 MCQ + 90 video → 90% ≥ 80
     for a in scenario["capa2"]:
         _submit(db, assessment_id=a.id, user_id=alice.id, auto_score=90.0, review_score=90.0)
-    # Prueba final: 90 caso + 90 video → 90% ≥ 85
+    # Prueba final: caso 10/10 = 100% + video 24/30 = 80% → 100*0.7 + 80*0.3 = 94 ≥ 85
     _submit(
-        db, assessment_id=scenario["final"].id, user_id=alice.id,
-        auto_score=90.0, review_score=90.0,
+        db, assessment_id=scenario["final"].id, user_id=alice.id, auto_score=None,
+        payload=_final_payload(10), review_score=80.0,
+        review_details={"video_rubric": {"total": 24}},
     )
 
     r = client.get("/grading/results", params={"cohort_id": scenario["cohort"].id})
@@ -218,16 +235,16 @@ def test_distinction_path(client, login_as, db, scenario):
     for mr in s["modules"]:
         assert mr["capa_1_avg"] == 90.0
         assert mr["capa_2_score"] == 90.0
-    assert s["final"]["score"] == 90.0
-    # Curso = 90*0.20 + 90*0.50 + 90*0.30 = 90
-    assert s["course_total"] == 90.0
+    assert s["final"]["score"] == 94.0
+    # Curso = 90*0.20 + 90*0.50 + 94*0.30 = 18 + 45 + 28.2 = 91.2
+    assert s["course_total"] == 91.2
     assert s["status"] == "distinction"
 
 
 def test_basic_path(client, login_as, db, scenario):
     """Bob aprueba justo:
-    - micros 75, módulos 72, final 65
-    - curso = 75*0.20 + 72*0.50 + 65*0.30 = 15 + 36 + 19.5 = 70.5 ≥ 70 → basic.
+    - micros 75, módulos 72, final = caso 8/10=80% + video 18/30=60% → 74
+    - curso = 75*0.20 + 72*0.50 + 74*0.30 = 15 + 36 + 22.2 = 73.2 ≥ 70 → basic.
     """
     login_as("admin")
     bob = scenario["bob"]
@@ -236,13 +253,15 @@ def test_basic_path(client, login_as, db, scenario):
     for a in scenario["capa2"]:
         _submit(db, assessment_id=a.id, user_id=bob.id, auto_score=72.0, review_score=72.0)
     _submit(
-        db, assessment_id=scenario["final"].id, user_id=bob.id,
-        auto_score=65.0, review_score=65.0,
+        db, assessment_id=scenario["final"].id, user_id=bob.id, auto_score=None,
+        payload=_final_payload(8), review_score=60.0,
+        review_details={"video_rubric": {"total": 18}},
     )
 
     r = client.get("/grading/results", params={"cohort_id": scenario["cohort"].id})
     s = next(x for x in r.json()["students"] if x["email"] == "bob@test.dev")
-    assert s["course_total"] == 70.5
+    assert s["final"]["score"] == 74.0
+    assert s["course_total"] == 73.2
     assert s["status"] == "basic"
 
 
