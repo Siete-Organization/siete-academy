@@ -83,6 +83,8 @@
     "submitReady": "Ready to submit. You'll see Stage 1 result instantly.",
     "submitIncomplete": "Complete all fields, the 3 written answers in range, and the 26 MCQs to enable submission.",
     "loadError": "Could not load the test. Please refresh or contact us.",
+    "rateLimited": "We've received several attempts from your network in a short time. Wait a few minutes and submit again — if it persists, contact us.",
+    "connectionError": "We couldn't reach the server. Check your connection and submit again; your answers are still here.",
     "resultPassed": "You passed Stage 1.",
     "resultPassedBody": "Your written answers and MCQs cleared the floor. We'll review your video and let you know the next steps within seven days max.",
     "resultRejected": "You don't move forward this time.",

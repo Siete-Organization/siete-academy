@@ -1,8 +1,9 @@
 """Endpoint público que sirve el contenido de la Prueba de admisión Etapa 1.
 
 El front carga este JSON al abrir /apply, randomiza orden de preguntas/opciones
-del lado cliente, aplica timers de 90s/pregunta y envía las respuestas en
-POST /applications.
+del lado cliente y envía las respuestas en POST /applications. El control de
+tiempo es server-side: started_at/submitted_at + el filtro min_completion_minutes
+(no hay timer por pregunta en el cliente).
 
 ES-only por ahora; EN/PT se añaden en PRs futuros cuando llegue el contenido.
 """
