@@ -6,6 +6,8 @@ import { ApplyPage } from "@/pages/apply/ApplyPage";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { StudentDashboard } from "@/pages/student/StudentDashboard";
 import { ModulePage } from "@/pages/student/ModulePage";
+import { StudentFinalTest } from "@/pages/student/StudentFinalTest";
+import { StudentModuleExam } from "@/pages/student/StudentModuleExam";
 import { StudentFeedback } from "@/pages/student/StudentFeedback";
 import { StudentCertificate } from "@/pages/student/StudentCertificate";
 import { StudentCalendar } from "@/pages/student/StudentCalendar";
@@ -25,6 +27,7 @@ import { AdminPractica } from "@/pages/admin/AdminPractica";
 import { AdminAnalytics } from "@/pages/admin/AdminAnalytics";
 import { AdminHome } from "@/pages/admin/AdminHome";
 import { AdminResults } from "@/pages/admin/AdminResults";
+import { AdminAssessmentPreview } from "@/pages/admin/AdminAssessmentPreview";
 import { RecruiterHome } from "@/pages/recruiter/RecruiterHome";
 
 export default function App() {
@@ -49,6 +52,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["student"]}>
                 <ModulePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/module/:moduleId/exam"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
+                <StudentModuleExam />
               </ProtectedRoute>
             }
           />
@@ -97,6 +108,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["student"]}>
                 <StudentLibraryIndustryDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/final"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
+                <StudentFinalTest />
               </ProtectedRoute>
             }
           />
@@ -155,6 +174,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["admin", "teacher"]}>
                 <AdminCourse />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/assessments/:assessmentId/preview"
+            element={
+              <ProtectedRoute roles={["admin", "teacher"]}>
+                <AdminAssessmentPreview />
               </ProtectedRoute>
             }
           />

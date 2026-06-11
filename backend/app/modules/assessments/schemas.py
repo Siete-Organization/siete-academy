@@ -3,7 +3,15 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-AssessmentType = Literal["mcq", "written", "prospection_db", "cold_call_video", "team_exercise"]
+AssessmentType = Literal[
+    "mcq",
+    "written",
+    "prospection_db",
+    "cold_call_video",
+    "team_exercise",
+    "capa_2",  # prueba de módulo (MCQ + video narrado)
+    "final_test",  # prueba final del curso (caso + video de defensa)
+]
 
 
 class AssessmentCreate(BaseModel):
