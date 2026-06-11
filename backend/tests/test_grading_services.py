@@ -135,6 +135,57 @@ def test_final_video_none_without_rubric():
     assert grading.final_video_score(_FINAL_CFG, {"short_answers": {}}) is None
 
 
+# ───────────────────────── distinción: diferenciadores + video crítico ─────────────────────────
+
+_DIST_CFG = {
+    "questions": [
+        {"id": "P1.4", "type": "single", "correct": ["a"]},
+        {"id": "P5.2", "type": "single", "correct": ["b"]},
+        {"id": "P6.1", "type": "single", "correct": ["c"]},
+    ],
+    "short_answers": [{"id": "P6.3", "max_points": 2}],
+    "differentiator_ids": ["P1.4", "P5.2", "P6.1", "P6.3"],
+    "video_rubric": {
+        "max_total": 30,
+        "critical_dimensions_for_distinction": [1, 2, 3, 4],
+    },
+}
+
+
+def test_differentiator_none_without_details():
+    payload = {"answers": {"P1.4": "a", "P5.2": "b", "P6.1": "c"}}
+    assert grading.differentiator_score(_DIST_CFG, payload, None) is None
+
+
+def test_differentiator_combines_mcq_and_short():
+    # max = 3 MCQ (1 c/u) + 2 (short P6.3) = 5. 3 MCQ ok + short 2 = 5 → 100%.
+    payload = {"answers": {"P1.4": "a", "P5.2": "b", "P6.1": "c"}}
+    details = {"short_answers": {"P6.3": 2}}
+    assert grading.differentiator_score(_DIST_CFG, payload, details) == 100.0
+
+
+def test_differentiator_below_75():
+    # 2 MCQ ok (P6.1 mal) + short 1 = 3/5 = 60%.
+    payload = {"answers": {"P1.4": "a", "P5.2": "b", "P6.1": "z"}}
+    details = {"short_answers": {"P6.3": 1}}
+    assert grading.differentiator_score(_DIST_CFG, payload, details) == 60.0
+
+
+def test_video_critical_ok_true_when_critical_dims_high():
+    # críticas 1-4 = 2 c/u = 8 ≥ umbral (0.9×8 ≈ 7).
+    details = {"video_rubric": {"1": 2, "2": 2, "3": 2, "4": 2}}
+    assert grading.video_critical_ok(_DIST_CFG, details) is True
+
+
+def test_video_critical_ok_false_when_critical_dims_low():
+    details = {"video_rubric": {"1": 2, "2": 1, "3": 1, "4": 0}}  # 4 < 7
+    assert grading.video_critical_ok(_DIST_CFG, details) is False
+
+
+def test_video_critical_none_without_details():
+    assert grading.video_critical_ok(_DIST_CFG, None) is None
+
+
 # ───────────────────────── course_final_score ─────────────────────────
 
 
@@ -187,14 +238,44 @@ def test_grad_in_progress_when_any_module_none():
 
 
 def test_grad_distinction_threshold():
-    # Los 4 módulos ≥80, final ≥85, curso ≥85
+    # 5 condiciones: módulos ≥80, final ≥85, curso ≥85, diferenciadores ≥75, video crítico ok
     assert (
         grading.graduation_status(
             course_final=88.0,
             per_module_scores=[85.0, 82.0, 90.0, 88.0],
             final_pct=86.0,
+            differentiator_pct=80.0,
+            video_critical_ok=True,
         )
         == "distinction"
+    )
+
+
+def test_grad_distinction_fails_without_differentiators():
+    # Todo alto pero diferenciadores <75 → cae a básico.
+    assert (
+        grading.graduation_status(
+            course_final=88.0,
+            per_module_scores=[85.0, 82.0, 90.0, 88.0],
+            final_pct=86.0,
+            differentiator_pct=70.0,
+            video_critical_ok=True,
+        )
+        == "basic"
+    )
+
+
+def test_grad_distinction_fails_without_critical_video():
+    # Todo alto pero el video no llega en dimensiones críticas → básico.
+    assert (
+        grading.graduation_status(
+            course_final=88.0,
+            per_module_scores=[85.0, 82.0, 90.0, 88.0],
+            final_pct=86.0,
+            differentiator_pct=90.0,
+            video_critical_ok=False,
+        )
+        == "basic"
     )
 
 

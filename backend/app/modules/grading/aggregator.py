@@ -244,6 +244,8 @@ def _build_student_result(
 
     # Capa 3 — prueba final (caso híbrido por ítem + video con rúbrica /30)
     final = FinalResult()
+    diff_pct: float | None = None
+    vid_crit: bool | None = None
     if final_assessment is not None:
         view = _latest_submission(subs_by_asmt.get(final_assessment.id, []))
         if view is not None:
@@ -253,6 +255,11 @@ def _build_student_result(
             )
             final.video = grading.final_video_score(final_assessment.config, details)
             final.score = grading.final_test_score(final.case, final.video)
+            # Inputs extra para distinción (doc líneas 1042-1043)
+            diff_pct = grading.differentiator_score(
+                final_assessment.config, view.submission.payload, details
+            )
+            vid_crit = grading.video_critical_ok(final_assessment.config, details)
 
     # Curso total — solo si tenemos las 3 capas
     micros_avg = grading.average(
@@ -270,6 +277,8 @@ def _build_student_result(
         course_final=course_total,
         per_module_scores=[mr.capa_2_score for mr in module_results],
         final_pct=final.score,
+        differentiator_pct=diff_pct,
+        video_critical_ok=vid_crit,
     )
 
     return StudentResult(
