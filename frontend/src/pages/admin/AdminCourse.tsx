@@ -457,6 +457,14 @@ function AssessmentsSection({ moduleId }: { moduleId: number }) {
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <Link
+                to={`/admin/assessments/${a.id}/preview`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs font-mono uppercase tracking-[0.14em] text-ember hover:underline underline-offset-4"
+              >
+                {t("adminCourse.previewAsStudent")} ↗
+              </Link>
               <button
                 onClick={() => setEditingId(a.id)}
                 className="text-xs font-mono uppercase tracking-[0.14em] text-ink-muted hover:text-ink"

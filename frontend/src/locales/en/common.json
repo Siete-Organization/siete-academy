@@ -338,6 +338,7 @@
     "assessments": "Assessments & cases",
     "assessmentsEmpty": "No assessments yet. Create an MCQ, written deliverable, cold-call video, etc.",
     "addAssessment": "Add assessment",
+    "previewAsStudent": "Student view",
     "assessmentTitlePlaceholder": "e.g. Quiz — Business models",
     "passing": "Passing score",
     "config": "Configuration (JSON)",

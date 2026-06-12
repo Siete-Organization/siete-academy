@@ -338,6 +338,7 @@
     "assessments": "Pruebas y casos",
     "assessmentsEmpty": "Sin pruebas aún. Crea un MCQ, una entrega escrita, un cold-call video, etc.",
     "addAssessment": "Agregar prueba",
+    "previewAsStudent": "Vista alumno",
     "assessmentTitlePlaceholder": "Ej. Quiz — Modelos de negocio",
     "passing": "Nota mínima",
     "config": "Configuración (JSON)",
