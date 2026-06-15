@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "source": "tools/heygen_inspect_reference.py contra video 7e21a035510b45c2870ec540e4f0be52",
+    "reference_video_title": "La realidad del B2B vs B2C",
+    "reference_video_duration_sec": 53.03,
+    "confirmed_by_user": "2026-06-08"
+  },
+  "_template_note": "El template_id c1e07437a03d428a9d126ce157a4931e (capturado del chat) NO existe en la cuenta (inspección 2026-06-11). Los dos templates reales NO exponen variables de texto, así que no sirven para generar por API; S1 se arma manual en Studio.",
+  "template_candidates": [
+    "08f619e2afc04da8948ff4cc0f7de9a0",
+    "9f3a2c41ef1847b1bf5666f69c966955"
+  ],
+  "brand_voice_id": "0e3e834da76f4f988fac667e40fcbbaf",
+  "brand_voice_note": "Brand Glossary 'Video Agent Pronunciation'. Param en /v2/template/{id}/generate = brand_voice_id. Entradas: B2B, B2C, SDR, LOB.",
+  "character": {
+    "_DEPRECATED": "Liam queda obsoleto (2026-06-12). El avatar ahora es Nico (CEO): rostro y voz recreados con Seedance 2.0. Ver guiones_videos/v2/_INSTRUCCIONES_IA_HEYGEN.md.",
+    "type": "talking_photo",
+    "talking_photo_id": "b8a9a389f73f4f8584725ce822d67c04",
+    "talking_photo_name": "Liam",
+    "scale": 1.0,
+    "talking_photo_style": "normal"
+  },
+  "voice": {
+    "_DEPRECATED": "No reutilizar: language=English causaba el mal acento. La voz nueva es la de Nico clonada (ES neutro LATAM); provisional = voz ES LATAM masculina cálida.",
+    "voice_id": "f0XGUE2pZkXlL1nCUJXg",
+    "voice_name": "Warm Tutor (MX)",
+    "language": "English",
+    "gender": "male",
+    "speed": 1.0
+  },
+  "dimension": {
+    "width": 1920,
+    "height": 1080,
+    "_note": "default 1080p landscape — no se pudo inferir del video de referencia. Ajustar si el courseware usa otra resolución."
+  },
+  "background": {
+    "type": "color",
+    "value": "#FFFFFF",
+    "_note": "default blanco — el video de referencia probablemente usa otro fondo. Confirmar con producto antes de batch."
+  }
+}

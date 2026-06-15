@@ -138,7 +138,7 @@ Decisor económico, Decisor técnico (puede vetar), Usuario, Coach/champion, Inf
 
 **Bloque 5 — El ciclo de vida del prospecto**
 
-Prospect → MQL → SQL → Opportunity → Customer → Renovación/Churn/Expansión. El SDR opera de Prospect a Opportunity. **NO confundir** con el lifecycle del cliente ya firmado (Onboarding → Use → Engage → Adopt → Optimize → Renew), que maneja Client Success post-firma. Confundirlos genera reportes inservibles y handoffs rotos.
+Cómo la empresa que vende clasifica al prospecto, de la etapa más fría a la más avanzada: Prospect → MQL → SQL → Opportunity → Customer. El SDR opera de Prospect a Opportunity (en outbound el MQL suele saltarse). La lista **termina en Customer**: lo que pasa después de la firma (renovar, expandir o churn) es trabajo de Atención al Cliente, no del SDR — no forma parte de la lista de prospección.
 
 **Bloque 6 — LOBs y la disociación quien paga / quien usa**
 
@@ -220,12 +220,12 @@ PRESENTATION_BLOCKS_ES = [
         "source": "Miller-Heiman, The New Strategic Selling 1985+",
     },
     {
-        "title": "Lifecycle del prospecto (lo que mueve el SDR)",
+        "title": "Ciclo de vida del prospecto (cómo el vendedor lo clasifica)",
         "bullets": [
             "Prospect → MQL → SQL → Opportunity → Customer",
-            "El SDR opera Prospect → Opportunity",
+            "El SDR opera Prospect → Opportunity (en outbound el MQL suele saltarse)",
             "Después del handoff, el SDR sale de la conversación",
-            "NO confundir con onboarding (lifecycle del cliente ya firmado)",
+            "Termina en Customer; lo posterior a la firma (renovar/churn) es de Atención al Cliente",
         ],
         "source": "Predictable Revenue (Ross & Tyler 2011)",
     },
@@ -387,21 +387,22 @@ MCQ_QUESTIONS = [
         "block": 5,
         "type": "single",
         "prompt": (
-            "Un SDR junior dice: 'Tenemos una empresa que está en la etapa de ONBOARDING. "
-            "El SDR del trimestre pasado los pasó a esta etapa hace 2 meses.' "
+            "Un SDR junior dice: 'Tenemos una empresa que está en la etapa de IMPLEMENTACIÓN/USO. "
+            "El SDR del trimestre pasado la pasó a esa etapa hace 2 meses.' "
             "¿Cuál es el problema con lo que dijo?"
         ),
         "choices": [
             {
                 "id": "a",
-                "text": "Está bien — onboarding es etapa correcta del lifecycle del prospecto.",
+                "text": "Está bien — 'implementación/uso' es una etapa correcta de la lista del prospecto.",
             },
             {
                 "id": "b",
                 "text": (
-                    "Mezcla dos lifecycles distintos: 'onboarding' es parte del lifecycle del "
-                    "cliente ya firmado (post-venta), no del lifecycle del prospecto. "
-                    "El SDR mueve a Opportunity, no a Onboarding."
+                    "Mezcla dos cosas distintas: el uso de la plataforma pasa DESPUÉS de que el "
+                    "cliente firmó, y de eso se encarga Atención al Cliente, no el SDR. Un SDR no "
+                    "mueve empresas a 'uso' — mueve prospectos hasta Oportunidad o, como mucho, "
+                    "hasta Cliente."
                 ),
             },
             {"id": "c", "text": "El problema es que dice 'trimestre pasado' en vez de 'mes pasado'."},
@@ -409,10 +410,10 @@ MCQ_QUESTIONS = [
         ],
         "correct": ["b"],
         "explanation": (
-            "Hay dos lifecycles que se confunden por nombres parecidos: "
-            "Prospect→MQL→SQL→Opportunity→Customer (lo mueve el SDR) y "
-            "Onboarding→Use→Renew (lo mueve Client Success post-firma). "
-            "En empresas como Siete coexisten ambos — confundirlos genera reportes inservibles."
+            "La lista que maneja el SDR va de Prospecto hasta Cliente y termina ahí, cuando el "
+            "cliente firma. Todo lo posterior a la firma —usar la plataforma, implementarla, "
+            "renovar— es trabajo de otra área (Atención al Cliente), no del SDR. Un prospecto que "
+            "todavía no firmó no puede estar 'usando' nada: si no es cliente, no hay nada que usar."
         ),
     },
 ]

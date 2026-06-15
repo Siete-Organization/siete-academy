@@ -19,25 +19,24 @@ MCQ: list[dict] = [
         "section": "sem3",
         "type": "single",
         "prompt": (
-            "Recibís datos sobre una empresa B2B: TransLogic, operador logístico que "
-            "gestiona cadena de frío para alimentos en 4 países LATAM. 850 empleados. "
-            "Modelo: cobran por servicio transportado + almacenaje. Sus clientes son "
-            "empresas de alimentos, farmacéuticas y laboratorios que necesitan "
-            "trazabilidad y temperatura controlada.\n\n"
-            "Aplicando BMC, ¿cuál de las siguientes es la fuente principal de ingresos de TransLogic?"
+            "TransLogic es un operador logístico que gestiona cadena de frío para alimentos y "
+            "farmacéuticas en 4 países de LATAM (850 empleados). Tiene flota propia de camiones "
+            "refrigerados y varios centros de almacenaje con temperatura controlada. Firma con sus "
+            "clientes contratos anuales que le garantizan volumen.\n\n"
+            "Aplicando el Business Model Canvas, ¿cuál es la fuente principal de ingresos de TransLogic?"
         ),
         "choices": [
-            {"id": "a", "text": "Venta de la flota de camiones refrigerados."},
-            {"id": "b", "text": "Comisión sobre las ventas de las empresas clientes."},
-            {"id": "c", "text": "Cobro por servicio de transporte + almacenaje (modelo transaccional + recurrente)."},
-            {"id": "d", "text": "Venta de software de trazabilidad."},
+            {"id": "a", "text": "El cobro a sus clientes por transportar y almacenar su mercadería, con un componente recurrente por los contratos de volumen que firma cada año."},
+            {"id": "b", "text": "La flota de camiones refrigerados y los centros de almacenaje: son los activos que sostienen la operación, así que son lo que le genera ingresos."},
+            {"id": "c", "text": "La operación diaria de coordinar rutas, choferes y cámaras frías: es lo que hace todos los días, y de ahí salen sus ingresos."},
+            {"id": "d", "text": "Una comisión sobre las ventas que sus clientes de alimentos y farmacéuticas concretan gracias a la logística que les provee."},
         ],
-        "correct": "c",
+        "correct": "a",
         "explanation": (
-            "El enunciado lo dice explícitamente — \"cobran por servicio transportado + almacenaje\". "
-            "Modelo operativo logístico B2B típico: ingresos transaccionales con componente recurrente. "
-            "La flota es recurso clave (capex), no fuente de ingreso. La comisión sobre ventas sería marketplace. "
-            "El software no se menciona."
+            "La fuente de ingresos es el cobro por transportar y almacenar mercadería, con componente "
+            "recurrente por los contratos anuales de volumen. La flota y los centros son recursos clave "
+            "(capex), no fuente de ingreso. La operación diaria son actividades clave. La comisión sobre "
+            "ventas sería un modelo marketplace, que no es el caso."
         ),
     },
     {
@@ -46,26 +45,23 @@ MCQ: list[dict] = [
         "section": "sem3",
         "type": "single",
         "prompt": (
-            "Una empresa SaaS B2B tiene estos números:\n"
-            "● Ticket promedio anual: USD 5.400\n"
-            "● CAC: USD 7.200\n"
-            "● Permanencia promedio del cliente: 24 meses\n"
-            "● Margen bruto: 75%\n\n"
-            "¿Cuál es el diagnóstico correcto de unit economics?"
+            "Una empresa de SaaS B2B publicó estos números: ticket promedio anual de USD 5.400, "
+            "costo de adquirir un cliente (CAC) de USD 7.200 y permanencia promedio del cliente de "
+            "24 meses.\n\n"
+            "¿Cuál es el diagnóstico correcto de su economía por cliente?"
         ),
         "choices": [
-            {"id": "a", "text": "LTV = USD 5.400. LTV/CAC = 0.75 (bajo). Empresa insostenible."},
-            {"id": "b", "text": "LTV contribución (con margen 75%) = USD 5.400 × 2 años × 0.75 = USD 8.100. LTV/CAC = 1.13. Por debajo de la regla de 3x. Hay problema de unit economics que probablemente explique frustración del CFO del prospecto."},
-            {"id": "c", "text": "LTV = USD 5.400 × 2 años = USD 10.800. LTV/CAC = 1.5. Saludable."},
-            {"id": "d", "text": "No hay suficiente información para calcular."},
+            {"id": "a", "text": "LTV = USD 5.400 (un año de ticket). LTV/CAC = 0,75; como es menor a 1, la empresa pierde dinero con cada cliente y es inviable."},
+            {"id": "b", "text": "LTV = USD 5.400 × 2 años = USD 10.800. LTV/CAC = 1,5; como está por encima de 1, la economía por cliente es saludable y no hay foco de preocupación."},
+            {"id": "c", "text": "LTV = USD 5.400 × 2 años = USD 10.800. LTV/CAC = 1,5: está muy por debajo de la regla de 3x, así que hay un problema de economía por cliente que probablemente preocupe a los dueños."},
+            {"id": "d", "text": "Faltan datos para diagnosticar: sin conocer el margen y la tasa de recompra no se puede estimar el LTV de este negocio."},
         ],
-        "correct": "b",
+        "correct": "c",
         "explanation": (
-            "Cálculo correcto de LTV contribución incluye el margen bruto. "
-            "LTV revenue: 5.400 × 2 = 10.800. LTV contribución (×0.75) = 8.100. "
-            "LTV/CAC = 8.100 / 7.200 = 1.13. La regla estándar de SaaS B2B es LTV/CAC ≥ 3 — "
-            "este negocio está estructuralmente insostenible a largo plazo. "
-            "(a) no multiplica por permanencia. (c) no aplica margen. (d) hay toda la info necesaria."
+            "LTV = 5.400 × 2 años = 10.800; LTV/CAC = 10.800 / 7.200 = 1,5. La regla estándar de SaaS "
+            "B2B es LTV/CAC ≥ 3, así que 1,5 está muy por debajo: hay un problema de economía por "
+            "cliente. (a) no multiplica por permanencia y se queda en un año. (b) confunde \"por encima "
+            "de 1\" con saludable, ignorando la regla de 3x. (d) hay info suficiente para el diagnóstico."
         ),
     },
     {
@@ -74,23 +70,23 @@ MCQ: list[dict] = [
         "section": "sem3",
         "type": "single",
         "prompt": (
-            "Industria: aseguradoras tradicionales de autos en LATAM (no InsurTech nuevas, "
-            "aseguradoras establecidas de décadas).\n\n"
-            "¿Cuál de las 5 fuerzas está ejerciendo mayor presión disruptiva sobre esta industria en 2026?"
+            "Industria: aseguradoras tradicionales de autos en LATAM (compañías establecidas desde "
+            "hace décadas, no las nuevas aseguradoras digitales).\n\n"
+            "¿Cuál de las 5 fuerzas de Porter está ejerciendo hoy la mayor presión disruptiva sobre esta industria?"
         ),
         "choices": [
-            {"id": "a", "text": "Rivalidad entre competidores existentes — las aseguradoras tradicionales compiten feroz entre sí."},
-            {"id": "b", "text": "Amenaza de sustitutos + amenaza de nuevos entrantes (InsurTech, seguros embebidos en apps como Rappi, neobancos con productos de seguros integrados). Ambas fuerzas están redefiniendo qué es \"un seguro\" y cómo se distribuye."},
-            {"id": "c", "text": "Poder de negociación de los proveedores (reaseguradoras internacionales)."},
-            {"id": "d", "text": "Poder de negociación de compradores — el cliente individual no tiene poder ante aseguradoras grandes."},
+            {"id": "a", "text": "La rivalidad entre las aseguradoras tradicionales: compiten fuerte entre sí por precio y cartera, y esa competencia interna es la mayor presión nueva del sector."},
+            {"id": "b", "text": "La amenaza de nuevos entrantes: aseguradoras digitales y canales como los seguros embebidos en apps o en neobancos están redefiniendo cómo se distribuye y se contrata un seguro."},
+            {"id": "c", "text": "El poder de negociación de los proveedores: las reaseguradoras internacionales fijan condiciones y son la fuerza que más aprieta el modelo tradicional hoy."},
+            {"id": "d", "text": "El poder de negociación de los compradores: el cliente individual presiona los precios a la baja y eso es lo que está quebrando el modelo tradicional."},
         ],
         "correct": "b",
         "explanation": (
-            "El cambio estructural más grande en seguros LATAM 2024-2026 combina dos fuerzas: "
-            "nuevos entrantes (InsurTech licenciadas, brazos digitales de banca, neobancos) + "
-            "sustitutos (seguros embebidos dentro de la compra misma). Están comiendo el modelo "
-            "tradicional agente → cliente → póliza anual. Las otras fuerzas existen pero no son "
-            "las que cambian el mapa hoy. Exige distinguir entre fuerza presente y fuerza disruptiva."
+            "La mayor presión disruptiva viene de la amenaza de nuevos entrantes: aseguradoras "
+            "digitales y canales como seguros embebidos en apps y neobancos están redefiniendo cómo "
+            "se distribuye y contrata un seguro, comiendo el modelo tradicional agente → cliente → "
+            "póliza anual. La rivalidad, los proveedores y el poder del comprador existen, pero no son "
+            "las fuerzas que cambian el mapa hoy. Exige distinguir fuerza presente de fuerza disruptiva."
         ),
     },
     {
@@ -99,22 +95,22 @@ MCQ: list[dict] = [
         "section": "sem3",
         "type": "single",
         "prompt": (
-            "Una Gerenta de RRHH compra un software de onboarding. Lee sobre distintas "
-            "dimensiones del \"job\" (trabajo que contrata al producto para hacer).\n\n"
-            "¿Cuál de las siguientes descripciones representa el job emocional de la Gerenta?"
+            "Una Gerenta de RRHH evalúa un software de onboarding para los nuevos empleados.\n\n"
+            "¿Cuál de estas descripciones captura el job emocional de la Gerenta (cómo quiere "
+            "sentirse), y no el funcional ni el social?"
         ),
         "choices": [
-            {"id": "a", "text": "\"El software debe reducir el tiempo de onboarding de 15 a 7 días.\""},
-            {"id": "b", "text": "\"El software debe integrarse con el HRIS existente sin migraciones.\""},
-            {"id": "c", "text": "\"La Gerenta quiere llegar tranquila al board meeting de HR sin ansiedad sobre si los nuevos empleados están rampeando bien, y poder dormir sabiendo que el proceso está contenido.\""},
-            {"id": "d", "text": "\"La Gerenta quiere que los nuevos empleados tengan una buena primera impresión.\""},
+            {"id": "a", "text": "Quiere que el software recorte el tiempo de onboarding de 15 a 7 días, para que los nuevos empleados estén operativos más rápido."},
+            {"id": "b", "text": "Quiere que la herramienta se integre con el sistema de RRHH que ya usa, sin tener que migrar datos ni rehacer procesos."},
+            {"id": "c", "text": "Quiere que el área la vea como la persona que modernizó el onboarding y dejó una experiencia cuidada para cada nuevo ingreso."},
+            {"id": "d", "text": "Quiere llegar tranquila a la reunión de directorio, sin la ansiedad de no saber si los nuevos empleados se están integrando bien, y poder desconectar sabiendo que el proceso está bajo control."},
         ],
-        "correct": "c",
+        "correct": "d",
         "explanation": (
-            "El job emocional es cómo quiere sentirse la persona mientras hace el trabajo. "
-            "\"Llegar tranquila\", \"sin ansiedad\", \"poder dormir\" son descriptores de estado interno. "
-            "(a) y (b) son dimensión funcional. (d) es dimensión social pero enfocada en los empleados. "
-            "Un SDR que escribe solo a la dimensión funcional pierde la mayor conexión — la emoción."
+            "El job emocional es cómo quiere sentirse la persona mientras hace el trabajo. \"Llegar "
+            "tranquila\", \"sin ansiedad\", \"poder desconectar\" son descriptores de estado interno. "
+            "(a) y (b) son dimensión funcional. (c) es dimensión social (cómo la ve el área). Un SDR "
+            "que escribe solo a la dimensión funcional pierde la mayor conexión: la emoción."
         ),
     },
     {
@@ -124,19 +120,20 @@ MCQ: list[dict] = [
         "type": "single",
         "prompt": (
             "Un SDR dice: \"Mi ICP es Gerentes de Marketing de fintechs en LATAM.\"\n\n"
-            "¿Qué está haciendo mal este SDR?"
+            "¿Qué está haciendo mal?"
         ),
         "choices": [
-            {"id": "a", "text": "Nada — así se define un ICP correctamente."},
-            {"id": "b", "text": "Está mezclando ICP (la empresa — fintech en LATAM) con buyer persona (la persona — Gerente de Marketing). Un ICP se define por criterios de empresa (industria, tamaño, geografía); un buyer persona se define por criterios de persona (rol, decisión, motivaciones). Son dos filtros distintos y acumulativos."},
-            {"id": "c", "text": "Debería haber dicho \"CMO\" en lugar de \"Gerente de Marketing\"."},
-            {"id": "d", "text": "\"LATAM\" es demasiado amplio, debería especificar país."},
+            {"id": "a", "text": "Está mezclando dos filtros distintos: el ICP define la empresa (fintech en LATAM) y el buyer persona define a la persona (Gerente de Marketing); son criterios separados y acumulativos."},
+            {"id": "b", "text": "Nada: así se define un ICP, combinando el tipo de empresa y el rol al que se le vende en una sola frase."},
+            {"id": "c", "text": "Eligió mal el rol: para una fintech debería apuntar al CMO y no a un Gerente de Marketing, que no suele tener la decisión."},
+            {"id": "d", "text": "Definió mal la geografía: \"LATAM\" es demasiado amplio para un ICP y debería bajar a países específicos."},
         ],
-        "correct": "b",
+        "correct": "a",
         "explanation": (
-            "Exacto lo que el Bloque 1 de Sem 4 explica. ICP = empresa, Buyer persona = persona. "
-            "Confundirlos genera listas mal filtradas: se agenda con Gerentes de Marketing en "
-            "empresas que no son ICP, o se prospectan fintechs sin saber qué rol dentro buscar."
+            "ICP = empresa (industria, tamaño, geografía); buyer persona = persona (rol, decisión, "
+            "motivaciones). Son dos filtros distintos y acumulativos. Confundirlos genera listas mal "
+            "filtradas: se agenda con Gerentes de Marketing en empresas que no son ICP, o se "
+            "prospectan fintechs sin saber qué rol buscar dentro."
         ),
     },
     {
@@ -145,25 +142,25 @@ MCQ: list[dict] = [
         "section": "sem4",
         "type": "single",
         "prompt": (
-            "Un prospecto responde a un cold email del SDR con:\n\n"
+            "Un prospecto responde a un cold email del SDR:\n\n"
             "\"Interesante. Antes de programar una llamada: ¿pueden mostrarme 3 casos de uso con "
             "empresas de nuestro tamaño donde hayan medido el impacto específico en nuestra métrica "
-            "principal (churn rate)? Necesito data real antes de llevar esto a mi comité interno.\"\n\n"
-            "¿Qué arquetipo del Challenger Customer representa esta persona?"
+            "principal (la tasa de cancelación de clientes)? Necesito datos reales antes de llevar "
+            "esto a mi comité interno.\"\n\n"
+            "¿Qué perfil de conducta representa esta persona?"
         ),
         "choices": [
-            {"id": "a", "text": "Friend — es amable y accesible."},
-            {"id": "b", "text": "Guide — comparte información pero pide algo a cambio."},
-            {"id": "c", "text": "Skeptic — cuestiona, pide evidencia, evalúa críticamente. Cuando se convence, empuja fuerte. Es Mobilizer."},
-            {"id": "d", "text": "Blocker — se opone al cambio."},
+            {"id": "a", "text": "El amistoso: responde con cordialidad y se muestra abierto a conversar sin poner trabas."},
+            {"id": "b", "text": "El que negocia información: ofrece datos internos a cambio de algo que le interese conseguir."},
+            {"id": "c", "text": "El escéptico: cuestiona y pide evidencia concreta antes de avanzar, y cuando se convence empuja fuerte la decisión hacia adentro."},
+            {"id": "d", "text": "El que bloquea: pone condiciones para frenar el avance y mantener las cosas como están."},
         ],
         "correct": "c",
         "explanation": (
-            "Señales Skeptic: cuestiona antes de avanzar, pide data específica (3 casos + métrica concreta), "
-            "menciona comité interno (va a empujar si se convence), tiene criterio propio. "
-            "Es uno de los 3 Mobilizers del Challenger Customer. "
-            "Muchos SDRs interpretan \"pide data antes de avanzar\" como obstáculo — en realidad "
-            "es la señal más clara de Mobilizer."
+            "Señales del escéptico: cuestiona antes de avanzar, pide datos específicos (3 casos + "
+            "métrica concreta), menciona comité interno (va a empujar si se convence) y tiene criterio "
+            "propio. Es uno de los perfiles que impulsa la decisión. Muchos SDRs leen \"pide datos "
+            "antes de avanzar\" como obstáculo; en realidad es la señal más clara de que impulsa."
         ),
     },
     {
@@ -172,24 +169,24 @@ MCQ: list[dict] = [
         "section": "sem4",
         "type": "single",
         "prompt": (
-            "Una CFO responde a una propuesta con:\n\n"
+            "Una CFO responde a una propuesta:\n\n"
             "\"La propuesta se ve bien, los números cierran. Pero cambiar de proveedor implica 3 meses "
             "de implementación, coordinar con IT, entrenar a 40 personas, y si algo sale mal me lo cargan "
-            "a mí delante del directorio. Hoy tenemos algo que funciona medianamente — prefiero eso a arriesgar.\"\n\n"
-            "¿Qué freno del decisor B2B está dominando esta respuesta?"
+            "a mí frente al directorio. Hoy tengo algo que funciona a medias; prefiero eso a arriesgar.\"\n\n"
+            "¿Qué freno del decisor B2B domina esta respuesta?"
         ),
         "choices": [
-            {"id": "a", "text": "Fatiga de proveedores — recibe muchas propuestas."},
-            {"id": "b", "text": "Costo de cambio + miedo al error público (combinación dominante)."},
-            {"id": "c", "text": "Falta de presupuesto."},
-            {"id": "d", "text": "Desconocimiento del producto."},
+            {"id": "a", "text": "Fatiga de proveedores: recibe tantas propuestas que su reacción por defecto es no enganchar con ninguna."},
+            {"id": "b", "text": "Costo de cambio y miedo al error público combinados: el esfuerzo de migrar pesa, y sobre todo el riesgo de quedar expuesta ante el directorio si la apuesta falla."},
+            {"id": "c", "text": "Falta de presupuesto: no tiene los recursos asignados para encarar el cambio este año."},
+            {"id": "d", "text": "Desconocimiento del producto: todavía no entiende qué hace la solución ni cómo le serviría."},
         ],
         "correct": "b",
         "explanation": (
-            "Dos frenos operando juntos: costo de cambio (\"3 meses, coordinar con IT, entrenar 40 personas\") "
-            "+ miedo al error público (\"me lo cargan a mí delante del directorio\"). La combinación es la "
-            "que paraliza. Insistir con el ROI no sirve. Lo que podría desbloquear: un caso con plan "
-            "de implementación explícito que minimice el riesgo percibido (ej. piloto de 30 días)."
+            "Dos frenos operando juntos: costo de cambio (\"3 meses, coordinar con IT, entrenar 40 "
+            "personas\") y miedo al error público (\"me lo cargan a mí frente al directorio\"). La "
+            "combinación es la que paraliza. Insistir con el ROI no sirve. Lo que podría desbloquear: "
+            "un caso con plan de implementación explícito que minimice el riesgo percibido (ej. piloto de 30 días)."
         ),
     },
     {
@@ -198,24 +195,25 @@ MCQ: list[dict] = [
         "section": "sem4",
         "type": "multi",
         "prompt": (
-            "Un SDR hace research de una empresa potencial y encuentra los siguientes hallazgos. "
-            "Marcá todos los que son señales reales de timing:"
+            "Un SDR investiga una empresa potencial y encuentra estos hallazgos. "
+            "Marcá todos los hallazgos que son señales reales de timing (no marques el ruido):"
         ),
         "choices": [
-            {"id": "1", "text": "La empresa contrató un nuevo CMO hace 40 días (primero promoción externa, no interna)."},
+            {"id": "1", "text": "Contrató un nuevo CMO hace 40 días, traído de afuera (no una promoción interna)."},
             {"id": "2", "text": "El CEO subió una foto del equipo en un offsite corporativo."},
-            {"id": "3", "text": "Publicaron 25 ofertas de trabajo para ingeniería + 8 para ventas en las últimas 3 semanas."},
-            {"id": "4", "text": "Ganaron un premio de \"Mejor Employer Branding 2026\"."},
-            {"id": "5", "text": "Anunciaron expansión de operaciones a Brasil + Colombia para 2026 Q3."},
-            {"id": "6", "text": "El Director de Tecnología publicó un post diciendo que \"este año es clave para modernizar nuestro stack\"."},
-            {"id": "7", "text": "La competencia directa de la empresa despidió 150 personas."},
-            {"id": "8", "text": "Cerraron ronda Serie D por USD 50M la semana pasada."},
+            {"id": "3", "text": "Publicó 30 ofertas de trabajo para ingeniería y ventas en las últimas 3 semanas."},
+            {"id": "4", "text": "Ganó un premio de \"Mejor marca empleadora 2026\"."},
+            {"id": "5", "text": "Anunció expansión de operaciones a Brasil y Colombia para el tercer trimestre de 2026."},
+            {"id": "6", "text": "El Director de Tecnología publicó que \"este año es clave para modernizar nuestro stack\"."},
+            {"id": "7", "text": "La competencia directa despidió a 150 personas."},
+            {"id": "8", "text": "Cerró una ronda de inversión Serie D por USD 50M la semana pasada."},
         ],
         "correct": ["1", "3", "5", "6", "8"],
         "explanation": (
-            "Señales operativas: 1 (nuevo CMO externo → ventana 90-100 días), 3 (28 ofertas → maquinaria comercial escala), "
-            "5 (expansión multi-país → necesidades operativas), 6 (declaración explícita del Director de Tecnología), "
-            "8 (Serie D → capital + crecimiento). Ruido: 2 (social), 4 (clima interno), 7 (afecta al competidor, no al prospecto)."
+            "Señales operativas: 1 (nuevo CMO externo → ventana de ~90-100 días), 3 (30 ofertas → la "
+            "maquinaria comercial escala), 5 (expansión multipaís → necesidades operativas), 6 "
+            "(declaración explícita del Director de Tecnología), 8 (Serie D → capital + crecimiento). "
+            "Ruido: 2 (social), 4 (clima interno), 7 (afecta al competidor, no al prospecto)."
         ),
     },
     {
@@ -225,23 +223,24 @@ MCQ: list[dict] = [
         "type": "single",
         "prompt": (
             "Un prospecto responde al cold email:\n\n"
-            "\"Interesante la propuesta. Te voy a ser franco: nuestro presupuesto de tecnología para "
-            "todo el año ya está comprometido con otras prioridades. Pero yo estoy armando el plan del "
-            "próximo año entre septiembre y octubre, y el tema que planteás está en mi radar como algo "
-            "a considerar. ¿Podés escribirme de nuevo a fines de agosto?\"\n\n"
+            "\"Interesante la propuesta. Te voy a ser franco: el presupuesto de tecnología de todo el "
+            "año ya está comprometido en otras prioridades. Pero yo armo el plan del próximo año entre "
+            "septiembre y octubre, y el tema que planteas está en mi radar. ¿Puedes escribirme de "
+            "nuevo a fines de agosto?\"\n\n"
             "¿Cómo clasificarías este caso?"
         ),
         "choices": [
-            {"id": "a", "text": "No fit — no tiene presupuesto."},
-            {"id": "b", "text": "No listo con trigger específico (contactar en agosto para planning de Q4/Q1 siguiente). Archivar con fecha."},
-            {"id": "c", "text": "Frío — respuesta de cortesía."},
-            {"id": "d", "text": "Listo — mencionó que está en su radar."},
+            {"id": "a", "text": "No encaja: como no tiene presupuesto disponible, la empresa no califica y conviene descartarla."},
+            {"id": "b", "text": "Frío: es una respuesta de cortesía para sacarse de encima al SDR sin comprometerse a nada."},
+            {"id": "c", "text": "No listo, con un disparador concreto: el bloqueo de presupuesto es temporal y dejó una fecha (agosto, antes de armar el plan del año); se archiva con recontacto."},
+            {"id": "d", "text": "Listo: como dijo que el tema está en su radar, conviene empujar la reunión cuanto antes."},
         ],
-        "correct": "b",
+        "correct": "c",
         "explanation": (
-            "3 señales claras de \"no listo\" con trigger: (1) bloqueador temporal (presupuesto comprometido); "
-            "(2) apertura genuina (\"está en mi radar\"); (3) trigger concreto (\"escribime a fines de agosto\"). "
-            "\"No tiene presupuesto ahora\" ≠ \"no va a tener nunca\". El prospecto dio fecha específica — no es cortesía."
+            "Tres señales claras de \"no listo\" con disparador: (1) bloqueo temporal (presupuesto "
+            "comprometido); (2) apertura genuina (\"está en mi radar\"); (3) disparador concreto "
+            "(\"escribime a fines de agosto\"). \"No tiene presupuesto ahora\" ≠ \"no va a tener "
+            "nunca\". El prospecto dio fecha específica, así que no es cortesía ni \"no encaja\"."
         ),
     },
     {
@@ -250,26 +249,26 @@ MCQ: list[dict] = [
         "section": "sem3",
         "type": "single",
         "prompt": (
-            "Un SDR que vende plataforma de gestión de ventas B2B escribe este email a un VP de Ventas "
+            "Un SDR que vende una plataforma de gestión de ventas B2B le escribe a un VP de Ventas "
             "de una empresa de servicios financieros:\n\n"
             "\"Hola Ricardo, vi que tu empresa está creciendo. Nuestra plataforma ayuda a equipos de "
-            "ventas como el tuyo a optimizar su pipeline y cerrar más deals. Hemos ayudado a empresas "
-            "similares a aumentar su conversión en un 30%. ¿Tenés 20 minutos esta semana para ver "
-            "cómo podemos ayudar a tu empresa?\"\n\n"
-            "¿Qué le falta a este mapeo dolor-solución?"
+            "ventas como el tuyo a optimizar el pipeline y cerrar más negocios. Ayudamos a empresas "
+            "similares a aumentar su conversión un 30%. ¿Tienes 20 minutos esta semana para ver cómo "
+            "podemos ayudar a tu empresa?\"\n\n"
+            "¿Cuál es el problema de fondo de este mapeo dolor-solución?"
         ),
         "choices": [
-            {"id": "a", "text": "Le falta la fuente del 30% — debería citar de dónde viene el dato."},
-            {"id": "b", "text": "Todo lo necesario: señal específica del prospecto + conexión con dolor contextual + propuesta sin prometer + pregunta validadora. El email habla de \"crecer\", \"equipos como el tuyo\", \"empresas similares\" — todo genérico. No hay mapeo; hay producto."},
-            {"id": "c", "text": "El CTA — 20 minutos es mucho."},
-            {"id": "d", "text": "El saludo debería ser más formal."},
+            {"id": "a", "text": "No hay mapeo: todo es genérico (\"crecer\", \"equipos como el tuyo\", \"empresas similares\"); no hay una señal específica de Ricardo ni un dolor de su contexto, solo producto y un pedido de reunión."},
+            {"id": "b", "text": "Le falta citar la fuente del 30%: sin respaldo del dato, el prospecto no va a confiar en la cifra."},
+            {"id": "c", "text": "El llamado a la acción es excesivo: pedir 20 minutos de entrada es demasiado y conviene proponer algo más liviano."},
+            {"id": "d", "text": "El tono es demasiado informal para un VP de una empresa de servicios financieros: debería ser más formal."},
         ],
-        "correct": "b",
+        "correct": "a",
         "explanation": (
-            "Un mapeo bien hecho tiene 3 elementos: dolor específico, impacto cuantificado, conexión "
-            "con oferta sin prometer. Este email tiene dolor genérico (\"crecer\"), impacto sin fuente "
-            "(\"30%\"), conexión vaga (\"ayudar a tu empresa\"). Es producto con CTA, no mapeo. "
-            "La fuente ayudaría pero el problema es estructural, no de cita."
+            "Un mapeo bien hecho tiene dolor específico, impacto contextual y conexión con la oferta "
+            "sin prometer. Este email tiene dolor genérico (\"crecer\"), impacto sin contexto (\"30%\") "
+            "y conexión vaga (\"ayudar a tu empresa\"). Es producto con un CTA, no mapeo. Citar la "
+            "fuente ayudaría, pero el problema es estructural, no de cita ni de tono."
         ),
     },
     {
@@ -278,23 +277,23 @@ MCQ: list[dict] = [
         "section": "sem3",
         "type": "single",
         "prompt": (
-            "Un SDR junior recibe feedback del manager:\n\n"
-            "\"Tus cold emails están explicando bien lo que hace nuestro producto. Pero están "
-            "convirtiendo al 0.4%. El benchmark del equipo está en 1.8%.\"\n\n"
+            "Un SDR junior recibe este feedback de su manager:\n\n"
+            "\"Tus cold emails explican bien lo que hace nuestro producto. Pero están convirtiendo al "
+            "0,4%. El promedio del equipo es 1,8%.\"\n\n"
             "¿Cuál es el error más probable que está cometiendo el SDR?"
         ),
         "choices": [
-            {"id": "a", "text": "Los emails son muy largos."},
-            {"id": "b", "text": "El SDR está vendiendo la solución sin haber entendido el problema del prospecto — escribe desde el producto, no desde el dolor. Error #1 del SDR nuevo (Sem 3 Bloque 7)."},
-            {"id": "c", "text": "El SDR no está haciendo enough volume."},
-            {"id": "d", "text": "El producto no tiene buen fit con el mercado."},
+            {"id": "a", "text": "Los emails son demasiado largos y el prospecto los abandona antes de llegar al pedido de reunión."},
+            {"id": "b", "text": "No está haciendo suficiente volumen de envíos, y por eso la cantidad de respuestas que recibe es baja."},
+            {"id": "c", "text": "El producto no tiene buen encaje con el mercado, y por eso ningún SDR del equipo logra convertir."},
+            {"id": "d", "text": "Está vendiendo la solución sin haber entendido el problema: escribe desde el producto y no desde el dolor del prospecto."},
         ],
-        "correct": "b",
+        "correct": "d",
         "explanation": (
-            "\"Explicando bien lo que hace nuestro producto\" es exactamente el síntoma del error #1. "
-            "La conversión baja (0.4% vs 1.8% benchmark) confirma que el problema no es ejecución sino enfoque. "
-            "El feedback es sobre conversión, no volumen. El producto sí convierte con otros SDRs (1.8%), "
-            "así que el problema es este SDR específico."
+            "\"Explican bien lo que hace nuestro producto\" es exactamente el síntoma del error #1 del "
+            "SDR nuevo. La conversión baja (0,4% vs 1,8% del promedio) confirma que el problema no es "
+            "ejecución sino enfoque. El feedback es sobre conversión, no volumen. El producto sí "
+            "convierte con otros SDRs (1,8%), así que el problema es este SDR específico."
         ),
     },
     {
@@ -303,24 +302,24 @@ MCQ: list[dict] = [
         "section": "sem4",
         "type": "single",
         "prompt": (
-            "Un VP de Ventas (recién ascendido hace 4 meses) responde a un cold email con:\n\n"
-            "\"Me interesa entender cómo otras empresas similares han medido impacto después de "
+            "Un VP de Ventas, ascendido hace 4 meses, responde a un cold email:\n\n"
+            "\"Me interesa entender cómo otras empresas similares midieron el impacto después de "
             "implementar esto. Necesito poder presentar un caso concreto al CEO en mi primer review "
-            "del próximo trimestre. Si hay métricas claras y timeline realista, tiene chance.\"\n\n"
-            "¿Cuál es el motor principal que está moviendo la decisión?"
+            "del próximo trimestre. Si hay métricas claras y un timeline realista, tiene chance.\"\n\n"
+            "¿Cuál es el motor principal que mueve su decisión?"
         ),
         "choices": [
-            {"id": "a", "text": "Resultados medibles en abstracto."},
-            {"id": "b", "text": "Avance de carrera — el VP recién ascendido necesita proyectos visibles que muestren impacto en su primer review."},
-            {"id": "c", "text": "Evitar riesgo."},
-            {"id": "d", "text": "Status interno."},
+            {"id": "a", "text": "Conseguir resultados medibles como fin en sí mismo, más allá de lo que signifiquen para él."},
+            {"id": "b", "text": "Avanzar en su carrera: recién ascendido, necesita un proyecto visible que demuestre impacto en su primer review ante el CEO."},
+            {"id": "c", "text": "Evitar el riesgo: prefiere no moverse para no exponerse a un error en su nuevo cargo."},
+            {"id": "d", "text": "Ganar posición interna: le importa sobre todo cómo lo perciben sus pares dentro de la empresa."},
         ],
         "correct": "b",
         "explanation": (
-            "El VP dice literalmente \"mi primer review del próximo trimestre\" — oportunidad de "
+            "El VP dice literalmente \"mi primer review del próximo trimestre\": oportunidad de "
             "demostrar que el ascenso fue acertado. Proyecto exitoso = carrera asegurada; proyecto "
             "fallido = riesgo de salida. Los otros motores están presentes pero son secundarios. "
-            "Implicación: mandarle caso con métricas + timeline que él pueda usar en su review."
+            "Implicación: mandarle un caso con métricas y timeline que él pueda usar en su review."
         ),
     },
     {
@@ -329,23 +328,23 @@ MCQ: list[dict] = [
         "section": "sem3",
         "type": "single",
         "prompt": (
-            "Empresa: AgroExport Argentina (exportadora de commodities agrícolas, 400 empleados, "
-            "operación en Argentina, con planes de expansión a Brasil anunciados para 2026 Q4).\n"
-            "Contacto potencial: Camilo Díaz — Gerente de Logística. LinkedIn muestra 3 años en el "
-            "cargo. Un post reciente: \"Este Q4 nos complica el volumen, las rutas actuales no escalan.\"\n\n"
-            "¿Cuál es la hipótesis de dolor más probable que el SDR podría usar como gancho?"
+            "Empresa: AgroExport Argentina (exportadora de commodities agrícolas, 400 empleados, con "
+            "expansión a Brasil anunciada para el cuarto trimestre de 2026). Contacto potencial: "
+            "Camilo Díaz, Gerente de Logística, 3 años en el cargo. Un post reciente suyo: \"Este "
+            "cuarto trimestre nos complica el volumen; las rutas actuales no escalan.\"\n\n"
+            "¿Cuál es la hipótesis de dolor más probable para usar como gancho?"
         ),
         "choices": [
-            {"id": "a", "text": "El crecimiento de la empresa le genera estrés al equipo."},
-            {"id": "b", "text": "Con la expansión anunciada a Brasil + el comentario público sobre que las rutas \"no escalan\", el dolor probable es la necesidad de rediseñar la operación logística para absorber volumen multi-país antes del Q4 2026 sin que los costos se disparen."},
-            {"id": "c", "text": "El costo de exportación de commodities está subiendo."},
-            {"id": "d", "text": "Los empleados están sobrecargados de trabajo."},
+            {"id": "a", "text": "El crecimiento de la empresa está generando estrés y sobrecarga en el equipo de Camilo."},
+            {"id": "b", "text": "El costo de exportar commodities agrícolas está subiendo por factores de mercado externos a la empresa."},
+            {"id": "c", "text": "Con la expansión a Brasil anunciada y el comentario público de Camilo sobre rutas que no escalan, el dolor probable es rediseñar la operación logística para absorber volumen multipaís antes del cierre del año sin que se disparen los costos."},
+            {"id": "d", "text": "Los empleados del área están sobrecargados de trabajo por el ritmo de la operación actual."},
         ],
-        "correct": "b",
+        "correct": "c",
         "explanation": (
-            "Combina 2 señales específicas (expansión anunciada con fecha + queja pública del contacto) "
-            "con un contexto operativo real (escalar logística multi-país es caro y complicado). "
-            "Las otras opciones son generalidades o derivadas."
+            "Combina dos señales específicas (expansión anunciada con fecha + queja pública del "
+            "contacto) con un contexto operativo real (escalar logística multipaís es caro y "
+            "complicado). Las otras opciones son generalidades o factores externos no accionables."
         ),
     },
     {
@@ -354,22 +353,23 @@ MCQ: list[dict] = [
         "section": "sem4",
         "type": "single",
         "prompt": (
-            "Continuación de la pregunta anterior (AgroExport Argentina + Camilo Díaz). "
-            "El SDR quiere escribir el gancho del cold email.\n\n"
-            "¿Cuál de estos ganchos es el más efectivo para Camilo?"
+            "Continúa el caso de la pregunta anterior (AgroExport Argentina + Camilo Díaz). "
+            "El SDR quiere escribir el gancho del cold email para Camilo.\n\n"
+            "¿Cuál de estos ganchos es el más efectivo?"
         ),
         "choices": [
-            {"id": "a", "text": "\"Hola Camilo, vi que AgroExport está creciendo. Nuestra plataforma optimiza logística. ¿Tenés 20 minutos?\""},
-            {"id": "b", "text": "\"Hola Camilo, vi tu post sobre rutas que no escalan + el anuncio de expansión a Brasil para Q4. En exportadoras con crecimiento multi-país vemos que el mayor costo oculto aparece en los primeros 6 meses — rutas armadas sobre supuestos del mercado original que no funcionan en el nuevo. ¿Les está pasando algo así o tienen mapeado cómo calibrar?\""},
-            {"id": "c", "text": "\"Hola Camilo, tenemos 30 años de experiencia en logística internacional. Trabajamos con empresas como Cargill y Bunge. ¿Coordinamos una llamada?\""},
-            {"id": "d", "text": "\"Hola Camilo, el crecimiento de AgroExport es impresionante. Nos gustaría ayudar.\""},
+            {"id": "a", "text": "\"Hola Camilo, vi tu comentario sobre rutas que no escalan y el anuncio de expansión a Brasil. En exportadoras que crecen a varios países, el costo más caro suele aparecer en los primeros meses, cuando las rutas armadas para el mercado original no rinden en el nuevo. ¿Les está pasando algo así o ya tienen cómo calibrarlo?\""},
+            {"id": "b", "text": "\"Hola Camilo, vi que AgroExport está creciendo mucho. Nuestra plataforma optimiza la logística de punta a punta. ¿Tienes 20 minutos esta semana para que te cuente?\""},
+            {"id": "c", "text": "\"Hola Camilo, tenemos 30 años de experiencia en logística internacional y trabajamos con grandes exportadoras globales. Me gustaría coordinar una llamada para presentarte lo que hacemos.\""},
+            {"id": "d", "text": "\"Hola Camilo, el crecimiento de AgroExport es realmente impresionante y nos encantaría poder acompañarlos en este momento tan importante. ¿Conversamos esta semana?\""},
         ],
-        "correct": "b",
+        "correct": "a",
         "explanation": (
-            "Señal específica (post + expansión verificables) + conexión al dolor (\"costo oculto de los primeros 6 meses\") + "
-            "no promete (ofrece una pregunta) + un solo CTA. (a) genérico, (c) prueba social desajustada "
-            "(Cargill y Bunge vs AgroExport de 400 empleados), (d) halago vacío. "
-            "La encadenada P13→P14 prueba que el alumno traduce el dolor a gancho bien estructurado."
+            "Señal específica (post + expansión verificables) + conexión al dolor (\"el costo más caro "
+            "en los primeros meses\") + no promete (ofrece una pregunta) + un solo CTA. (b) es "
+            "genérico, (c) usa prueba social desajustada (grandes exportadoras globales vs AgroExport "
+            "de 400 empleados), (d) es halago vacío. La encadenada P13→P14 prueba que el alumno "
+            "traduce el dolor a un gancho bien estructurado."
         ),
     },
     {
@@ -378,26 +378,27 @@ MCQ: list[dict] = [
         "section": "sem4",
         "type": "single",
         "prompt": (
-            "Un SDR escribe el primer email a una empresa B2B prospecto. Dentro de la empresa hay "
-            "4 contactos potenciales:\n"
-            "● Pablo (CEO) — C-level, pero no suele responder cold emails según su LinkedIn.\n"
-            "● Mirta (Directora de Operaciones) — escribe posts frecuentes sobre operaciones, "
-            "comparte artículos de industria.\n"
-            "● Juan (Gerente de Proyectos) — LinkedIn con pocos posts, actividad limitada.\n"
-            "● Cecilia (VP de Finanzas) — sus posts son principalmente de \"buenas vibras\" y citas motivacionales.\n\n"
-            "¿A cuál contactar primero para maximizar probabilidad de Mobilizer (Teacher específicamente)?"
+            "Un SDR escribe el primer email a una empresa B2B prospecto. Dentro hay 4 contactos posibles:\n"
+            "● Pablo (CEO): C-level, pero según su LinkedIn no suele responder correos en frío.\n"
+            "● Mirta (Directora de Operaciones): publica seguido sobre operaciones y comparte "
+            "artículos de su industria.\n"
+            "● Juan (Gerente de Proyectos): LinkedIn con poca actividad, casi sin publicaciones.\n"
+            "● Cecilia (VP de Finanzas): sus posts son sobre todo frases motivacionales y de buenas vibras.\n\n"
+            "¿A quién conviene contactar primero para maximizar la chance de dar con alguien que "
+            "impulse la decisión hacia adentro?"
         ),
         "choices": [
-            {"id": "a", "text": "Pablo — como C-level tiene más peso en la decisión."},
-            {"id": "b", "text": "Mirta — escribe y comparte artículos de industria (patrón de Teacher)."},
-            {"id": "c", "text": "Juan — como Gerente es decisor operativo."},
-            {"id": "d", "text": "Cecilia — su actividad en LinkedIn muestra que es accesible."},
+            {"id": "a", "text": "A Pablo: como CEO tiene el mayor peso en la decisión, así que es el mejor punto de entrada."},
+            {"id": "b", "text": "A Juan: como Gerente de Proyectos es decisor operativo, así que es quien va a hacer avanzar el tema."},
+            {"id": "c", "text": "A Cecilia: su actividad en LinkedIn la muestra accesible, y eso facilita conseguir la reunión."},
+            {"id": "d", "text": "A Mirta: publica y comparte conocimiento de su industria, el patrón de conducta de quien divulga ideas y suele empujarlas internamente."},
         ],
-        "correct": "b",
+        "correct": "d",
         "explanation": (
-            "\"Escribir posts + compartir artículos de industria\" es la señal conductual más clara de "
-            "Teacher (uno de los 3 Mobilizers). Jerarquía ≠ arquetipo. Rol ≠ arquetipo. "
-            "Posts de \"buenas vibras\" son señal de Friend (accesible pero no empujador)."
+            "Publicar posts y compartir artículos de industria es la señal conductual más clara del "
+            "que divulga (un perfil que impulsa la decisión hacia adentro). Jerarquía ≠ perfil de "
+            "conducta; rol ≠ perfil de conducta. Los posts de \"buenas vibras\" son señal del "
+            "amistoso (accesible, pero no impulsa)."
         ),
     },
     {
@@ -406,29 +407,34 @@ MCQ: list[dict] = [
         "section": "sem4",
         "type": "single",
         "prompt": (
-            "Una SDR senior le explica a una junior:\n\n"
-            "\"Lo que aprendí en 2 años es esto: antes de escribir un email, paso por 3 filtros mentales. "
-            "Primero, el filtro del negocio: ¿entiendo cómo gana plata esta empresa, qué la hace crecer, "
-            "qué la frena? Si no puedo contestar eso en 30 segundos, todavía no estoy listo para escribir. "
-            "Segundo, el filtro del comprador: ¿la persona a la que le voy a escribir es Mobilizer o Talker? "
-            "Si no lo sé, mejor busco señales antes. Tercero, el filtro del timing: ¿hay alguna señal "
-            "concreta y reciente que me permita construir un gancho específico? Si no, la empresa no "
-            "está lista para el cold email hoy.\"\n\n"
-            "Esta reflexión integra principios de qué bloques del Módulo 2?"
+            "Una SDR con experiencia le explica a una colega que recién empieza:\n\n"
+            "\"Lo que aprendí en estos años es que, antes de escribir un email, paso por tres filtros. "
+            "El primero es el del negocio: ¿entiendo cómo gana dinero esta empresa, qué la hace crecer "
+            "y qué la frena? Si no puedo responder eso en 30 segundos, todavía no estoy lista para "
+            "escribir; no me alcanza con que LinkedIn diga 'es una fintech', necesito saber qué tipo "
+            "de fintech, a quién le vende y cuál es su dolor de hoy. El segundo es el del comprador: la "
+            "persona a la que le voy a escribir, ¿impulsa la decisión o solo conversa? Si no lo sé, "
+            "busco señales antes, porque escribirle a alguien amable que nunca mueve nada me llena la "
+            "agenda de reuniones que no cierran. El tercero es el del momento: ¿hay alguna señal "
+            "concreta y reciente para construir un gancho específico? Si no la hay, la empresa no está "
+            "lista para el email en frío hoy: la archivo con un disparador o investigo más a fondo si "
+            "es una cuenta prioritaria.\"\n\n"
+            "Una SDR junior quiere trabajar con estos tres filtros. ¿Cuál de estas decisiones los "
+            "aplica correctamente?"
         ),
         "choices": [
-            {"id": "a", "text": "Solo del Bloque 5 de Sem 4 (señales de timing)."},
-            {"id": "b", "text": "Solo del Bloque 7 de Sem 3 (error #1 del SDR nuevo)."},
-            {"id": "c", "text": "Integra múltiples bloques: business acumen como primer filtro (Sem 3, Bloques 2-5), Challenger Customer como segundo filtro (Sem 4, Bloque 2), y timing signals como tercer filtro (Sem 4, Bloque 5). La reflexión muestra cómo los tres operan juntos para evitar el error #1 (Sem 3, Bloque 7)."},
-            {"id": "d", "text": "Es filosofía general, no integra bloques específicos."},
+            {"id": "a", "text": "Encontró una buena señal de timing (una ronda de inversión reciente), así que escribe de inmediato al primer contacto que aparece en su base de datos para no perder el momento."},
+            {"id": "b", "text": "Antes de escribir, arma el modelo de negocio del prospecto, identifica si su contacto impulsa o solo conversa y busca una señal reciente; si falta cualquiera de los tres, no envía todavía."},
+            {"id": "c", "text": "Como entiende bien el producto que vende, redacta un email claro que explica sus funciones y se lo manda a varios contactos de la empresa para cubrir todo el comité."},
+            {"id": "d", "text": "Identifica por su cargo a la persona con más poder de decisión y le escribe enseguida, porque con el decisor correcto los otros dos filtros pasan a segundo plano."},
         ],
-        "correct": "c",
+        "correct": "b",
         "explanation": (
-            "La reflexión conecta múltiples fundamentos en una narrativa coherente: "
-            "\"cómo gana plata\" (BMC), \"qué la hace crecer/frena\" (unit economics + Porter), "
-            "\"dolor estructural\" (JTBD + mapeo), \"Mobilizer vs Talker\" (Challenger Customer), "
-            "\"señal concreta\" (timing signals), \"emails que no cierran\" = evitar el error #1. "
-            "Un alumno que identifica esta integración demuestra que el módulo quedó como sistema."
+            "Aplicar los tres filtros significa, antes de enviar: armar el modelo de negocio del "
+            "prospecto (filtro del negocio), identificar si el contacto impulsa o solo conversa "
+            "(filtro del comprador) y buscar una señal concreta y reciente (filtro del momento); si "
+            "falta cualquiera, no se envía. (a) salta el filtro del negocio y del comprador. (c) es el "
+            "error #1: escribe desde el producto. (d) confunde cargo con conducta y descarta dos filtros."
         ),
     },
 ]
@@ -437,150 +443,173 @@ MCQ: list[dict] = [
 VIDEO_CASES: list[dict] = [
     {
         "id": "case_a",
-        "title": "Aplicar BMC + 5 fuerzas de Porter a Mercado Libre Argentina",
+        "title": "Leer un negocio antes de la reunión",
         "scenario": (
-            "Mercado Libre Argentina está anunciado como cuenta ICP para un cliente que vende "
-            "software de optimización de logística. Tu AE te pide armar un brief conceptual de 5 min "
-            "antes de la reunión.\n\n"
-            "Lo que el alumno debe producir en el video:\n"
-            "1. BMC de Mercado Libre Argentina en los 9 componentes (puede enfocarse en el negocio "
-            "de e-commerce marketplace, no en Mercado Pago).\n"
-            "2. 5 fuerzas de Porter aplicadas a la industria e-commerce en LATAM — identificar las 2 "
-            "fuerzas más disruptivas hoy.\n"
-            "3. A partir de los dos análisis, proponer el dolor estructural probable que el software "
-            "de optimización logística podría atacar."
+            "Mercado Libre Argentina figura como cuenta ICP para un cliente que vende software de "
+            "optimización de logística. Tu AE te pide armar un brief conceptual de 5 minutos antes de "
+            "la reunión.\n\n"
+            "Lo que debes producir en el video:\n"
+            "1. El Business Model Canvas de Mercado Libre Argentina en sus 9 componentes (puedes "
+            "enfocarte en el negocio de marketplace de e-commerce, no en Mercado Pago).\n"
+            "2. Las 5 fuerzas de Porter aplicadas a la industria de e-commerce en LATAM, identificando "
+            "las 2 fuerzas más disruptivas hoy.\n"
+            "3. A partir de los dos análisis, el dolor estructural probable que el software de "
+            "optimización logística podría atacar."
         ),
         "expected_key_point": (
-            "Rivalidad intensa (Amazon, Shein, Temu) + poder creciente del comprador (múltiples "
-            "alternativas + comparadores) son las 2 fuerzas más disruptivas. El dolor específico "
-            "atacable: eficiencia de última milla + costo variable por envío."
+            "Las 2 fuerzas más disruptivas son la rivalidad intensa (competencia con otros "
+            "marketplaces globales) y el poder creciente del comprador (muchas alternativas + "
+            "comparadores de precio), conectadas con un dolor logístico concreto: eficiencia de "
+            "última milla y costo variable por envío."
         ),
         "expected_concepts": [
-            "BMC en los 9 componentes",
+            "Business Model Canvas en los 9 componentes",
             "5 fuerzas de Porter — distinción de fuerzas dominantes",
             "mapeo dolor-solución estructural",
         ],
         "expected_decision": (
-            "Brief que conecta análisis estructural con dolor accionable: optimización de última milla "
-            "y costo variable por envío como hipótesis a validar en la reunión con el AE."
+            "Mapear el dolor estructural a la eficiencia de última milla y el costo variable por "
+            "envío, y proponer el ángulo del software de optimización logística sobre ese dolor como "
+            "hipótesis a validar en la reunión con el AE. Un análisis 6/6 arma el Business Model "
+            "Canvas completo y jerarquiza las fuerzas dominantes; uno débil describe el Canvas en "
+            "general o aplica Porter sin priorizar fuerzas."
         ),
     },
     {
         "id": "case_b",
-        "title": "Identificar arquetipos del Challenger Customer en un comité de 6 personas",
+        "title": "Leer un comité de 6 personas",
         "scenario": (
-            "Se muestran 6 respuestas de personas distintas de la misma empresa:\n\n"
-            "1) VP Operaciones: \"Estoy cansado de proveedores que prometen y no cumplen. Si no tenés "
-            "casos de estudio auditados con métricas claras, no sigo.\"\n"
-            "2) Gerente de Proyectos: \"Qué interesante tu propuesta. Encantado de conversar. Decime "
+            "Se muestran 6 respuestas de personas distintas de la misma empresa (extractos de emails "
+            "o LinkedIn) y una descripción breve del rol de cada una:\n\n"
+            "1) VP de Operaciones: \"Estoy cansado de proveedores que prometen y no cumplen. Si no "
+            "tienes casos de estudio auditados con métricas claras, no sigo.\"\n"
+            "2) Gerente de Proyectos: \"Qué interesante tu propuesta. Encantado de conversar. Dime "
             "cuándo te viene bien.\"\n"
-            "3) Director Comercial: \"Leí el paper que me compartiste, me pareció brillante. Se lo pasé "
-            "al comité ejecutivo para que lo discutamos en la próxima reunión — esto puede ser parte del plan Q3.\"\n"
-            "4) Analista senior: \"Te puedo dar información sobre cómo funciona internamente... pero "
-            "necesito saber si vamos a poder incluir mi equipo en el piloto. Hablamos?\"\n"
-            "5) Coordinador: \"Mirá, si esto me ayuda a ser visible ante el CEO, estoy dentro. Ayudame a "
-            "presentarlo con mi nombre en el brief.\"\n"
+            "3) Director Comercial: \"Leí el documento que me compartiste, me pareció excelente. Se lo "
+            "pasé al comité ejecutivo para discutirlo en la próxima reunión; esto puede ser parte del "
+            "plan del próximo trimestre.\"\n"
+            "4) Analista senior: \"Te puedo dar información sobre cómo funciona esto internamente, pero "
+            "necesito saber si vamos a poder incluir a mi equipo en el piloto. ¿Hablamos?\"\n"
+            "5) Coordinador: \"Si esto me ayuda a ganar visibilidad ante el CEO, cuenta conmigo. "
+            "Ayúdame a presentarlo con mi nombre en el brief.\"\n"
             "6) Director de Tecnología: \"No creo que sea el momento. Tenemos otras prioridades.\"\n\n"
-            "Lo que el alumno debe producir:\n"
-            "1. Identificar el arquetipo (1-7 del Challenger Customer) de cada contacto.\n"
-            "2. Separar Mobilizers vs Talkers.\n"
-            "3. Proponer estrategia: con quién profundizar, quién neutralizar, quién usar como referidor."
+            "Lo que debes producir:\n"
+            "1. Identificar, para cada contacto, qué perfil de conducta representa (entre los que "
+            "viste en la Semana 4).\n"
+            "2. Separar quiénes impulsan la decisión, quiénes solo conversan y quién bloquea.\n"
+            "3. Proponer una estrategia: con quién profundizar, a quién usar como referidor y con quién "
+            "no gastar energía."
         ),
         "expected_key_point": (
-            "Identifica correctamente: 1=Skeptic, 2=Friend, 3=Teacher, 4=Guide, 5=Climber, 6=Blocker. "
-            "Mobilizers: 1 y 3. Talkers: 2, 4, 5, 6."
+            "Separar conducta de cargo. Perfiles: 1 = el escéptico (impulsa); 2 = el amistoso (solo "
+            "conversa); 3 = el que divulga (impulsa); 4 = el que negocia información (solo conversa); "
+            "5 = el que busca beneficio propio (solo conversa); 6 = el que bloquea. Impulsan: 1 y 3. "
+            "Solo conversan: 2, 4, 5. Bloquea: 6."
         ),
         "expected_concepts": [
-            "7 arquetipos del Challenger Customer",
-            "Mobilizers vs Talkers",
-            "estrategia de stakeholder mapping",
+            "perfiles de conducta del comprador (Semana 4)",
+            "quién impulsa la decisión vs quién solo conversa",
+            "estrategia de mapeo de stakeholders",
         ],
         "expected_decision": (
-            "Profundizar con #1 (Skeptic — empuja cuando se convence) y #3 (Teacher — evangeliza "
-            "internamente). Usar #4 como fuente de info. No pelear con #6."
+            "Profundizar con #1 (el escéptico: darle los casos y métricas que pide) y con #3 (el que "
+            "divulga: darle material para que evangelice internamente). Usar a #4 como fuente de "
+            "información, no como aliado. No pelear con #6."
         ),
     },
     {
         "id": "case_c",
-        "title": "Reescribir cold email genérico a Marina de Ualá",
+        "title": "Un mapeo dolor-solución genérico para reescribir",
         "scenario": (
             "Un SDR escribió este cold email:\n\n"
             "\"Hola Marina, vi que tu empresa está creciendo rápido. Nuestra plataforma ayuda a empresas "
             "B2B a mejorar su pipeline de ventas y alcanzar resultados increíbles. Trabajamos con clientes "
-            "como Globant y Mercado Libre. ¿Tenés 20 minutos esta semana para ver si podemos ayudar?\"\n\n"
-            "Contexto adicional que el SDR tiene pero no usó:\n"
-            "● Empresa de Marina: Ualá Argentina (neobanco, cerró Serie D hace 3 meses por USD 350M, "
-            "anunció expansión a México y Colombia).\n"
+            "como Globant y Mercado Libre. ¿Tienes 20 minutos esta semana para ver si podemos ayudar?\"\n\n"
+            "Contexto adicional que el SDR tiene, pero no usó:\n"
+            "● Empresa de Marina: un neobanco regional que cerró una ronda de inversión grande hace "
+            "pocos meses y anunció expansión a dos países nuevos.\n"
             "● Rol de Marina: VP de Growth.\n"
-            "● Post reciente de Marina en LinkedIn: \"El desafío más caro de expandir a 3 países a la "
-            "vez: mantener CAC estable mientras el canal local aún no está maduro.\"\n\n"
-            "Lo que el alumno debe producir en el video:\n"
-            "1. Diagnosticar por qué el email es un mapeo dolor-solución mal hecho.\n"
-            "2. Reescribir el email aplicando el contexto disponible + principios de Sem 3 y Sem 4.\n"
+            "● Post reciente de Marina en LinkedIn: \"El desafío más caro de expandir a tres países a "
+            "la vez: mantener el CAC estable mientras el canal local todavía no madura.\"\n\n"
+            "Lo que debes producir en el video:\n"
+            "1. Diagnosticar por qué el email escrito es un mapeo dolor-solución mal hecho.\n"
+            "2. Reescribir el email aprovechando el contexto disponible y los principios de la Semana 3 "
+            "y la Semana 4.\n"
             "3. Justificar cada cambio con el concepto del curso que lo fundamenta."
         ),
         "expected_key_point": (
-            "El email es producto genérico sin señal específica — el SDR ignoró la Serie D, la expansión "
-            "tri-país y el post de Marina. Es el Error #1 del SDR nuevo + mapeo dolor-solución mal hecho + "
-            "prueba social desajustada (Globant/MeLi son gigantes, no comparables a Ualá del tamaño actual)."
+            "El email es producto genérico sin señal específica: el SDR ignoró las tres señales "
+            "disponibles (la ronda de inversión, la expansión a tres países y el post de Marina sobre "
+            "el CAC), y usa una prueba social desajustada (empresas grandes que no son comparables). "
+            "Es el error #1 del SDR nuevo + mapeo dolor-solución mal hecho."
         ),
         "expected_concepts": [
-            "Error #1 del SDR nuevo (Sem 3 Bloque 7)",
-            "mapeo dolor-solución (Sem 3 Bloque 6)",
-            "gancho específico (Sem 4 Bloque 5)",
+            "error #1 del SDR nuevo",
+            "mapeo dolor-solución",
+            "gancho específico",
             "prueba social ajustada al tamaño/contexto",
         ],
         "expected_decision": (
-            "Reescribir con gancho específico (\"vi tu post sobre CAC en expansión tri-país + anuncio "
-            "Ualá a México y Colombia\"), dolor contextual (CAC distorsionado en mercados nuevos), "
-            "conexión sin prometer, un solo CTA."
+            "Reescribir con gancho específico (el post sobre el CAC en la expansión a tres países + el "
+            "anuncio de expansión), dolor contextual (CAC distorsionado en mercados nuevos donde el "
+            "canal local aún no madura), conexión sin prometer y un solo llamado a la acción. Nombra "
+            "el error #1, el mapeo dolor-solución y el gancho específico."
         ),
     },
     {
         "id": "case_d",
-        "title": "Clasificar 10 respuestas a cold email (no listo / no fit / bloqueador / qualified)",
+        "title": "Clasificar 10 respuestas a cold emails",
         "scenario": (
-            "Un SDR tiene 10 respuestas a cold emails esta semana. El ICP definido es \"empresas B2B "
-            "SaaS LATAM, 150-500 empleados, con foco en marketing automation\". Las 10 respuestas:\n\n"
-            "1) SoftPlay Perú (120 empleados, SaaS B2C gaming), CTO: \"Interesante, agendemos.\"\n"
-            "2) GrowthLab Chile (300 empleados, SaaS B2B), VP Marketing: \"Me interesa. Tengo board "
-            "meeting en 6 semanas, después de eso te retomo.\"\n"
+            "Un SDR recibió 10 respuestas a cold emails esta semana. El ICP definido es: empresas B2B "
+            "SaaS de LATAM, de 150 a 500 empleados. El producto que vende el SDR es una herramienta de "
+            "automatización de marketing. Las 10 respuestas:\n\n"
+            "1) SoftPlay Perú (120 empleados, SaaS B2C de gaming), CTO: \"Interesante, agendemos.\"\n"
+            "2) GrowthLab Chile (300 empleados, SaaS B2B), VP de Marketing: \"Me interesa. Tengo "
+            "reunión de directorio en 6 semanas; después de eso te retomo.\"\n"
             "3) DataFlow Colombia (400 empleados, SaaS B2B), CEO: \"Estamos en proceso de venta de la "
-            "empresa a un fondo. Probablemente operación cierra en 4 meses.\"\n"
-            "4) CloudRise Argentina (280 empleados, SaaS B2B), CMO: \"Ya firmamos contrato con "
-            "[competidor directo] el mes pasado. 2 años de compromiso.\"\n"
-            "5) PayStack LATAM (180 empleados, fintech), VP Growth: \"Interesante pero no es prioridad "
-            "este año ni el que viene. Nuestra estrategia es consolidar sin sumar herramientas.\"\n"
-            "6) ConsultorQ Uruguay (400 empleados, consultoría), CFO: \"Sáqueme de su lista por favor y "
-            "no me contacte más.\"\n"
-            "7) MetaEdu México (220 empleados, SaaS B2B edtech), CMO: \"Tengo interés. Estamos "
-            "justamente evaluando herramientas, 3 opciones activas. ¿Podés mandarme deck?\"\n"
-            "8) LogiSmart Perú (90 empleados, SaaS B2B logística), COO: \"Me interesa, pero somos chicos. "
-            "¿Tenés descuento para empresas menores?\"\n"
-            "9) HealthCore Chile (450 empleados, SaaS B2B salud), Gerente de Marketing: \"Hablé con "
-            "nuestro VP de Marketing, está interesada en conocer más. Te paso su contacto: maria@...\"\n"
-            "10) PagosGlobal Brasil (600 empleados, fintech), CFO: \"No somos ICP de ustedes — sólo "
-            "operamos en Brasil en portugués.\"\n\n"
-            "Lo que el alumno debe producir:\n"
-            "1. Clasificar cada respuesta en una de: qualified / no listo con trigger / no fit / do not contact.\n"
-            "2. Para los \"no listo\": especificar fecha de recontacto.\n"
-            "3. Identificar patrones si el SDR está cometiendo errores de segmentación."
+            "empresa a un fondo. La operación probablemente cierre en 4 meses.\"\n"
+            "4) CloudRise Argentina (280 empleados, SaaS B2B), CMO: \"Ya firmamos contrato con un "
+            "competidor directo de ustedes el mes pasado. 2 años de compromiso.\"\n"
+            "5) PayStack LATAM (180 empleados, SaaS B2B), VP de Growth: \"Interesante, pero no es "
+            "prioridad este año ni el que viene. Nuestra estrategia es consolidar lo que tenemos sin "
+            "sumar herramientas.\"\n"
+            "6) ConsultorQ Uruguay (400 empleados, SaaS B2B), CFO: \"Sáquenme de su lista, por favor, "
+            "y no me contacten más.\"\n"
+            "7) MetaEdu México (220 empleados, SaaS B2B de edtech), CMO: \"Tengo interés. Justo "
+            "estamos evaluando herramientas, 3 opciones activas. ¿Puedes mandarme un deck?\"\n"
+            "8) LogiSmart Perú (90 empleados, SaaS B2B de logística), COO: \"Me interesa, pero somos "
+            "chicos. ¿Tienen descuento para empresas más pequeñas?\"\n"
+            "9) HealthCore Chile (450 empleados, SaaS B2B de salud), Gerente de Marketing: \"Hablé con "
+            "nuestra VP de Marketing, está interesada en conocer más. Te paso su contacto: maria@...\"\n"
+            "10) PagosGlobal Brasil (650 empleados, SaaS B2B de pagos), CFO: \"Podríamos conversar, "
+            "pero somos un equipo grande y con procesos propios.\"\n\n"
+            "Lo que debes producir:\n"
+            "1. Clasificar cada respuesta en una de: calificado / no listo / no encaja / no contactar.\n"
+            "2. Para los \"no listo\": especificar una fecha o un disparador de recontacto.\n"
+            "3. Identificar si el SDR está cometiendo algún error de segmentación."
         ),
         "expected_key_point": (
-            "Clasificación esperada: 1=no fit (B2C), 2=no listo (7 sem), 3=no listo (6-12 meses), "
-            "4=no listo (22-24 meses pre-vencimiento), 5=no fit (declaración estructural), "
-            "6=do not contact, 7=qualified, 8=no fit (tamaño), 9=qualified (referido válido), "
-            "10=no fit geográfico/idioma. Patrón: varios fuera del ICP (1, 8, 10) → problema de segmentación aguas arriba."
+            "Clasificación esperada: 1 = no encaja (B2C y 120 < 150 del ICP); 2 = no listo "
+            "(recontactar ~7 semanas, tras la reunión de directorio); 3 = no listo (recontactar 6-12 "
+            "meses tras la venta, la nueva administración redefine prioridades); 4 = no listo "
+            "(recontactar ~22 meses, antes del vencimiento del contrato); 5 = no listo con horizonte "
+            "largo (~18 meses): el bloqueo es de prioridad y presupuesto, no del modelo; no es \"no "
+            "encaja\" porque \"no encaja\" exige que nunca cierre; 6 = no contactar (marca "
+            "permanente); 7 = calificado (calza ICP y está en evaluación activa); 8 = no encaja por "
+            "tamaño (90 < 150); 9 = calificado (referido a un buyer persona válido, con contacto); "
+            "10 = no encaja por tamaño (650 > 500). Patrón: varios casos fuera del ICP (1, 8, 10) → "
+            "problema de segmentación aguas arriba."
         ),
         "expected_concepts": [
-            "no listo con trigger vs no fit estructural",
-            "do not contact",
+            "no listo (con disparador) vs no encaja estructural",
+            "no contactar",
             "patrón de error de segmentación en filtros de prospección",
         ],
         "expected_decision": (
-            "Avanzar con 7 y 9. Archivar 2, 3, 4 con triggers de fecha. Descartar 1, 5, 6, 8, 10. "
-            "Recomendar revisar filtros de Apollo aguas arriba — varios casos fuera de ICP indican "
-            "problema de segmentación, no de copy."
+            "Avanzar con 7 y 9. Archivar 2, 3, 4 y 5 como \"no listo\" con disparador de fecha. "
+            "Descartar 1, 8 y 10 (no encaja por tamaño/modelo) y respetar el \"no contactar\" de 6. "
+            "Recomendar revisar los filtros de la base de prospección aguas arriba: varios casos "
+            "fuera del ICP indican problema de segmentación, no de copy."
         ),
     },
 ]
@@ -603,7 +632,7 @@ VIDEO_RUBRIC: dict = {
             "scale": [
                 {"score": 0, "descriptor": "Frases genéricas. No usa vocabulario del curso."},
                 {"score": 1, "descriptor": "Usa algún concepto pero superficial o aplicado a medias."},
-                {"score": 2, "descriptor": "Usa vocabulario específico (BMC, 5 fuerzas, JTBD, Mobilizer, Skeptic, no listo/no fit, etc.) correctamente aplicado al caso."},
+                {"score": 2, "descriptor": "Usa el vocabulario del curso (Business Model Canvas, 5 fuerzas de Porter, Jobs to Be Done, quién impulsa/solo conversa, el escéptico, no listo/no encaja, etc.) y lo conecta correctamente con el caso."},
             ],
         },
         {

@@ -56,9 +56,9 @@ def _final_config() -> dict:
             "no_ai_or_sharing": True,
             "stages_sequential": True,
             "video_attempts_max": 2,
-            "video_duration_minutes": 15,
+            "video_duration_minutes": 8,
             "submission_window_days": 5,
-            "total_case_hours": 2.5,
+            "total_case_hours": 1.0,
         },
     }
 

@@ -26,11 +26,10 @@ def auto_grade_mcq(assessment: Assessment, payload: dict[str, Any]) -> float | N
     student = payload.get("answers", {})
 
     if questions:
-        total = len(questions)
+        earned, total = sum_mcq_points(questions, student)
         if total == 0:
             return None
-        hits = count_mcq_correct(questions, student)
-        return round((hits / total) * 100, 2)
+        return round((earned / total) * 100, 2)
 
     # Legacy single-choice fallback
     correct_legacy = assessment.config.get("correct_answers", {})
@@ -58,6 +57,23 @@ def count_mcq_correct(questions: list[dict], answers: dict[str, Any]) -> int:
     return hits
 
 
+def sum_mcq_points(questions: list[dict], answers: dict[str, Any]) -> tuple[float, float]:
+    """Devuelve (puntos obtenidos, puntos totales) ponderando cada pregunta por su
+    campo ``points`` (default 1). Permite puntaje ponderado — p.ej. el caso de la
+    Prueba Final, con ítems de 2 y 3 puntos (/42). Con ``points`` ausente equivale
+    a contar aciertos (capa_2 y mcq puro no cambian)."""
+    earned = 0.0
+    total = 0.0
+    for q in questions:
+        pts = float(q.get("points", 1) or 1)
+        total += pts
+        if _question_is_correct(
+            q.get("type", "single"), q.get("correct"), answers.get(q.get("id"))
+        ):
+            earned += pts
+    return earned, total
+
+
 def _question_is_correct(qtype: str, correct: Any, given: Any) -> bool:
     if given is None:
         return False
@@ -76,6 +92,67 @@ def _question_is_correct(qtype: str, correct: Any, given: Any) -> bool:
             return False
         return all(str(correct[k]) == str(given[k]) for k in correct)
     return False
+
+
+# Claves que revelan la respuesta correcta o la rúbrica de corrección. NUNCA
+# deben llegar al alumno en los endpoints student-facing (capa_2 / final_test).
+_STRIP_TOP = ("short_rubric", "video_rubric", "differentiator_ids", "correct_answers")
+_STRIP_QUESTION = ("correct", "explanation", "differentiator")
+_STRIP_SHORT = ("expected_answer", "rubric")
+_STRIP_TABLE = ("expected_sequence", "rubric")
+
+
+def public_config(config: dict[str, Any]) -> dict[str, Any]:
+    """Copia del config sin claves de respuesta ni rúbricas.
+
+    El alumno necesita enunciados, opciones y el brief — nunca las respuestas
+    correctas ni las rúbricas. El grading vive server-side (``auto_grade_mcq`` +
+    review del profesor), que lee el config crudo de la DB, así que quitar estas
+    claves de la respuesta HTTP no afecta la nota.
+
+    Solo se usa en capa_2 / final_test, que se corrigen server-side. Las
+    micropruebas (capa_1) se siguen calificando client-side en el front, así que
+    el endpoint ``/lesson/{id}`` mantiene ``correct`` hasta mover ese grading al
+    server (deuda trackeada).
+    """
+    if not config:
+        return {}
+    clean = {k: v for k, v in config.items() if k not in _STRIP_TOP}
+
+    questions = clean.get("questions")
+    if isinstance(questions, list):
+        clean["questions"] = [
+            {k: v for k, v in q.items() if k not in _STRIP_QUESTION}
+            for q in questions
+            if isinstance(q, dict)
+        ]
+
+    short_answers = clean.get("short_answers")
+    if isinstance(short_answers, list):
+        clean["short_answers"] = [
+            {k: v for k, v in sa.items() if k not in _STRIP_SHORT}
+            for sa in short_answers
+            if isinstance(sa, dict)
+        ]
+
+    tables = clean.get("tables")
+    if isinstance(tables, list):
+        clean["tables"] = [_public_table(t) for t in tables if isinstance(t, dict)]
+
+    return clean
+
+
+def _public_table(table: dict[str, Any]) -> dict[str, Any]:
+    clean = {k: v for k, v in table.items() if k not in _STRIP_TABLE}
+    rows = clean.get("rows")
+    if isinstance(rows, list):
+        # Las tablas de clasificación llevan la respuesta correcta por fila.
+        clean["rows"] = [
+            {k: v for k, v in row.items() if k != "correct"}
+            for row in rows
+            if isinstance(row, dict)
+        ]
+    return clean
 
 
 def submit(

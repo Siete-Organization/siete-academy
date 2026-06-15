@@ -30,7 +30,7 @@ interface VideoDim {
   label: string;
 }
 interface FinalConfig {
-  questions?: unknown[];
+  questions?: { points?: number }[];
   short_answers?: ShortAnswer[];
   tables?: CaseTable[];
   video_rubric?: { max_total?: number; dimensions?: VideoDim[] };
@@ -76,7 +76,8 @@ export function FinalCaseGrader({
   const tables = config?.tables ?? [];
   const videoDims = config?.video_rubric?.dimensions ?? [];
   const videoMax = config?.video_rubric?.max_total ?? 30;
-  const mcqCount = config?.questions?.length ?? 0;
+  // Máximo del MCQ ponderado por `points` (default 1). Refleja el /42 del server.
+  const mcqMaxPoints = (config?.questions ?? []).reduce((s, q) => s + (q.points ?? 1), 0);
 
   const studentShort = (payload.short_answers as Record<string, string>) ?? {};
   const studentTables = (payload.tables as Record<string, unknown>) ?? {};
@@ -84,11 +85,13 @@ export function FinalCaseGrader({
   const { casePct, videoPct, finalPct } = useMemo(() => {
     const shortMax = shortAnswers.reduce((s, a) => s + (a.max_points ?? 2), 0);
     const tableMax = tables.reduce((s, a) => s + (a.max_points ?? 0), 0);
-    const mcqHits = Math.round(((mcqAutoScore ?? 0) / 100) * mcqCount);
+    // mcqAutoScore ya es el % ponderado (puntos obtenidos / 42 × 100); reconstruimos
+    // los puntos exactos para que el preview coincida con el caso que computa el server.
+    const mcqPts = ((mcqAutoScore ?? 0) / 100) * mcqMaxPoints;
     const shortPts = Object.values(shortScores).reduce((s, v) => s + v, 0);
     const tablePts = Object.values(tableScores).reduce((s, v) => s + v, 0);
-    const caseMax = mcqCount + shortMax + tableMax;
-    const cPct = caseMax > 0 ? ((mcqHits + shortPts + tablePts) / caseMax) * 100 : 0;
+    const caseMax = mcqMaxPoints + shortMax + tableMax;
+    const cPct = caseMax > 0 ? ((mcqPts + shortPts + tablePts) / caseMax) * 100 : 0;
     const vPts = Object.values(videoScores).reduce((s, v) => s + v, 0);
     const vPct = videoMax > 0 ? (vPts / videoMax) * 100 : 0;
     return {
@@ -96,7 +99,7 @@ export function FinalCaseGrader({
       videoPct: Math.round(vPct * 100) / 100,
       finalPct: Math.round((cPct * 0.7 + vPct * 0.3) * 100) / 100,
     };
-  }, [shortAnswers, tables, shortScores, tableScores, videoScores, videoMax, mcqAutoScore, mcqCount]);
+  }, [shortAnswers, tables, shortScores, tableScores, videoScores, videoMax, mcqAutoScore, mcqMaxPoints]);
 
   const submit = async () => {
     setSubmitting(true);

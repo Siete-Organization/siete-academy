@@ -82,34 +82,37 @@ def final_case_score(
 ) -> float | None:
     """Nota del CASO de la Prueba Final (híbrido por ítem, doc líneas 12671-13503).
 
-    caso% = (MCQ aciertos + puntos respuestas cortas + puntos tablas) ÷ máximo × 100.
+    caso% = (puntos MCQ + puntos respuestas cortas + puntos tablas) ÷ máximo × 100.
 
-    - MCQ: auto-gradable (aciertos sobre el payload del alumno).
-    - Respuestas cortas + tablas: las califica el profesor (`details`). Si todavía
-      no hay `details`, el caso está incompleto → None (no inferimos parcial).
+    - MCQ: auto-gradable, ponderado por ``points`` (default 1).
+    - Respuestas cortas + tablas: las califica el profesor (`details`). Si el caso
+      tiene componentes manuales y todavía no hay `details`, está incompleto → None.
+      Si el caso es 100% MCQ (sin componentes manuales — p.ej. el rediseño de NICO),
+      se autocalifica sin esperar al profesor.
     """
-    if details is None:
-        return None
     questions = config.get("questions") or []
     short = config.get("short_answers") or []
     tables = config.get("tables") or []
 
-    mcq_total = len(questions)
-    mcq_hits = assess_services.count_mcq_correct(
+    needs_manual = bool(short or tables)
+    if needs_manual and details is None:
+        return None
+
+    mcq_earned, mcq_max = assess_services.sum_mcq_points(
         questions, (payload or {}).get("answers", {}) or {}
     )
 
-    d_short = details.get("short_answers") or {}
-    d_tables = details.get("tables") or {}
+    d_short = (details or {}).get("short_answers") or {}
+    d_tables = (details or {}).get("tables") or {}
     sa_points = sum(_num(d_short.get(sa.get("id"))) for sa in short)
     sa_max = sum(_num(sa.get("max_points", 2)) for sa in short)
     tbl_points = sum(_num(d_tables.get(tb.get("id"))) for tb in tables)
     tbl_max = sum(_num(tb.get("max_points", 0)) for tb in tables)
 
-    total_max = mcq_total + sa_max + tbl_max
+    total_max = mcq_max + sa_max + tbl_max
     if total_max <= 0:
         return None
-    earned = mcq_hits + sa_points + tbl_points
+    earned = mcq_earned + sa_points + tbl_points
     return round(earned / total_max * 100, 2)
 
 
@@ -137,22 +140,30 @@ def differentiator_score(
     diff_ids = config.get("differentiator_ids") or []
     if not diff_ids:
         return None
-    if details is None:
-        return None
 
     questions = {q.get("id"): q for q in (config.get("questions") or [])}
     shorts = {s.get("id"): s for s in (config.get("short_answers") or [])}
     tables = {t.get("id"): t for t in (config.get("tables") or [])}
+
+    # Si alguna diferenciadora es respuesta corta/tabla, necesita grading manual.
+    # Si todas son MCQ (rediseño de NICO), se autocalifica sin esperar al profesor.
+    needs_manual = any((qid in shorts or qid in tables) for qid in diff_ids)
+    if needs_manual and details is None:
+        return None
+
     answers = (payload or {}).get("answers", {}) or {}
-    d_short = details.get("short_answers") or {}
-    d_tables = details.get("tables") or {}
+    d_short = (details or {}).get("short_answers") or {}
+    d_tables = (details or {}).get("tables") or {}
 
     earned = 0.0
     max_pts = 0.0
     for qid in diff_ids:
         if qid in questions:
-            max_pts += 1
-            earned += assess_services.count_mcq_correct([questions[qid]], answers)
+            q = questions[qid]
+            pts = float(q.get("points", 1) or 1)
+            max_pts += pts
+            if assess_services.count_mcq_correct([q], answers):
+                earned += pts
         elif qid in shorts:
             m = _num(shorts[qid].get("max_points", 2))
             max_pts += m

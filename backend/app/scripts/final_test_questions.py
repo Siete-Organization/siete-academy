@@ -3,305 +3,390 @@
 Caso integrador: GestaLogix (SaaS B2B de trazabilidad farmacéutica para
 distribuidores en MX/CO/PE).
 
-Fuente: SDR_Academy_Siete_Documento_Maestro.md, líneas 12671-13503, v0.1 (2026-04-24).
+Fuente de verdad: guiones_videos/v2/guiones_corregidos_NICO/LIMPIO_PRUEBAS_FINAL.md
+(v1, 2026-06-13). NICO rediseñó el caso a **16 MCQ de respuesta única 100%
+autocorregibles** (antes: híbrido con respuestas cortas + tablas manuales).
 
 Estructura del examen:
-- 6 etapas con mezcla MCQ + tablas estructuradas + respuestas cortas.
-- Video de defensa de 15 minutos (1 toma) con rúbrica de 15 dimensiones.
+- Caso escrito: 16 ítems MCQ, puntaje **ponderado /42** (6 ítems × 2 pts + 10 ítems
+  × 3 pts). Se autocalifica entero (no requiere corrección manual). Pesa 70%.
+- Video de defensa (~8 min, 1 toma) con rúbrica de 15 dimensiones (/30). Pesa 30%.
 
 Shape de los datos:
-- MCQ: preguntas auto-gradables (13 questions con choices/correct, compatible
-  con `auto_grade_mcq`). Cubren P1.1, P1.2, P1.4, P2.2, P3.A.1, P3.B.1, P3.C,
-  P3.D.1, P4.2, P5.1, P5.2, P6.1 — total 12 MCQ.
-- SHORT_ANSWERS: 8 prompts de respuesta corta con rúbrica genérica /2.
-- TABLES: 2 tablas estructuradas (filtros ICP + secuencia outbound).
-- VIDEO_RUBRIC_15: rúbrica del video defense (15 dimensiones × 0-2 = /30).
-- GENERIC_SHORT_RUBRIC: rúbrica genérica 0-2 para respuestas cortas.
-- DIFFERENTIATOR_IDS: preguntas que pesan extra para distinción (75% acumulado).
+- MCQ: lista de preguntas con ``points`` (2 o 3) y ``correct`` (compatible con
+  ``sum_mcq_points`` / ``auto_grade_mcq``). Las 4 diferenciadoras llevan
+  ``differentiator: True``.
+- SHORT_ANSWERS / TABLES: vacías (el rediseño de NICO no tiene componentes manuales;
+  se conservan los símbolos por compatibilidad con el seeder y el grading).
+- VIDEO_RUBRIC_15: rúbrica del video (15 dimensiones × 0-2 = /30; 6 críticas).
+- DIFFERENTIATOR_IDS: preguntas que cuentan para distinción (≥75% = ≥9/12).
 """
 
 CASE_BRIEF: dict = {
     "title": "GestaLogix — SaaS B2B de trazabilidad farmacéutica (MX/CO/PE)",
     "summary": (
-        "GestaLogix vende una plataforma de gestión logística y trazabilidad a "
-        "distribuidores farmacéuticos medianos y grandes en México, Colombia y Perú. "
-        "Fundada en 2022 por tres ingenieros del rubro farmacéutico. Serie A de USD 8M "
-        "cerrada en marzo 2025. 40 empleados al cierre de 2025, plan de crecer a 70 en "
-        "2026. Ticket promedio del cliente final: USD 35K-70K anuales."
+        "GestaLogix es una empresa SaaS B2B que vende una plataforma de gestión "
+        "logística y trazabilidad a distribuidores farmacéuticos medianos y grandes en "
+        "México, Colombia y Perú. Fundada en 2022 por tres profesionales de la industria "
+        "farmacéutica. Serie A de USD 8M cerrada en marzo de 2025 (un fondo de Ciudad de "
+        "México y dos family offices peruanos). 40 empleados al cierre de 2025; plan de "
+        "crecer a 70 durante 2026. Ticket promedio del cliente final: USD 35K-70K anuales."
     ),
     "platform": [
         "Trazabilidad de lotes (seriación, caducidad, retiros).",
-        "Cadena de frío (sensores IoT + alertas automáticas).",
+        "Cadena de frío (sensores y alertas automáticas).",
         "Control de inventario en tiempo real (múltiples bodegas).",
-        "Cumplimiento regulatorio (COFEPRIS México, INVIMA Colombia, DIGEMID Perú).",
-        "Reportería para auditorías (integración con ERP del cliente).",
+        "Cumplimiento regulatorio (COFEPRIS en México, INVIMA en Colombia, DIGEMID en Perú).",
+        "Reportería para auditorías (integración con el ERP del cliente).",
     ],
     "market_context": (
-        "Industria farmacéutica LATAM bajo presión regulatoria creciente desde 2023 "
-        "(trazabilidad obligatoria + sanciones por incumplimiento). Distribuidores "
-        "tradicionales dependen de sistemas legacy (SAP + Excel + workarounds manuales). "
-        "El cumplimiento regulatorio es el driver #1 hoy. Competidores internacionales "
-        "(TraceLink, Systech) son caros y tienen implementaciones de 12-18 meses. "
-        "GestaLogix se posiciona como la alternativa regional, implementación 3-4 meses, "
-        "40% más barata."
+        "La industria farmacéutica de la región está bajo presión regulatoria creciente "
+        "sobre trazabilidad y cumplimiento, con sanciones por incumplimiento. Los "
+        "distribuidores tradicionales dependen de sistemas heredados (ERP más planillas más "
+        "procesos manuales). El cumplimiento regulatorio es el principal motor de la "
+        "conversación actual. Los competidores internacionales (TraceLink, Systech) son "
+        "caros y tienen implementaciones de 12-18 meses; GestaLogix se posiciona como la "
+        "alternativa regional: implementación en 3-4 meses y alrededor de 40% más económica."
     ),
     "client_expectations": {
-        "meetings_per_month": "10 calificadas/mes a partir del mes 2",
-        "icp": "Distribuidores farmacéuticos con 50-500 empleados, operación en al menos 2 de los 3 países (MX/CO/PE)",
-        "target_decision_maker": "VP de Operaciones, Director de Cadena de Suministro, o Gerente de Cumplimiento Regulatorio",
-        "average_ticket": "USD 50K anuales por deal cerrado",
-        "decision_timeline": "3-6 meses típico (ciclo B2B enterprise)",
+        "meetings_per_month": "10 reuniones calificadas/mes a partir del mes 2",
+        "icp": "Distribuidores farmacéuticos con 50-500 empleados, con operación en al menos 2 de los 3 países (MX/CO/PE)",
+        "target_decision_maker": "VP de Operaciones, Director de Cadena de Suministro o Gerente de Cumplimiento Regulatorio",
+        "average_ticket": "USD 50K anuales por negocio cerrado",
+        "decision_timeline": "3-6 meses (ciclo de compra B2B enterprise)",
     },
 }
 
 
-# ─────────────────────────────  MCQ AUTO-GRADABLES  ─────────────────────────────
+# ─────────────────────────────  MCQ AUTO-GRADABLES (/42)  ────────────────────────
+# 6 ítems de 2 puntos (1.1, 1.3, 2.2, 3.A.1, 3.B.1, 6.2) + 10 ítems de 3 puntos
+# (1.4, 2.1, 3.A.2, 3.B.2, 4.1, 4.3, 5.2, 5.3, 6.1, 6.3) = 42 puntos.
 
 MCQ: list[dict] = [
     {
         "id": "P1.1",
         "stage": 1,
-        "topic": "Business Model Canvas — componente diferenciador",
+        "topic": "Business Model Canvas — componente más diferenciador",
         "type": "single",
+        "points": 2,
         "prompt": (
-            "¿Cuál de los 9 componentes del BMC de GestaLogix es más diferenciador "
-            "competitivamente según el brief?"
+            "Lees el modelo de negocio de GestaLogix con el Business Model Canvas. ¿Cuál de "
+            "sus componentes es el más diferenciador competitivamente, según el brief?"
         ),
         "choices": [
-            {"id": "a", "text": "Key Partners (inversores y socios fundadores)."},
-            {"id": "b", "text": "Customer Segments (distribuidores farmacéuticos medianos y grandes en MX/CO/PE)."},
-            {"id": "c", "text": "Value Propositions (alternativa regional, implementación en 3-4 meses, 40% más barata que competidores internacionales — todo contra un driver regulatorio creciente)."},
-            {"id": "d", "text": "Revenue Streams (tickets USD 35K-70K anuales)."},
+            {"id": "a", "text": "Las alianzas clave: el respaldo de la Serie A (un fondo mexicano y dos family offices peruanos) es lo que les da espalda para diferenciarse."},
+            {"id": "b", "text": "Los recursos clave: el equipo fundador con experiencia en la industria farmacéutica regional es el activo que los separa del resto."},
+            {"id": "c", "text": "La propuesta de valor: alternativa regional, implementación en 3-4 meses y alrededor de 40% más económica que los competidores internacionales, sobre un motor de cumplimiento creciente."},
+            {"id": "d", "text": "Las fuentes de ingresos: el modelo de suscripción anual de USD 35K-70K por cliente es lo que sostiene la diferencia."},
         ],
         "correct": "c",
         "explanation": (
-            "La propuesta de valor específica es lo que los separa del resto del mercado. "
-            "La combinación regional + tiempo de implementación + precio + timing regulatorio "
-            "es el diferenciador competitivo."
+            "La propuesta de valor (regional + 3-4 meses + 40% más barata, sobre un motor "
+            "regulatorio creciente) es lo que los separa del resto del mercado."
         ),
     },
     {
-        "id": "P1.2",
+        "id": "P1.3",
         "stage": 1,
-        "topic": "5 fuerzas de Porter — fuerza disruptiva a favor",
+        "topic": "Jobs to Be Done — el trabajo que GestaLogix reemplaza",
         "type": "single",
+        "points": 2,
         "prompt": (
-            "Aplicando las 5 fuerzas de Porter al mercado de GestaLogix, ¿cuál es hoy la "
-            "fuerza más disruptiva a su favor?"
+            "Si GestaLogix no existiera, ¿qué estaría haciendo hoy el área de operaciones de "
+            "un distribuidor farmacéutico mediano para cumplir con la trazabilidad? Es decir, "
+            "¿cuál es el trabajo por resolver (Jobs to Be Done) que GestaLogix reemplaza?"
         ),
         "choices": [
-            {"id": "a", "text": "Poder de negociación de los clientes (distribuidores farmacéuticos)."},
-            {"id": "b", "text": "Amenaza de nuevos entrantes (otras startups regionales)."},
-            {"id": "c", "text": "Amenaza de sustitutos (sistemas legacy + Excel)."},
-            {"id": "d", "text": "Presión externa estructural (regulación + sanciones por incumplimiento) — que convierte al software de trazabilidad de \"nice-to-have\" a \"compliance obligatorio\", forzando a los distribuidores a actualizar sus sistemas."},
+            {"id": "a", "text": "Contrata consultores externos antes de cada auditoría para que le armen la reportería a tiempo."},
+            {"id": "b", "text": "Sostiene a mano una mezcla de ERP heredado, planillas para lotes y cadena de frío, y reportería manual antes de cada auditoría; el trabajo de fondo es cumplir con la regulación sin frenar las operaciones."},
+            {"id": "c", "text": "Busca reducir el gasto en tecnología y consolidar a sus proveedores de software en un solo contrato anual."},
+            {"id": "d", "text": "Arma un plan de transformación digital a varios años porque se lo pidió la dirección general."},
         ],
-        "correct": "d",
+        "correct": "b",
         "explanation": (
-            "La regulación actúa como driver externo que obliga a los distribuidores a moverse. "
-            "Es la fuerza que convierte una conversación sobre \"optimización\" (opcional) en una "
-            "sobre \"cumplimiento\" (no-opcional). Siete la va a apalancar en el gancho."
+            "El JTBD dominante es \"cumplir con la regulación sin frenar las operaciones\". "
+            "Hoy se resuelve a mano (ERP heredado + planillas + reportería manual). Las otras "
+            "son piezas parciales o desvían el foco."
         ),
     },
     {
         "id": "P1.4",
         "stage": 1,
-        "topic": "Dolor dominante del decisor (DIFERENCIADORA)",
+        "topic": "Dolor dominante accionable del decisor (DIFERENCIADORA)",
         "differentiator": True,
         "type": "single",
+        "points": 3,
         "prompt": (
             "El VP de Operaciones de un distribuidor farmacéutico de 300 empleados en México "
-            "está hoy bajo la presión de COFEPRIS. ¿Cuál es su dolor dominante más probable "
-            "respecto a trazabilidad, y qué hace que ese dolor sea accionable en una "
-            "conversación con un SDR?"
+            "está bajo la presión de COFEPRIS. ¿Cuál es su dolor dominante más accionable en "
+            "una primera conversación con un SDR?"
         ),
         "choices": [
-            {"id": "a", "text": "Dolor: \"quiero modernizar la empresa\". Accionable porque es una aspiración."},
-            {"id": "b", "text": "Dolor: \"cada auditoría nos cuesta 3 semanas de un equipo de 4 personas y tuvimos una multa pequeña el año pasado — si se repite, la próxima multa sería grande\". Accionable porque es específico, cuantificable, con consecuencias concretas."},
-            {"id": "c", "text": "Dolor: \"tengo curiosidad por la tecnología nueva\". Accionable porque el SDR puede hablar de features."},
-            {"id": "d", "text": "Dolor: \"mi CEO me pidió un plan de digitalización para 2027\". Accionable porque tiene deadline."},
+            {"id": "a", "text": "Le preocupa el costo anual de las licencias de su ERP heredado y le gustaría renegociarlo con el proveedor."},
+            {"id": "b", "text": "La dirección le fijó como objetivo del año reducir la cantidad de proveedores de tecnología de la empresa."},
+            {"id": "c", "text": "La integración del sistema actual le da problemas, aunque ese tema en la práctica lo lleva el área de tecnología y no la suya."},
+            {"id": "d", "text": "Cada auditoría le consume semanas de un equipo chico y ya tuvo una sanción menor el año pasado; si se repite, la próxima sería grave."},
         ],
-        "correct": "b",
+        "correct": "d",
         "explanation": (
-            "Un dolor accionable para un SDR B2B es específico, cuantificable, con consecuencias "
-            "concretas y presentes. Las otras son versiones genéricas (a, c) o demasiado futuras (d). "
-            "El SDR con criterio reconoce que el dolor que abre conversaciones es el que el prospecto "
-            "puede nombrar con detalle en el primer intercambio."
+            "Un dolor accionable es específico, cuantificable, con consecuencia presente y propio "
+            "del rol. (a) es de compras, (b) es ajeno al dolor operativo, (c) lo lleva otra área."
+        ),
+    },
+    {
+        "id": "P2.1",
+        "stage": 2,
+        "topic": "Clasificación de criterios del ICP (duro / señal / negativo)",
+        "type": "single",
+        "points": 3,
+        "prompt": (
+            "Estos son los 9 criterios candidatos para el ICP de GestaLogix:\n\n"
+            "1) Distribuidor farmacéutico (industria)\n"
+            "2) Entre 50 y 500 empleados\n"
+            "3) Operación en al menos 2 de México, Colombia o Perú\n"
+            "4) Anunció recientemente la apertura de una nueva bodega o centro de distribución\n"
+            "5) Recibió una sanción regulatoria reciente (COFEPRIS, INVIMA o DIGEMID)\n"
+            "6) Ya trabaja con TraceLink o Systech (competencia directa)\n"
+            "7) Contrató un Gerente de Cumplimiento Regulatorio en los últimos 6 meses\n"
+            "8) Levantó una ronda de inversión en los últimos 12 meses\n"
+            "9) Ya es cliente actual de GestaLogix\n\n"
+            "¿Cuál de las siguientes opciones clasifica correctamente los 9 criterios como Duro "
+            "(estructural, define quién entra), Señal (disparador de compra) o Negativo (descartar)?"
+        ),
+        "choices": [
+            {"id": "a", "text": "Duros: 1, 2, 3 · Señales: 4, 5, 7, 8 · Negativos: 6, 9."},
+            {"id": "b", "text": "Duros: 1, 2, 3, 8 · Señales: 4, 5, 7 · Negativos: 6, 9."},
+            {"id": "c", "text": "Duros: 1, 2, 3 · Señales: 4, 5, 6, 7, 8 · Negativos: 9."},
+            {"id": "d", "text": "Duros: 1, 2 · Señales: 3, 4, 5, 7, 8 · Negativos: 6, 9."},
+        ],
+        "correct": "a",
+        "explanation": (
+            "Duros = estructura (industria, tamaño, geografía). Señales = disparadores (bodega, "
+            "sanción, contratación de cumplimiento, ronda). Negativos = competencia directa (6) y "
+            "cliente actual (9). (b) sube la ronda a duro; (c) clasifica la competencia como señal; "
+            "(d) baja la geografía a señal."
         ),
     },
     {
         "id": "P2.2",
         "stage": 2,
-        "topic": "Expandir ICP a productos médicos no farmacéuticos",
+        "topic": "Expandir el ICP a productos médicos no farmacéuticos",
         "type": "single",
+        "points": 2,
         "prompt": (
-            "El Team Lead te propone expandir el ICP a distribuidores de productos médicos "
-            "(no farmacéuticos) — dispositivos, consumibles de hospital, etc. — \"porque también "
-            "tienen trazabilidad\". ¿Qué hacés?"
+            "Tu líder de equipo te propone expandir el ICP a distribuidores de productos médicos "
+            "no farmacéuticos (dispositivos, consumibles de hospital) \"porque también manejan "
+            "trazabilidad\". ¿Qué haces?"
         ),
         "choices": [
-            {"id": "a", "text": "Acepto la expansión — más contactos = más reuniones."},
-            {"id": "b", "text": "Rechazo la expansión totalmente — el cliente fue explícito: distribuidores farmacéuticos."},
-            {"id": "c", "text": "Propongo correr un piloto de 2 semanas con 50-100 contactos de distribuidores de productos médicos, manteniendo 100% del foco en farmacéuticos, midiendo reply rate + meeting rate sobre reply + feedback del AE. Si rinde, se expande con criterio. Si no, se cierra el experimento."},
-            {"id": "d", "text": "Acepto pero sin mezclar listas — armo campaña separada y veo qué pasa."},
+            {"id": "a", "text": "Acepto la expansión: con más contactos disponibles llego antes a la meta de reuniones del mes."},
+            {"id": "b", "text": "Propongo un piloto acotado: 50-100 contactos del segmento nuevo durante 2 semanas, con el foco principal intacto y un método de medición declarado (tasa de respuesta y reuniones sobre respuestas); si rinde, se expande; si no, se cierra."},
+            {"id": "c", "text": "Rechazo la expansión de plano: el cliente pidió distribuidores farmacéuticos y no hay nada que discutir al respecto."},
+            {"id": "d", "text": "Acepto y armo una campaña aparte para ese segmento, y voy viendo con el tiempo qué resultados deja la cosa."},
         ],
-        "correct": "c",
+        "correct": "b",
         "explanation": (
-            "Aplicación directa de PDCA (M4 Sem 8): una variable nueva, muestra acotada, método de "
-            "medición declarado. (a) acción sin método, (b) conservadurismo ciego, (d) parece "
-            "razonable pero no declara método — termina en \"veamos qué sale\" sin datos para decidir."
+            "Aplicación directa de PDCA: una variable nueva, muestra acotada, método de medición "
+            "declarado. (a) acción sin método, (c) conservadurismo ciego, (d) parece razonable pero "
+            "no declara método — termina en \"veamos qué sale\" sin datos para decidir."
         ),
     },
     {
         "id": "P3.A.1",
         "stage": 3,
-        "topic": "Variante de acceso — Farmacéuticos del Sur (correo + teléfono verificados)",
+        "topic": "Variante de acceso — Farmacéutica Velmar (correo + teléfono verificados)",
         "type": "single",
+        "points": 2,
         "prompt": (
-            "Farmacéuticos del Sur (Colombia): 180 empleados, operación en Colombia y Perú. "
-            "Apollo te devuelve al VP de Operaciones, Carlos Rojas, con email y teléfono "
-            "verificados. Nunca fue contactado antes. ¿Qué variante de acceso aplica?"
+            "Farmacéutica Velmar (Colombia): 180 empleados, operación en Colombia y Perú. Tu base "
+            "te devuelve al VP de Operaciones, Carlos Rojas, con correo y teléfono verificados. "
+            "Nunca fue contactada. ¿Qué variante de acceso aplica?"
         ),
         "choices": [
-            {"id": "a", "text": "Variante 1 (correo + teléfono verificados del decisor)."},
-            {"id": "b", "text": "Variante 2 (solo correo)."},
-            {"id": "c", "text": "Variante 3 (sin contacto del decisor)."},
-            {"id": "d", "text": "Variante 5 (recontacto)."},
+            {"id": "a", "text": "Variante 1 — correo y teléfono verificados del decisor: acercamiento multicanal directo."},
+            {"id": "b", "text": "Variante 2 — solo correo del decisor: correo paciente con cadencia espaciada."},
+            {"id": "c", "text": "Variante 3 — sin contacto del decisor: acceso vía referidores internos."},
+            {"id": "d", "text": "Variante 5 — recontacto con ángulo nuevo tras una ventana de enfriamiento."},
         ],
         "correct": "a",
-        "explanation": "Decisor con correo + teléfono verificados → variante 1 multicanal proactivo.",
+        "explanation": "Decisor con correo + teléfono verificados → variante 1, multicanal proactivo.",
+    },
+    {
+        "id": "P3.A.2",
+        "stage": 3,
+        "topic": "Mejor primer mensaje para el decisor (Carlos Rojas)",
+        "type": "single",
+        "points": 3,
+        "prompt": (
+            "Eliges el primer correo para Carlos Rojas, VP de Operaciones de Velmar. ¿Cuál es el "
+            "mejor de los cuatro?"
+        ),
+        "choices": [
+            {"id": "a", "text": "Hola Carlos. Te escribo para presentarte GestaLogix, la plataforma regional de trazabilidad y cadena de frío: seriación de lotes, alertas automáticas y reportería para auditorías, todo en una sola herramienta. Trabajamos con varios distribuidores de la región. ¿Agendamos 30 minutos para mostrártela?"},
+            {"id": "b", "text": "Hola Carlos. Quería ver si te interesa conocer una solución de trazabilidad y cadena de frío para tu operación. Tenemos muy buenas referencias y creo que podría encajar con lo que necesitan. ¿Tienes un espacio para conversar pronto?"},
+            {"id": "c", "text": "Hola Carlos. Vi que Velmar opera tanto en Colombia como en Perú. Para distribuidores con presencia en los dos países, sostener INVIMA y DIGEMID en paralelo suele recaer sobre el área de operaciones. ¿Cómo están manejando hoy la trazabilidad entre ambas operaciones? Si tiene sentido, te comparto en 15 minutos cómo lo resolvieron operaciones de tamaño similar."},
+            {"id": "d", "text": "Hola Carlos. Creo que podemos ayudar a Velmar a reducir bastante el tiempo de sus auditorías y los costos de cumplimiento. ¿Cuándo te viene bien una demostración para que lo veas en detalle y con números?"},
+        ],
+        "correct": "c",
+        "explanation": (
+            "Foco en el lector + gancho específico (operación MX/CO) + pregunta abierta + CTA de "
+            "bajo compromiso. (a) es pecado capital sutil (habla del producto), (b) gancho genérico, "
+            "(d) promete mejora difusa y pide demostración de entrada."
+        ),
     },
     {
         "id": "P3.B.1",
         "stage": 3,
-        "topic": "Variante de acceso — Distribuidora Andina (sin decisor en Apollo)",
+        "topic": "Variante de acceso — Distribuidora Andix (sin contacto del decisor)",
         "type": "single",
+        "points": 2,
         "prompt": (
-            "Distribuidora Andina (Perú): 400 empleados, operación en Perú y México. Apollo no "
-            "tiene al decisor. Aparecen 3 Coordinadores de Operaciones y 1 Gerente de Cumplimiento "
-            "Regulatorio con email verificado. Nunca contactada. ¿Qué variante aplica?"
+            "Distribuidora Andix (Perú): 400 empleados, operación en Perú y México. Tu base no tiene "
+            "contacto verificado del decisor: solo un patrón de correo inferido del VP de Operaciones "
+            "marcado como baja confianza. Sí aparecen, con correo verificado, tres Coordinadores de "
+            "Operaciones y un Gerente de Cumplimiento Regulatorio, Mariela Fuentes. Nunca fue "
+            "contactada. ¿Qué variante de acceso aplica?"
         ),
         "choices": [
-            {"id": "a", "text": "Variante 1."},
-            {"id": "b", "text": "Variante 2."},
-            {"id": "c", "text": "Variante 3 (sin contacto del decisor; uso referidores dentro de la empresa)."},
-            {"id": "d", "text": "Variante 6 (artesanal wish list)."},
+            {"id": "a", "text": "Variante 1 — el patrón de correo inferido y el teléfono de la central alcanzan para un acercamiento multicanal directo al decisor."},
+            {"id": "b", "text": "Variante 2 — con el patrón de correo inferido del decisor basta para una secuencia de correo paciente a su casilla."},
+            {"id": "c", "text": "Variante 5 — recontacto con ángulo nuevo, porque ya hay rastros de contacto previo en la base."},
+            {"id": "d", "text": "Variante 3 — al no haber contacto verificado del decisor, el acceso es vía referidores internos: los mandos medios con correo verificado son candidatos a orientarte."},
         ],
-        "correct": "c",
+        "correct": "d",
         "explanation": (
-            "Sin contacto del decisor + mandos medios verificados → variante 3 (referidores). "
-            "El objetivo con ellos es pedir orientación, no vender."
+            "Sin contacto verificado del decisor + mandos medios verificados → variante 3 "
+            "(referidores). El objetivo con ellos es pedir orientación, no vender. Un patrón inferido "
+            "de baja confianza no habilita variante 1 ni 2; no hubo contacto previo (descarta 5)."
         ),
     },
     {
-        "id": "P3.C",
+        "id": "P3.B.2",
         "stage": 3,
-        "topic": "Variante de acceso — Farma & Co (solo correo del decisor)",
+        "topic": "Mejor mensaje para la referidora (Mariela Fuentes)",
         "type": "single",
+        "points": 3,
         "prompt": (
-            "Farma & Co (México): 220 empleados, operación en México y Colombia. Apollo tiene "
-            "solo el correo del VP de Operaciones, Lucía Ramírez. No hay teléfono. Nunca contactada. "
-            "¿Qué variante aplica?"
+            "Tu objetivo con Mariela no es venderle: es que te oriente hacia quién decide sobre "
+            "trazabilidad. ¿Cuál es el mejor mensaje?"
         ),
         "choices": [
-            {"id": "a", "text": "Variante 1 (correo + teléfono)."},
-            {"id": "b", "text": "Variante 2 (solo correo — email paciente, cadencia espaciada, espera respuesta con teléfono en firma)."},
-            {"id": "c", "text": "Variante 3 (sin contacto del decisor)."},
-            {"id": "d", "text": "Variante 4 (referidor ya dio el contacto)."},
+            {"id": "a", "text": "Hola Mariela. Por tu rol pensé que podrías orientarme. Estoy tratando de ubicar quién en Distribuidora Andix lidera las decisiones sobre sistemas de trazabilidad y cadena de frío: ¿es algo que ve directamente el VP de Operaciones o pasa antes por otra área? Cualquier pista me ayuda. No quiero hacerte perder tiempo con algo que no toque a tu equipo."},
+            {"id": "b", "text": "Hola Mariela. Por tu rol pensé que podrías orientarme. Trabajamos con GestaLogix, una plataforma de trazabilidad regional que cumple con DIGEMID y COFEPRIS, se implementa en pocos meses y suele ahorrar bastante en auditorías. ¿Quién sería la persona indicada para verlo, y te sumo en copia cuando lo presente?"},
+            {"id": "c", "text": "Hola Mariela. Vi tu perfil y creo que el área de cumplimiento es clave en esto. ¿Tienes 20 minutos esta semana para que te muestre cómo GestaLogix puede ayudar a Distribuidora Andix con la trazabilidad? Llevo una breve demostración."},
+            {"id": "d", "text": "Hola Mariela. Estoy contactando empresas del sector para presentar una solución que podría interesarles. ¿Me podrías ayudar a avanzar internamente con esto cuando tengas un momento? Quedo atento."},
         ],
-        "correct": "b",
-        "explanation": "Solo correo del decisor → variante 2 email paciente.",
-    },
-    {
-        "id": "P3.D.1",
-        "stage": 3,
-        "topic": "Variante de acceso — MediTrack Perú (recontacto)",
-        "type": "single",
-        "prompt": (
-            "MediTrack Perú: 85 empleados, operación en Perú. Hace 5 meses Siete la contactó. El "
-            "decisor respondió a la tercera secuencia: \"Interesante pero es un mal momento, estamos "
-            "con la integración de una empresa que acabamos de adquirir. Hablemos en Q1 del año que "
-            "viene\". Estamos en noviembre — Q1 a 2 meses. Acaban de anunciar un nuevo centro de "
-            "distribución en Lima. ¿Qué variante aplica?"
+        "correct": "a",
+        "explanation": (
+            "Pide orientación sin vender, nombra el rol que busca y respeta su tiempo. (b) desliza el "
+            "pitch de venta, (c) la trata como decisora e intenta agendar demostración, (d) es tan "
+            "vago que no permite rutear."
         ),
-        "choices": [
-            {"id": "a", "text": "Variante 1."},
-            {"id": "b", "text": "Variante 4 (referidor dio el contacto)."},
-            {"id": "c", "text": "Variante 5 (recontacto con ángulo nuevo tras ventana de enfriamiento)."},
-            {"id": "d", "text": "Variante 6 (wish list)."},
-        ],
-        "correct": "c",
-        "explanation": "Contacto previo + ventana de enfriamiento + señal fresca → variante 5.",
     },
     {
-        "id": "P4.2",
+        "id": "P4.1",
         "stage": 4,
-        "topic": "Regla de ramificación de la secuencia",
+        "topic": "Errores estructurales de una secuencia propuesta",
         "type": "single",
+        "points": 3,
         "prompt": (
-            "¿Cuál debe ser la regla de ramificación declarada para esta secuencia?"
+            "Vuelves a Farmacéutica Velmar (variante 1). Un compañero te pasa esta secuencia para "
+            "revisar antes de cargarla:\n\n"
+            "Paso 1 — Día 0 — Teléfono — Llamada en frío de apertura\n"
+            "Paso 2 — Día 0 — Correo — Primer correo con el gancho\n"
+            "Paso 3 — Día 2 — Correo — Reenvío del mismo correo \"por si no llegó\"\n"
+            "Paso 4 — Día 4 — WhatsApp — Mensaje al número personal del decisor\n"
+            "Paso 5 — Día 7 — Correo — Seguimiento con un ángulo nuevo\n"
+            "Paso 6 — Día 10 — Teléfono — Segunda llamada\n"
+            "Paso 7 — Día 13 — Correo — Cierre abierto\n\n"
+            "¿Cuál de estas opciones identifica correctamente los errores estructurales de la secuencia?"
         ),
         "choices": [
-            {"id": "a", "text": "Si no responde en el paso 3, escalar a 2 llamadas consecutivas + WhatsApp."},
-            {"id": "b", "text": "Si responde en cualquier paso → la secuencia automática se pausa y el SDR toma control manual; si no responde después del último paso → la cuenta se archiva con trigger de recontacto (~4-6 meses)."},
-            {"id": "c", "text": "Si no responde en el paso 4, aumentar el volumen de envíos a la misma persona."},
-            {"id": "d", "text": "Seguir mandando touches hasta que responda o bloquee."},
+            {"id": "a", "text": "La llamada va antes del primer correo; el reenvío del mismo correo; usar el teléfono dos veces; y meter WhatsApp al número personal del decisor."},
+            {"id": "b", "text": "La llamada va antes del primer correo; el reenvío del mismo correo; WhatsApp al número personal; y que la secuencia se reparta en una ventana demasiado corta."},
+            {"id": "c", "text": "La llamada va antes del primer correo; el reenvío del mismo correo; WhatsApp al número personal como toque de cadencia; y que no declara ninguna regla de qué hacer si el prospecto responde."},
+            {"id": "d", "text": "El reenvío del mismo correo; y meter WhatsApp al número personal del decisor."},
         ],
-        "correct": "b",
+        "correct": "c",
         "explanation": (
-            "Aplicación directa de M4 Sem 7 Bloque 4: toda secuencia necesita regla \"pausa al "
-            "responder\" + trigger de archivo con recontacto. Las otras opciones rompen la lógica "
-            "del sistema o caen en saturación."
+            "Errores: llamada antes del contexto escrito, reenvío idéntico, WhatsApp al número "
+            "personal, y ausencia de regla de ramificación. (a) marca de más \"teléfono dos veces\" "
+            "(es correcto), (b) inventa \"ventana demasiado corta\" (13 días está bien), (d) es incompleta."
         ),
     },
     {
-        "id": "P5.1",
-        "stage": 5,
-        "topic": "Arquetipo Challenger Customer — Carlos Rojas",
+        "id": "P4.3",
+        "stage": 4,
+        "topic": "Verificaciones de entregabilidad antes de ejecutar a escala",
         "type": "single",
+        "points": 3,
         "prompt": (
-            "Carlos Rojas (VP de Operaciones de Farmacéuticos del Sur) responde al séptimo día de "
-            "la secuencia mencionando: que entiende la propuesta, que tienen un proveedor SAP ad-hoc "
-            "hace 3 años que cumple mínimamente con INVIMA, que cualquier cambio implica 6 meses de "
-            "paralización operativa que no pueden permitirse porque están por cerrar un contrato con "
-            "una cadena grande, pero pide explícitamente \"un caso concreto donde hayan migrado un "
-            "SAP existente sin frenar operaciones en una empresa de nuestro tamaño\". ¿Qué arquetipo "
-            "del Challenger Customer es Carlos más probablemente?"
+            "Antes de ejecutar esta secuencia sobre toda la lista, ¿cuál de estas opciones lista las "
+            "tres verificaciones correctas con el equipo de infraestructura para no quemar tu dominio?"
         ),
         "choices": [
-            {"id": "a", "text": "Friend (dice sí a todo, amable, accesible)."},
-            {"id": "b", "text": "Skeptic (cuestiona, pide pruebas, no se convence fácil, pero cuando se convence empuja internamente)."},
-            {"id": "c", "text": "Blocker (dice \"no\" a cualquier cambio sin argumentar)."},
-            {"id": "d", "text": "Climber (busca ascenso, apoya lo que lo haga verse bien)."},
+            {"id": "a", "text": "El calentamiento de los dominios; la validación de la lista; y activar el píxel de seguimiento de aperturas para priorizar a quien abre."},
+            {"id": "b", "text": "El calentamiento de los dominios; subir el volumen diario por casilla para terminar antes; y la validación de la lista."},
+            {"id": "c", "text": "El volumen por casilla al día; cargar la plantilla con imágenes y enlaces para verse más profesional; y la validación de la lista."},
+            {"id": "d", "text": "El calentamiento de los dominios de envío; el volumen por casilla al día; y la validación de la lista para mantener baja la tasa de rebote."},
         ],
-        "correct": "b",
+        "correct": "d",
         "explanation": (
-            "Skeptic puro: lee con atención, menciona dolores concretos, pide caso específico, deja "
-            "abierto solo con datos. No es Friend (no acepta por cortesía), no es Blocker (no dice "
-            "\"no\" — dice \"mostrame\"), no es Climber (no pide nada para su carrera). Los Skeptic "
-            "son Mobilizers valiosos."
+            "Calentamiento + volumen por casilla + validación de lista. Los distractores meten "
+            "anti-patrones: píxel de apertura (a) y plantilla recargada de imágenes (c) dañan la "
+            "entregabilidad; subir el volumen (b) contradice el tope por casilla."
         ),
     },
     {
         "id": "P5.2",
         "stage": 5,
-        "topic": "Objeción vs rechazo (DIFERENCIADORA)",
+        "topic": "Objeción con información vs rechazo (DIFERENCIADORA)",
         "differentiator": True,
         "type": "single",
+        "points": 3,
         "prompt": (
-            "¿Es esta respuesta de Carlos un rechazo funcional o una objeción con información?"
+            "Al séptimo día de la secuencia de Velmar, Carlos Rojas (VP de Operaciones) responde:\n\n"
+            "\"Hola, gracias por tu seguimiento. Leí tus dos correos y entiendo la propuesta, pero "
+            "acá hay varias complicaciones. Ya tenemos un proveedor que nos armó una integración a "
+            "medida con nuestro ERP hace tres años; no es perfecta, pero cumple lo mínimo con INVIMA. "
+            "Además, cualquier cambio de plataforma implica meses de paralización operativa que hoy "
+            "no podemos permitirnos: estamos por cerrar un contrato con una cadena grande y no hay "
+            "margen para disrupciones. Si tienen un caso concreto donde hayan migrado un ERP existente "
+            "sin frenar operaciones en una empresa de nuestro tamaño, me interesa verlo. Pero si es "
+            "rehacer la plataforma desde cero, lo dejamos para el año que viene. Saludos, Carlos.\"\n\n"
+            "¿Cómo lees la respuesta de Carlos?"
         ),
         "choices": [
-            {"id": "a", "text": "Rechazo funcional — Carlos fue claro en que no van a cambiar de plataforma, hay que respetar y archivar."},
-            {"id": "b", "text": "Objeción con información: da razones concretas (tiempo, timing, proveedor actual, contrato grande pendiente) + pide activamente un caso específico de migración SAP → está diciendo \"mostrame y vemos\", no \"no me interesa\". Hay espacio para seguir."},
-            {"id": "c", "text": "Rechazo disfrazado — la pregunta por el caso es amabilidad, pero la decisión ya está tomada."},
-            {"id": "d", "text": "Objeción superficial — hay que insistir con un ángulo distinto."},
+            {"id": "a", "text": "Es un rechazo funcional: dejó claro que no van a cambiar de plataforma, así que corresponde respetar y archivar la cuenta."},
+            {"id": "b", "text": "Es un rechazo disfrazado: pide un caso por cortesía, pero ya tiene proveedor y el contrato grande le da la excusa perfecta para no avanzar."},
+            {"id": "c", "text": "Es una objeción con información: da razones concretas y pide un caso específico de migración sin frenar operaciones, o sea, explicita la condición que tendría que cumplirse para avanzar."},
+            {"id": "d", "text": "Es una objeción superficial: no dio una razón de fondo, así que corresponde volver a insistir con otro ángulo hasta que ceda."},
         ],
-        "correct": "b",
+        "correct": "c",
         "explanation": (
-            "Aplicación de M3 Sem 6: la clave es que Carlos pide un entregable específico. Si fuera "
-            "rechazo, diría \"gracias, no\". Cuando el prospecto pide material concreto con parámetros "
-            "específicos (migración SAP, tamaño similar, sin frenar operaciones), está explicitando "
-            "la condición que tendría que cumplirse para avanzar. Es objeción con información dura."
+            "Carlos pide un entregable específico (caso de migración sin frenar operaciones, tamaño "
+            "similar): explicita la condición para avanzar. Es objeción con información dura, no rechazo "
+            "(no dice \"gracias, no\") ni objeción superficial (sí dio razones de fondo)."
+        ),
+    },
+    {
+        "id": "P5.3",
+        "stage": 5,
+        "topic": "Mejor respuesta a Carlos (objeción con información)",
+        "type": "single",
+        "points": 3,
+        "prompt": "¿Cuál es la mejor respuesta para mandarle a Carlos?",
+        "choices": [
+            {"id": "a", "text": "Hola Carlos, gracias por el contexto; lo del contrato grande cambia el cálculo. Tengo el caso de un distribuidor de tamaño parecido que migró su ERP en fases paralelas, sin ventana de paralización, y otro más corto con menos integración. Te mando el primero con los datos del proyecto para que lo revises con tu equipo técnico. ¿Te sirve así o prefieres ver los dos?"},
+            {"id": "b", "text": "Hola Carlos, entiendo que es un mal momento. Si no es prioridad ahora, lo dejamos para más adelante y te vuelvo a escribir el año que viene cuando tengan más espacio. Quedo atento a cualquier cosa que necesites mientras tanto. Gracias por tu tiempo."},
+            {"id": "c", "text": "Hola Carlos, justo tengo un caso que calza con lo que pides, pero antes me gustaría mostrarte la plataforma en una demostración de 30 minutos para que veas cómo funciona la migración. ¿Coordinamos esta semana y después te paso el caso?"},
+            {"id": "d", "text": "Hola Carlos, claro: te mando un caso donde migramos un ERP igual al tuyo en exactamente 6 semanas, sin un solo día de parada y con 100% de cumplimiento desde el primer mes. ¿Cuándo lo revisamos juntos?"},
+        ],
+        "correct": "a",
+        "explanation": (
+            "Reconoce el contexto sin capitular, responde al pedido exacto (caso de migración paralela) "
+            "y mantiene la agencia del prospecto. (b) capitula y cierra, (c) antepone la demostración al "
+            "pedido, (d) inventa cifras exactas (6 semanas, 100%) — viola \"proponer sin prometer\"."
         ),
     },
     {
@@ -310,457 +395,215 @@ MCQ: list[dict] = [
         "topic": "Diagnóstico por descarte con cadena causal (DIFERENCIADORA)",
         "differentiator": True,
         "type": "single",
+        "points": 3,
         "prompt": (
-            "Métricas semanales (no cambiaste copy, ICP, cadencia ni herramientas; en Sem 3 research "
-            "cargó 80 contactos sin pasar por ZeroBounce \"se ven bien a ojo\"):\n\n"
-            "Métrica          | Sem 1 | Sem 2 | Sem 3 | Sem 4\n"
-            "Bounce rate      | 2.4%  | 2.6%  | 4.8%  | 6.1%\n"
-            "Reply rate       | 2.1%  | 2.0%  | 0.9%  | 0.4%\n"
-            "Meeting/reply    | 26%   | 28%   | 27%   | 25%\n"
-            "Show rate        | 72%   | 73%   | 71%   | 74%\n"
-            "Precalif aprobada| 88%   | 89%   | 86%   | 90%\n\n"
+            "Pasaron 4 semanas ejecutando. Métricas semanales:\n\n"
+            "Métrica                     | Sem 1 | Sem 2 | Sem 3 | Sem 4\n"
+            "Tasa de rebote              | 2.3%  | 2.4%  | 2.2%  | 2.5%\n"
+            "Tasa de respuesta           | 3.1%  | 3.0%  | 3.3%  | 3.2%\n"
+            "Reuniones sobre respuestas  | 24%   | 25%   | 26%   | 25%\n"
+            "Tasa de asistencia          | 71%   | 73%   | 72%   | 72%\n"
+            "Precalificaciones aprobadas | 84%   | 86%   | 85%   | 38%\n\n"
+            "Contexto: no cambiaste el mensaje, ni el ICP declarado, ni la cadencia, ni las "
+            "herramientas. En la Semana 3, el equipo de investigación —presionado por la meta de "
+            "reuniones— sumó 90 contactos nuevos de \"empresas con trazabilidad\"; al revisarlos por "
+            "encima, ves que varios son distribuidores de productos médicos no farmacéuticos y algunas "
+            "farmacéuticas por debajo de 50 empleados. Ese lote entró sin el piloto acotado que habías "
+            "propuesto en la Etapa 2.\n\n"
             "¿Cuál es tu hipótesis principal y cuál es tu primera acción diagnóstica?"
         ),
         "choices": [
-            {"id": "a", "text": "Fatiga de mensaje — A/B test de 3 variantes de asunto."},
-            {"id": "b", "text": "ICP mal calibrado — revisar filtros de Apollo y ajustar industria/cargo."},
-            {"id": "c", "text": "Cadena causal: batch de Sem 3 cargado sin validar → bounce rate subió (4.8% → 6.1%, por encima del umbral crítico 3-5%) → reputación de los dominios cayó → emails correctos caen a spam → reply rate se derrumba (2.0% → 0.4%). Métricas colaterales (meeting/reply, show, precalif) estables descartan ICP/copy. Primera acción: pausar + Postmaster + ZeroBounce retroactivo sobre los 80 contactos + activar dominio de reserva si reputación severamente dañada."},
-            {"id": "d", "text": "Problema del copy — volver a la versión de Sem 1 que rindió mejor."},
+            {"id": "a", "text": "Es fatiga de mensaje: el gancho se gastó después de cuatro semanas. Primera acción: una prueba A/B con variantes del asunto y del cuerpo."},
+            {"id": "b", "text": "La lista se contaminó con prospectos fuera del ICP: responden por afinidad temática pero no pasan la precalificación. Las demás métricas están estables, lo que descarta canal, mensaje, gestión y agendamiento; la caída aislada de la precalificación apunta a quién entra a la lista. Primera acción: separar las métricas del lote nuevo y medir qué porción cae fuera del ICP."},
+            {"id": "c", "text": "Es entregabilidad: los dominios se quemaron y los correos caen a spam. Primera acción: pausar la campaña y revisar la reputación de cada dominio."},
+            {"id": "d", "text": "Es agendamiento: las reuniones se están confirmando mal. Primera acción: revisar las invitaciones de calendario y los recordatorios."},
         ],
-        "correct": "c",
+        "correct": "b",
         "explanation": (
-            "Integra múltiples bloques en un solo razonamiento: deliverability (M4 Sem 7), "
-            "consecuencia sistémica de saltear validación (M4 Sem 8 Bloque 3), diagnóstico por "
-            "descarte con métricas colaterales como filtro (M4 Sem 8 Bloque 6). El alumno que "
-            "acierta conecta coincidencia temporal, identifica la cadena causal, descarta copy "
-            "e ICP por métricas colaterales estables, y propone acciones ordenadas."
+            "La única métrica que cae es la precalificación, justo tras cargar un lote fuera de ICP "
+            "sin piloto (coincidencia temporal). Las métricas vecinas estables descartan entregabilidad "
+            "(rebote ok), mensaje/canal (respuesta ok) y agendamiento (asistencia ok). El caso cierra en "
+            "bucle con la decisión de la Etapa 2."
         ),
-    },
-]
-
-
-# ─────────────────────────────  RESPUESTAS CORTAS  ─────────────────────────────
-
-SHORT_ANSWERS: list[dict] = [
-    {
-        "id": "P1.3",
-        "stage": 1,
-        "topic": "JTBD dominante del VP de Operaciones",
-        "prompt": (
-            "Si GestaLogix no existiera, ¿qué estaría haciendo hoy un VP de Operaciones de un "
-            "distribuidor farmacéutico mediano para cumplir con la regulación de trazabilidad? "
-            "Describí el \"job to be done\" que GestaLogix está reemplazando. Máx. 80 palabras."
-        ),
-        "max_words": 80,
-        "expected_answer": (
-            "Combinación de (a) un sistema ERP legado como SAP con módulos de trazabilidad "
-            "incompletos o mal configurados, (b) planillas Excel manuales para registrar lotes + "
-            "cadena de frío, (c) un equipo de compliance haciendo reportería manual antes de cada "
-            "auditoría, (d) contratación de consultores externos en momentos de crisis. El JTBD "
-            "dominante es \"cumplir con la regulación sin frenar las operaciones ni contratar 3 "
-            "consultores cada vez que hay una auditoría\". GestaLogix reemplaza esa combinación "
-            "con una plataforma única."
-        ),
-        "rubric": (
-            "2 puntos: nombra ≥2 alternativas (ERP legacy, Excel manual, equipo de compliance, "
-            "consultores) + articula el JTBD real (\"cumplir sin frenar operaciones\"). "
-            "1: nombra el JTBD pero sin alternativas claras. "
-            "0: genérico (\"están con sistemas viejos\")."
-        ),
-        "max_points": 2,
-    },
-    {
-        "id": "P3.A.2",
-        "stage": 3,
-        "topic": "Primer email a Carlos Rojas (variante 1, decisor con email y teléfono)",
-        "prompt": (
-            "Escribí el primer email que mandarías a Carlos Rojas, VP de Operaciones de "
-            "Farmacéuticos del Sur. Máx. 90 palabras. Evalúa con el grid de 6 criterios de M3 "
-            "Sem 5: foco en lector, gancho específico, longitud, CTA único, propuesta sin "
-            "prometer, tono directo pero respetuoso."
-        ),
-        "max_words": 90,
-        "expected_answer": (
-            "Asunto: Farmacéuticos del Sur — trazabilidad bajo INVIMA + DIGEMID\n\n"
-            "Hola Carlos, Vi que Farmacéuticos del Sur tiene operación tanto en Colombia como Perú. "
-            "Para empresas con presencia en ambos, cumplir con INVIMA y DIGEMID en paralelo suele "
-            "ser el principal dolor de cabeza del área de operaciones. ¿Cómo están manejando hoy "
-            "la trazabilidad entre las dos operaciones? Si tiene sentido, puedo contarte cómo "
-            "resolvimos esto con distribuidores de tamaño similar — 15 minutos, no más. "
-            "Saludos, [SDR]"
-        ),
-        "rubric": (
-            "2 puntos: gancho específico (presencia MX/CO), pregunta abierta sin presionar, "
-            "longitud apropiada (~80 palabras), un solo CTA, foco en Carlos/Farmacéuticos del Sur, "
-            "tono directo. 1: razonable pero falla en 1-2 criterios. 0: pecado capital (habla de "
-            "Siete + sus 40 empleados + sus clientes) o copy genérico."
-        ),
-        "max_points": 2,
-    },
-    {
-        "id": "P3.B.2",
-        "stage": 3,
-        "topic": "Primer email al referidor (variante 3, Gerente de Cumplimiento)",
-        "prompt": (
-            "Escribí el primer email al Gerente de Cumplimiento Regulatorio de Distribuidora "
-            "Andina como referidor potencial. Máx. 80 palabras. Nombrá explícitamente cuál es tu "
-            "objetivo (qué tipo de respuesta buscás de esta persona)."
-        ),
-        "max_words": 80,
-        "expected_answer": (
-            "Objetivo: pedir orientación, no vender. Tono consultivo.\n\n"
-            "Hola Patricia, Por tu rol pensé que podrías orientarme. Estoy tratando de ubicar "
-            "quién en Distribuidora Andina lidera las decisiones sobre sistemas de trazabilidad "
-            "y cadena de frío. ¿Sería un tema que ve directamente el VP de Operaciones, o pasa "
-            "antes por alguien más? Gracias por cualquier orientación. No quiero hacerte perder "
-            "tiempo con algo que no vea tu área. [SDR]"
-        ),
-        "rubric": (
-            "2 puntos: reconoce que es variante 3, pide orientación (no vende), tono consultivo, "
-            "nombra rol específico del decisor que busca, cierra con respeto al tiempo del referidor. "
-            "1: reconoce variante pero el email tiene tono de venta. 0: trata al mando medio como "
-            "KDM; intenta agendar demo."
-        ),
-        "max_points": 2,
-    },
-    {
-        "id": "P3.D.2",
-        "stage": 3,
-        "topic": "Email de recontacto (variante 5) — MediTrack Perú",
-        "prompt": (
-            "Escribí el primer email de recontacto a MediTrack Perú. Máx. 100 palabras. Debe "
-            "referenciar la interacción anterior sin culpar al prospecto + usar la señal fresca "
-            "(nuevo centro de distribución en Lima) como ángulo nuevo."
-        ),
-        "max_words": 100,
-        "expected_answer": (
-            "Asunto: MediTrack + nuevo centro en Lima\n\n"
-            "Hola [Nombre], Volví a acordarme de esta conversación cuando vi el anuncio del nuevo "
-            "centro de distribución en Lima. En junio dijiste que Q1 era un momento más lógico — "
-            "entendible, la integración llevaba su tiempo. La expansión suma otra capa de "
-            "trazabilidad: cadena de frío entre centros + sincronización regulatoria DIGEMID de "
-            "la nueva locación. ¿Tiene sentido agendar 15 minutos en enero para ver si el timing "
-            "ahora es mejor? Saludos, [SDR]"
-        ),
-        "rubric": (
-            "2 puntos: referencia la interacción anterior sin reproche, usa la señal fresca (nuevo "
-            "centro) como ángulo nuevo, respeta el timing declarado por el prospecto, CTA condicional. "
-            "1: alguna falla (tono de reproche, gancho genérico, insistencia temprana). 0: no "
-            "referencia la interacción anterior o repite el mensaje que ya se había mandado."
-        ),
-        "max_points": 2,
-    },
-    {
-        "id": "P4.3",
-        "stage": 4,
-        "topic": "Verificación de deliverability antes de ejecutar masivamente",
-        "prompt": (
-            "Antes de empezar a ejecutar la secuencia masivamente en 200 empresas, ¿qué 3 cosas "
-            "tenés que verificar en el equipo de infraestructura para no quemar tu dominio? "
-            "Máx. 80 palabras."
-        ),
-        "max_words": 80,
-        "expected_answer": (
-            "1) Warmup de los dominios de envío: si son dominios nuevos, necesitan 2-4 semanas de "
-            "warmup con volumen gradual antes de outreach masivo. "
-            "2) Volumen por casilla/día: no superar 80-100 emails/casilla/día para no caer a spam. "
-            "3) Validación de la lista: correr ZeroBounce/similar antes de cargar los 200 contactos "
-            "para mantener bounce rate <3%. "
-            "Bonus: SPF/DKIM/DMARC + dominio de reserva ya warmed up."
-        ),
-        "rubric": (
-            "2 puntos: nombra los 3 (warmup + volumen/día + validación). "
-            "1: nombra 2. 0: menos."
-        ),
-        "max_points": 2,
-    },
-    {
-        "id": "P5.3",
-        "stage": 5,
-        "topic": "Respuesta a Carlos Skeptic con caso específico",
-        "prompt": (
-            "Escribí exactamente lo que le responderías a Carlos. Máx. 120 palabras. Tu "
-            "respuesta debe (1) reconocer su contexto sin capitular, (2) responder a la pregunta "
-            "específica que hizo con honestidad, (3) proponer un next step alineado al pedido."
-        ),
-        "max_words": 120,
-        "expected_answer": (
-            "Hola Carlos, Gracias por el contexto — especialmente lo del contrato con la cadena "
-            "grande. Esa restricción cambia el cálculo. Tengo dos casos que calzan con tu pedido: "
-            "uno de un distribuidor colombiano de tamaño similar que migró de SAP a nuestra "
-            "plataforma en fases paralelas (ERP corriendo + trazabilidad superpuesta 4 meses hasta "
-            "handover), sin ventana de paralización operativa. El otro es peruano, tamaño parecido, "
-            "proceso más corto pero con menor complejidad de integración. Puedo mandarte el primero "
-            "en 24h con datos concretos del proyecto (tiempo, módulos, handover) para que lo analices "
-            "con tu equipo técnico. ¿Te sirve así o preferís ver los dos juntos? Saludos, [SDR]"
-        ),
-        "rubric": (
-            "2 puntos: reconoce contexto específico (contrato + paralización), responde con precisión "
-            "al pedido (caso con migración SAP paralela + datos concretos), no inventa cifras, "
-            "ofrece next step acotado, cierra con pregunta que mantiene agencia del prospecto. "
-            "1: aceptable pero con fricciones (reunión antes del caso, promesas cuantificadas sin "
-            "sustento, no nombra la restricción de paralización). "
-            "0: vende sin responder al pedido, ignora la información dada, capitula."
-        ),
-        "max_points": 2,
     },
     {
         "id": "P6.2",
         "stage": 6,
-        "topic": "Escalación tras detectar caída de deliverability",
-        "prompt": (
-            "¿Qué escalás, a quién, y cuándo? Máx. 100 palabras."
+        "topic": "Acción de escalación",
+        "type": "single",
+        "points": 2,
+        "prompt": "Confirmada la hipótesis, ¿qué escalas y cómo?",
+        "choices": [
+            {"id": "a", "text": "Espero a la reunión semanal con mi líder para no alarmar con un dato que quizás se acomoda solo en los próximos días."},
+            {"id": "b", "text": "Le escribo al equipo de investigación marcando que el lote que cargaron arruinó mis métricas y pido que no vuelvan a hacerlo."},
+            {"id": "c", "text": "Le pido permiso a mi líder para pausar la incorporación del lote nuevo antes de tocar nada, porque no quiero excederme en mis atribuciones."},
+            {"id": "d", "text": "El mismo día reporto a mi líder con el dato (la precalificación cayó a 38% por probable contaminación del lote de la Semana 3, ya separé las métricas) y le propongo al equipo de investigación, como política y no como reproche, que ningún lote entre a la lista sin pasar el chequeo de los filtros duros del ICP."},
+        ],
+        "correct": "d",
+        "explanation": (
+            "Escala el mismo día, con el dato y separando métricas, y propone una política preventiva "
+            "sin reproche. (a) tarda, (b) es reproche, (c) pide permiso para algo que es su atribución."
         ),
-        "max_words": 100,
-        "expected_answer": (
-            "El mismo día (no esperar 1 semana más), escalo a:\n"
-            "● Team Lead: reporte por Slack/email: \"bounce rate subió a 6.1% y reply rate cayó 75%; "
-            "probable problema de deliverability por batch no validado en Sem 3; pausé campaña hasta "
-            "verificar Postmaster y correr ZeroBounce retroactivo\". Decisión urgente.\n"
-            "● Equipo de research: como propuesta de política (no reproche): \"ningún batch entra "
-            "a la lista sin pasar por ZeroBounce, aunque se vea bien a ojo\".\n"
-            "● Outbound Specialist: verificar estado de dominios de reserva (warmup completo) "
-            "para poder rotar si la reputación no se recupera en 1-2 semanas."
-        ),
-        "rubric": (
-            "2 puntos: escala el mismo día, a 3 niveles (Team Lead + research + Outbound Specialist), "
-            "con mensaje claro + datos + propuesta de política preventiva, sin reproche. "
-            "1: escala pero incompleto (solo Team Lead, o sin propuesta preventiva, o con reproche). "
-            "0: no escala o tarda en hacerlo; pide permiso para hacer cosas que tiene autonomía para hacer."
-        ),
-        "max_points": 2,
     },
     {
         "id": "P6.3",
         "stage": 6,
-        "topic": "Hipótesis testeable de mejora continua (DIFERENCIADORA)",
+        "topic": "Hipótesis testeable para prevenir el incidente (DIFERENCIADORA)",
         "differentiator": True,
+        "type": "single",
+        "points": 3,
         "prompt": (
-            "En el 1:1 con tu Team Lead de la próxima semana, tenés que proponer una hipótesis "
-            "testeable para evitar que este tipo de incidente vuelva a pasar. Formulala según PDCA. "
-            "Máx. 100 palabras."
+            "En tu próximo 1:1 propones una hipótesis para que esto no se repita. ¿Cuál está bien "
+            "formulada?"
         ),
-        "max_words": 100,
-        "expected_answer": (
-            "Hipótesis: si establecemos como regla dura \"ningún contacto entra al motor de "
-            "secuencias sin pasar validación automatizada + revisión de bounce rate semanal\" + "
-            "\"cualquier bounce rate semanal que supere 3% dispara pausa automática del SDR "
-            "afectado\", el número de incidentes de deliverability críticos debería caer a ≤1 al "
-            "semestre. Test: implementar la regla el próximo lunes. Medir durante 3 meses: número "
-            "de eventos donde bounce rate >3% en una semana + tiempo medio de detección (objetivo: "
-            "≤48h desde el inicio del síntoma). Magnitud esperada: -70% en incidentes críticos."
+        "choices": [
+            {"id": "a", "text": "Si ajustamos los filtros del ICP y, de paso, reescribimos el gancho del mensaje para las empresas nuevas, la precalificación debería recuperarse y la conversión general también debería mejorar en las próximas semanas."},
+            {"id": "b", "text": "Si ningún contacto entra al motor sin pasar el chequeo de los filtros duros del ICP y revisamos la tasa de precalificación cada semana con pausa automática si baja del 70%, los incidentes de contaminación deberían caer a uno o menos por trimestre; lo medimos durante 3 meses contra el histórico."},
+            {"id": "c", "text": "Si exigimos que cada lote pase el chequeo de los filtros duros del ICP antes de entrar al motor, vamos a tener bastantes menos prospectos fuera de perfil de ahora en adelante y la precalificación debería ir mejorando de forma sostenida."},
+            {"id": "d", "text": "Si establecemos el chequeo de los filtros duros del ICP como regla fija del equipo, la precalificación debería volver a su nivel normal en algún momento y eso nos va a dar más reuniones de calidad."},
+        ],
+        "correct": "b",
+        "explanation": (
+            "Cumple las condiciones de hipótesis testeable: variable única (chequeo de filtros), método "
+            "y umbral declarados (precalif semanal, pausa <70%), magnitud esperada (≤1 incidente/trimestre) "
+            "y ventana de medición (3 meses vs histórico). (a) mezcla 2 variables; (c) y (d) no declaran "
+            "método ni magnitud."
         ),
-        "rubric": (
-            "3 puntos: hipótesis formulada con \"si X → entonces Y\" + variable única (regla) + "
-            "método de medición + magnitud esperada + timeline de evaluación. Todo explícito. "
-            "2: razonable pero falla en 1 elemento (sin magnitud o sin método claro). "
-            "1: vaga pero apuntada en la dirección correcta. "
-            "0: plan de acción sin método (\"voy a tener más cuidado con los batches\")."
-        ),
-        "max_points": 3,
     },
 ]
 
 
-# ─────────────────────────────  TABLAS ESTRUCTURADAS  ─────────────────────────────
+# ─────────────────────────────  COMPONENTES MANUALES (vacíos)  ───────────────────
+# El rediseño de NICO (v1, 2026-06-13) convirtió todo el caso a MCQ autocorregible.
+# Se conservan vacíos por compatibilidad con el seeder y el motor de grading.
 
-TABLES: list[dict] = [
-    {
-        "id": "P2.1",
-        "stage": 2,
-        "topic": "Clasificación de filtros del ICP",
-        "prompt": (
-            "Completá la tabla con filtros operativos del ICP de GestaLogix. Marcá cada criterio "
-            "como Duro (estructural), Señal (trigger de compra) o Negativo (descartar)."
-        ),
-        "rows": [
-            {"id": "1", "label": "Distribuidor farmacéutico (industria)", "correct": "duro"},
-            {"id": "2", "label": "50-500 empleados", "correct": "duro"},
-            {"id": "3", "label": "Operación en al menos 2 de MX/CO/PE", "correct": "duro"},
-            {"id": "4", "label": "Levantó ronda de inversión en los últimos 12 meses", "correct": "senal"},
-            {"id": "5", "label": "Recibió una multa o sanción regulatoria reciente (COFEPRIS/INVIMA/DIGEMID)", "correct": "senal"},
-            {"id": "6", "label": "Empresas que ya trabajan con TraceLink o Systech — descartar", "correct": "negativo"},
-            {"id": "7", "label": "Expansión anunciada a un nuevo país o nueva bodega", "correct": "senal"},
-            {"id": "8", "label": "Contrató Gerente de Cumplimiento Regulatorio en los últimos 6 meses", "correct": "senal"},
-            {"id": "9", "label": "Empresa cuyo outbound ya pasó sin respuesta en los últimos 3 meses", "correct": "negativo"},
-        ],
-        "options": [
-            {"id": "duro", "label": "Filtro duro (ICP estructural)"},
-            {"id": "senal", "label": "Filtro de señal (trigger de compra)"},
-            {"id": "negativo", "label": "Filtro negativo (descartar)"},
-        ],
-        "rubric": (
-            "1 punto cada 3 respuestas correctas. Máx. 3 puntos (9 de 9). "
-            "Umbral: 6 correctas para aprobar la pregunta."
-        ),
-        "max_points": 3,
-    },
-    {
-        "id": "P4.1",
-        "stage": 4,
-        "topic": "Secuencia outbound de 6-7 touchpoints en 13-15 días",
-        "prompt": (
-            "Volvés a Farmacéuticos del Sur (variante 1). Después del primer email (Etapa 3), "
-            "tenés que declarar toda la secuencia. Completá 6-7 touchpoints en 13-15 días. Para "
-            "cada paso declará día, canal y propósito de esa acción (en 1 línea)."
-        ),
-        "expected_sequence": [
-            {"paso": 1, "dia": 0, "canal": "email", "proposito": "Primer email con gancho específico (cumplimiento INVIMA + DIGEMID multi-país)"},
-            {"paso": 2, "dia": 3, "canal": "email", "proposito": "Follow-up con nuevo ángulo: cliente similar cerrando cadena de frío"},
-            {"paso": 3, "dia": 5, "canal": "telefono", "proposito": "Llamada corta referenciando los emails + permission-based opener"},
-            {"paso": 4, "dia": 8, "canal": "email", "proposito": "Nuevo thread con pregunta distinta (no repetir) — por ej., cómo manejan auditorías actuales"},
-            {"paso": 5, "dia": 11, "canal": "telefono", "proposito": "Segundo y último intento de llamada + despedida si no contesta"},
-            {"paso": 6, "dia": 14, "canal": "email", "proposito": "Último email — cierra abierto (\"si esto cambia, quedo disponible\")"},
-        ],
-        "rubric": (
-            "3 puntos: 6-7 touchpoints, 13-15 días, email → llamada → email → llamada coherente, "
-            "ningún touch repetido idéntico, la llamada aparece después de al menos 1-2 emails. "
-            "2: cumple la mayoría pero con errores menores (1 día de más/menos, touch repetido en forma). "
-            "1: cadencia aceptable pero con errores de orden (WhatsApp como entrada, llamada el día 0). "
-            "0: cadencia rota (3 touches en 2 días, 12 touches, o sin lógica)."
-        ),
-        "max_points": 3,
-    },
-]
+SHORT_ANSWERS: list[dict] = []
+TABLES: list[dict] = []
+GENERIC_SHORT_RUBRIC: dict = {}
 
 
-# ─────────────────────────────  RÚBRICA DEL VIDEO  ─────────────────────────────
+# ─────────────────────────────  RÚBRICA DEL VIDEO (/30)  ─────────────────────────
 
 VIDEO_RUBRIC_15: dict = {
     "scale_per_dim": "0-2",
     "max_total": 30,
-    "conversion": {
-        "30": 100, "24": 80, "18": 60,
-    },
-    "critical_dimensions_for_distinction": [1, 2, 3, 4],
+    "conversion": {"30": 100, "24": 80, "18": 60},
+    "critical_dimensions_for_distinction": [1, 2, 3, 4, 5, 6],
+    "min_critical_points": 11,
     "min_critical_for_distinction": "11/12 o 12/12",
+    "defense_decisions": [
+        "El mensaje a la referidora de Distribuidora Andix (Etapa 3, Situación B).",
+        "La respuesta a Carlos Rojas (Etapa 5).",
+        "El diagnóstico de la caída de métricas (Etapa 6: hipótesis y propuesta de prevención).",
+    ],
     "dimensions": [
         {"id": 1, "label": "Identificación del problema", "critical": True,
          "scale": [
              {"score": 0, "descriptor": "No lo identifica o lo confunde."},
-             {"score": 1, "descriptor": "Identifica parcialmente."},
-             {"score": 2, "descriptor": "Identifica claro y correcto de entrada."},
+             {"score": 1, "descriptor": "Lo identifica de forma parcial."},
+             {"score": 2, "descriptor": "Claro y correcto de entrada."},
          ]},
-        {"id": 2, "label": "Uso de vocabulario específico del curso", "critical": True,
+        {"id": 2, "label": "Vocabulario del curso", "critical": True,
          "scale": [
-             {"score": 0, "descriptor": "Habla en frases genéricas sin nombrar conceptos."},
-             {"score": 1, "descriptor": "Usa 1-2 conceptos pero superficiales."},
-             {"score": 2, "descriptor": "Nombra bloques específicos y conceptos con precisión (variantes de acceso, 6 canales, objeción vs rechazo, diagnóstico por descarte, PDCA, etc.)."},
+             {"score": 0, "descriptor": "Frases genéricas, sin nombrar conceptos."},
+             {"score": 1, "descriptor": "Usa uno o dos conceptos, superficiales."},
+             {"score": 2, "descriptor": "Nombra conceptos con precisión (variantes de acceso, objeción frente a rechazo, diagnóstico por descarte, hipótesis testeable, ICP, entre otros)."},
          ]},
         {"id": 3, "label": "Jerarquización de causas", "critical": True,
          "scale": [
              {"score": 0, "descriptor": "No prioriza."},
-             {"score": 1, "descriptor": "Prioriza en general pero sin justificar."},
-             {"score": 2, "descriptor": "Justifica por qué una causa es más grave que otra con datos o lógica del funnel."},
+             {"score": 1, "descriptor": "Prioriza en general, sin justificar."},
+             {"score": 2, "descriptor": "Justifica por qué una causa pesa más que otra con datos o lógica del embudo."},
          ]},
-        {"id": 4, "label": "Integración entre módulos", "critical": True,
+        {"id": 4, "label": "Integración entre partes del curso", "critical": True,
          "scale": [
-             {"score": 0, "descriptor": "Defiende una decisión con un solo módulo."},
-             {"score": 1, "descriptor": "Cruza 2 módulos."},
-             {"score": 2, "descriptor": "Cruza 3-4 módulos en una misma decisión."},
+             {"score": 0, "descriptor": "Defiende una decisión apoyándose en una sola parte del curso."},
+             {"score": 1, "descriptor": "Cruza dos partes."},
+             {"score": 2, "descriptor": "Cruza tres o más partes en una misma decisión."},
          ]},
-        {"id": 5, "label": "Presentación personal breve",
+        {"id": 5, "label": "Justificación de la respuesta a Carlos", "critical": True,
+         "scale": [
+             {"score": 0, "descriptor": "Genérica."},
+             {"score": 1, "descriptor": "Con algún concepto."},
+             {"score": 2, "descriptor": "Con concepto más razón específica al caso (objeción con información, pedido concreto, respuesta al pedido sin capitular)."},
+         ]},
+        {"id": 6, "label": "Justificación del diagnóstico de métricas", "critical": True,
+         "scale": [
+             {"score": 0, "descriptor": "Genérica."},
+             {"score": 1, "descriptor": "Con algún concepto."},
+             {"score": 2, "descriptor": "Con concepto más razón específica (descarte por métricas vecinas, causa aguas arriba, hipótesis con método)."},
+         ]},
+        {"id": 7, "label": "Presentación personal breve",
          "scale": [
              {"score": 0, "descriptor": "Ausente."},
              {"score": 1, "descriptor": "Larga o autorreferencial."},
              {"score": 2, "descriptor": "Corta, clara, enfocada."},
          ]},
-        {"id": 6, "label": "Estructura del video",
+        {"id": 8, "label": "Estructura del video",
          "scale": [
              {"score": 0, "descriptor": "Desordenada."},
-             {"score": 1, "descriptor": "Cumple estructura pero con saltos."},
-             {"score": 2, "descriptor": "Estructura clara, transiciones entre decisiones."},
+             {"score": 1, "descriptor": "Cumple la estructura con saltos."},
+             {"score": 2, "descriptor": "Estructura clara, con transiciones."},
          ]},
-        {"id": 7, "label": "Decisión 1 — claridad del contexto",
+        {"id": 9, "label": "Decisión 1 (referidora) — claridad del contexto",
          "scale": [
              {"score": 0, "descriptor": "Confuso."},
              {"score": 1, "descriptor": "Se entiende con esfuerzo."},
              {"score": 2, "descriptor": "Claro de entrada."},
          ]},
-        {"id": 8, "label": "Decisión 1 — justificación",
+        {"id": 10, "label": "Decisión 1 (referidora) — justificación",
          "scale": [
              {"score": 0, "descriptor": "Genérica."},
              {"score": 1, "descriptor": "Con algún concepto."},
-             {"score": 2, "descriptor": "Con concepto + razón específica al caso."},
+             {"score": 2, "descriptor": "Concepto más razón específica (variante 3, pedir orientación sin vender)."},
          ]},
-        {"id": 9, "label": "Decisión 2 — claridad del contexto",
+        {"id": 11, "label": "Decisión 2 y 3 — claridad del contexto",
          "scale": [
              {"score": 0, "descriptor": "Confuso."},
              {"score": 1, "descriptor": "Se entiende con esfuerzo."},
              {"score": 2, "descriptor": "Claro de entrada."},
          ]},
-        {"id": 10, "label": "Decisión 2 — justificación",
-         "scale": [
-             {"score": 0, "descriptor": "Genérica."},
-             {"score": 1, "descriptor": "Con algún concepto."},
-             {"score": 2, "descriptor": "Con concepto + razón específica al caso."},
-         ]},
-        {"id": 11, "label": "Decisión 3 — claridad del contexto",
-         "scale": [
-             {"score": 0, "descriptor": "Confuso."},
-             {"score": 1, "descriptor": "Se entiende con esfuerzo."},
-             {"score": 2, "descriptor": "Claro de entrada."},
-         ]},
-        {"id": 12, "label": "Decisión 3 — justificación",
-         "scale": [
-             {"score": 0, "descriptor": "Genérica."},
-             {"score": 1, "descriptor": "Con algún concepto."},
-             {"score": 2, "descriptor": "Con concepto + razón específica al caso."},
-         ]},
-        {"id": 13, "label": "Cierre — qué aprendiste",
+        {"id": 12, "label": "Cierre — qué aprendiste",
          "scale": [
              {"score": 0, "descriptor": "Ausente o superficial."},
-             {"score": 1, "descriptor": "Genérico (\"aprendí mucho\")."},
+             {"score": 1, "descriptor": "Genérico."},
              {"score": 2, "descriptor": "Específico, conectado con decisiones concretas."},
          ]},
-        {"id": 14, "label": "Cierre — qué harías distinto",
+        {"id": 13, "label": "Cierre — qué harías distinto",
          "scale": [
-             {"score": 0, "descriptor": "Ausente o \"nada, todo bien\"."},
+             {"score": 0, "descriptor": "Ausente o \"nada\"."},
              {"score": 1, "descriptor": "Cambios menores sin justificar."},
              {"score": 2, "descriptor": "Cambios específicos justificados con conceptos del curso."},
          ]},
-        {"id": 15, "label": "Dominio verbal",
+        {"id": 14, "label": "Dominio verbal",
          "scale": [
              {"score": 0, "descriptor": "Lectura, muletillas constantes."},
-             {"score": 1, "descriptor": "Acepta pero con pérdidas."},
-             {"score": 2, "descriptor": "Habla con fluidez, responde a sí mismo con sentido."},
+             {"score": 1, "descriptor": "Aceptable, con pérdidas."},
+             {"score": 2, "descriptor": "Fluido, responde con sentido."},
+         ]},
+        {"id": 15, "label": "Honestidad del razonamiento",
+         "scale": [
+             {"score": 0, "descriptor": "Inventa certezas o resultados."},
+             {"score": 1, "descriptor": "Mezcla criterio con suposiciones sin marcarlas."},
+             {"score": 2, "descriptor": "Defiende el criterio sin afirmar que acertó; reconoce lo que no sabe."},
          ]},
     ],
-}
-
-
-# ─────────────────────────────  RÚBRICA GENÉRICA RESPUESTAS CORTAS  ─────────────
-
-GENERIC_SHORT_RUBRIC: dict = {
-    "scale": "0-2",
-    "scoring": [
-        {"score": 0, "descriptor": "No cumple lo pedido / fuera de tema / contradice lo enseñado / inventa datos no dados / es genérico copiable."},
-        {"score": 1, "descriptor": "Cumple parcialmente. Identifica algún concepto correcto pero le falta especificidad al caso, o introduce un error notable, o usa la herramienta sin justificarla."},
-        {"score": 2, "descriptor": "Cumple los 4 criterios: (a) específico al caso (no genérico), (b) usa vocabulario del curso correctamente, (c) decide algo concreto y trazable al diagnóstico, (d) respeta el límite de palabras pedido."},
-    ],
-    "by_type": {
-        "emails": "Gancho específico (señal verificable, no genérica) + tono apropiado al destinatario (consultivo si referidor, propuesta si decisor, reconocimiento si recontacto) + un solo CTA + grid de 6 criterios + límite de palabras.",
-        "tables": "2 = ≥80% correcto; 1 = 50-79%; 0 = <50%.",
-        "diagnostics": "Identifica causa raíz (no síntoma) + estructura \"si X → entonces Y\" + variable única + método de medición + magnitud esperada + acción concreta priorizada.",
-        "escalations": "Escala el mismo día + identifica a quién escalar (jerarquía + roles relevantes) + incluye propuesta preventiva, no solo reporte.",
-    },
 }
 
 
 # ─────────────────────────────  PREGUNTAS DIFERENCIADORAS  ─────────────────────
 
 DIFFERENTIATOR_IDS: list[str] = ["P1.4", "P5.2", "P6.1", "P6.3"]
-"""IDs que pesan el doble en el cálculo de distinción. ≥75% acumulado en estas 4
-preguntas es requisito para graduación con distinción (junto con curso ≥85%,
-módulos ≥80%, prueba final ≥85%, video 11/12 o 12/12 en dimensiones críticas)."""
+"""Las 4 diferenciadoras (todas MCQ de 3 puntos = 12 pts). Para distinción se exige
+≥75% acumulado = ≥9/12 (junto con curso ≥85%, módulos ≥80%, prueba final ≥85% y el
+video ≥11/12 en sus 6 dimensiones críticas)."""
 
 
 # ─────────────────────────────  PESOS Y UMBRALES  ──────────────────────────────
 
-# Doc líneas 13487-13496: Nota Prueba Final = (Caso × 0.7) + (Video × 0.3)
+# Nota Prueba Final = (Caso% × 0.7) + (Video% × 0.3). Caso = puntos ÷ 42 × 100.
 WEIGHTS = {"case": 0.7, "video": 0.3}
 
-# Doc línea 12726-12729
 PASSING_SCORE = 60.0          # graduación básica
 DISTINCTION_SCORE = 85.0      # graduación con distinción
 
@@ -769,12 +612,17 @@ def total_mcq_count() -> int:
     return len(MCQ)
 
 
+def total_case_points() -> int:
+    """Puntaje máximo del caso (suma de ``points``). Debe dar 42."""
+    return sum(int(q.get("points", 1)) for q in MCQ)
+
+
 def total_short_answers() -> int:
     return len(SHORT_ANSWERS)
 
 
 def differentiator_questions() -> list[dict]:
-    """Devuelve las 4 preguntas marcadas como diferenciadoras (MCQ + short answer)."""
+    """Devuelve las preguntas marcadas como diferenciadoras (todas MCQ en el rediseño)."""
     out: list[dict] = []
     for q in MCQ:
         if q.get("differentiator"):

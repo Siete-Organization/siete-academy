@@ -519,6 +519,26 @@ function AssessmentEditor({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // La lista (/module/{id}) viene strip-eada (sin respuestas). Para editar sin
+  // perder las claves correctas, recargamos el config CRUDO del endpoint staff.
+  useEffect(() => {
+    if (!assessment) return;
+    let active = true;
+    void (async () => {
+      try {
+        const { data } = await api.get<{ config: unknown }>(
+          `/assessments/${assessment.id}`,
+        );
+        if (active) setConfigJson(JSON.stringify(data.config ?? {}, null, 2));
+      } catch {
+        /* fallback: queda el config strip-eado de la lista */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [assessment]);
+
   const handleSave = async () => {
     setError(null);
     let config: unknown;

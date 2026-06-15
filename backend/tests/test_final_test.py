@@ -4,11 +4,14 @@ import pytest
 from app.modules.assessments.models import Assessment
 from app.modules.assessments.services import auto_grade_mcq
 from app.modules.courses.models import Course, Module, ModuleTranslation
-from app.modules.grading.services import classify_tier
+from app.modules.grading.services import (
+    classify_tier,
+    differentiator_score,
+    final_case_score,
+)
 from app.scripts.final_test_questions import (
     CASE_BRIEF,
     DIFFERENTIATOR_IDS,
-    GENERIC_SHORT_RUBRIC,
     MCQ,
     PASSING_SCORE,
     SHORT_ANSWERS,
@@ -16,6 +19,7 @@ from app.scripts.final_test_questions import (
     VIDEO_RUBRIC_15,
     WEIGHTS,
     differentiator_questions,
+    total_case_points,
     total_mcq_count,
     total_short_answers,
 )
@@ -40,17 +44,21 @@ def module_m4_for_final(db) -> Module:
 
 class TestContent:
     def test_mcq_present(self):
-        # 12 MCQ auto-gradables que cubren P1.1, P1.2, P1.4, P2.2, P3.A.1, P3.B.1,
-        # P3.C, P3.D.1, P4.2, P5.1, P5.2, P6.1
-        assert total_mcq_count() == 12
+        # Rediseño NICO (v1): 16 MCQ de respuesta única, todas autocorregibles.
+        assert total_mcq_count() == 16
 
-    def test_short_answers_present(self):
-        # 8 respuestas cortas: P1.3, P3.A.2, P3.B.2, P3.D.2, P4.3, P5.3, P6.2, P6.3
-        assert total_short_answers() == 8
+    def test_case_points_total_42(self):
+        # 6 ítems × 2 pts + 10 ítems × 3 pts = 42.
+        assert total_case_points() == 42
 
-    def test_tables_present(self):
-        # 2 tablas: P2.1 (ICP) + P4.1 (secuencia)
-        assert len(TABLES) == 2
+    def test_no_manual_components(self):
+        # El caso es 100% MCQ: sin respuestas cortas ni tablas manuales.
+        assert total_short_answers() == 0
+        assert len(TABLES) == 0
+
+    def test_points_are_2_or_3(self):
+        for q in MCQ:
+            assert q.get("points") in (2, 3), q["id"]
 
     def test_ids_unique_across_all_questions(self):
         ids = (
@@ -78,9 +86,11 @@ class TestContent:
     def test_video_rubric_has_15_dimensions(self):
         assert len(VIDEO_RUBRIC_15["dimensions"]) == 15
 
-    def test_video_critical_dims_are_first_four(self):
+    def test_video_critical_dims_are_first_six(self):
         criticals = [d for d in VIDEO_RUBRIC_15["dimensions"] if d.get("critical")]
-        assert {d["id"] for d in criticals} == {1, 2, 3, 4}
+        assert {d["id"] for d in criticals} == {1, 2, 3, 4, 5, 6}
+        assert set(VIDEO_RUBRIC_15["critical_dimensions_for_distinction"]) == {1, 2, 3, 4, 5, 6}
+        assert VIDEO_RUBRIC_15["min_critical_points"] == 11
 
     def test_weights_sum_to_one(self):
         assert WEIGHTS["case"] + WEIGHTS["video"] == 1.0
@@ -92,9 +102,10 @@ class TestContent:
         assert "summary" in CASE_BRIEF
         assert "GestaLogix" in CASE_BRIEF["summary"]
 
-    def test_short_rubric_scale_is_0_to_2(self):
-        scores = [s["score"] for s in GENERIC_SHORT_RUBRIC["scoring"]]
-        assert scores == [0, 1, 2]
+    def test_all_differentiators_are_mcq(self):
+        # En el rediseño, las 4 diferenciadoras son MCQ (no respuestas cortas).
+        mcq_ids = {q["id"] for q in MCQ}
+        assert set(DIFFERENTIATOR_IDS) <= mcq_ids
 
 
 class TestSeed:
@@ -104,9 +115,9 @@ class TestSeed:
         assert a.lesson_id is None
         assert a.module_id == module_m4_for_final.id
         assert a.passing_score == PASSING_SCORE
-        assert len(a.config["questions"]) == 12
-        assert len(a.config["short_answers"]) == 8
-        assert len(a.config["tables"]) == 2
+        assert len(a.config["questions"]) == 16
+        assert len(a.config["short_answers"]) == 0
+        assert len(a.config["tables"]) == 0
         assert a.config["tier"] == "capa_3"
         assert a.config["weights"] == {"case": 0.7, "video": 0.3}
 
@@ -143,3 +154,27 @@ class TestIntegration:
         }
         score = auto_grade_mcq(a, {"answers": wrong})
         assert score == 0.0
+
+    def test_case_score_autocomputes_without_professor_details(self, db, module_m4_for_final):
+        """El caso 100% MCQ se autocalifica sin esperar el grading manual del profesor."""
+        a = _upsert_final(db, module_m4_for_final)
+        all_correct = {q["id"]: q["correct"] for q in MCQ}
+        # details=None: antes devolvía None; ahora computa porque no hay componentes manuales.
+        assert final_case_score(a.config, {"answers": all_correct}, None) == 100.0
+
+    def test_case_score_is_weighted_by_points(self, db, module_m4_for_final):
+        """Acertar solo los ítems de 2 pts da 12/42; el puntaje es ponderado, no por conteo."""
+        a = _upsert_final(db, module_m4_for_final)
+        only_2pt = {q["id"]: q["correct"] for q in MCQ if q.get("points") == 2}
+        expected = round(12 / 42 * 100, 2)  # 6 ítems × 2 pts = 12 de 42
+        assert final_case_score(a.config, {"answers": only_2pt}, None) == expected
+
+    def test_differentiator_score_three_of_four_is_distinction_floor(self, db, module_m4_for_final):
+        """3 de 4 diferenciadoras (todas de 3 pts) = 9/12 = 75% — el piso de distinción."""
+        a = _upsert_final(db, module_m4_for_final)
+        answers = {q["id"]: q["correct"] for q in MCQ}
+        # Romper una diferenciadora a propósito.
+        broken = DIFFERENTIATOR_IDS[0]
+        q = next(x for x in MCQ if x["id"] == broken)
+        answers[broken] = next(c["id"] for c in q["choices"] if c["id"] != q["correct"])
+        assert differentiator_score(a.config, {"answers": answers}, None) == 75.0
