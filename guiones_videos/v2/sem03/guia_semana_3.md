@@ -3,7 +3,6 @@ documento: Guía Semana 3 — Business acumen: leer un negocio
 modulo: 2 — El otro lado
 semana: 3
 formato: guia_pdf_literal_v2
-fuente: LIMPIO_S3.md (v6 · 2026-06-11)
 copyright: © Siete Academy. Todos los derechos reservados.
 nota_diseno: Markdown brand-agnostic. Aplicar brandbook como capa CSS/plantilla cuando esté disponible.
 ---

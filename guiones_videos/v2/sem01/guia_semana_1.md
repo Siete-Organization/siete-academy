@@ -3,7 +3,6 @@ documento: Guía Semana 1 — Anatomía de la venta B2B
 modulo: 1 — El juego y el jugador
 semana: 1
 formato: guia_pdf_v3
-fuente: LIMPIO_S1.md (v4 · 2026-06-11)
 copyright: © Siete Academy. Todos los derechos reservados.
 ---
 

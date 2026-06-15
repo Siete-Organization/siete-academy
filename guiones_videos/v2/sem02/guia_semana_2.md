@@ -3,7 +3,6 @@ documento: Guía Semana 2 — El rol del SDR, los hitos que vende y la reunión 
 modulo: 1 — El juego y el jugador
 semana: 2
 formato: guia_pdf_literal_v2
-fuente: LIMPIO_S2.md (v3 · 2026-06-11)
 copyright: © Siete Academy. Todos los derechos reservados.
 nota_diseno: Markdown brand-agnostic. Aplicar brandbook como capa CSS/plantilla cuando esté disponible.
 ---

@@ -3,7 +3,6 @@ documento: Guía Semana 5 — Escritura persuasiva en frío
 modulo: 3 — La conexión
 semana: 5
 formato: guia_pdf_v3
-fuente: LIMPIO_S5.md (v1 · 2026-06-12)
 copyright: © Siete Academy. Todos los derechos reservados.
 ---
 

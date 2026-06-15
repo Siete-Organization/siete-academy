@@ -3,7 +3,6 @@ documento: Guía Semana 7 — La maquinaria del outbound
 modulo: 4 — El sistema
 semana: 7
 formato: guia_pdf_v3
-fuente: LIMPIO_S7.md (v1 · 2026-06-12)
 copyright: © Siete Academy. Todos los derechos reservados.
 ---
 

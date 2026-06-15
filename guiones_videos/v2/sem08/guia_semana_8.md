@@ -3,7 +3,6 @@ documento: Guía Semana 8 — Del proceso al mindset de mejora continua
 modulo: 4 — El sistema
 semana: 8
 formato: guia_pdf_v3
-fuente: LIMPIO_S8.md (v1 · 2026-06-12)
 copyright: © Siete Academy. Todos los derechos reservados.
 ---
 

@@ -3,7 +3,6 @@ documento: Guía Semana 6 — Conversación, calificación y mensajería asíncr
 modulo: 3 — La conexión
 semana: 6
 formato: guia_pdf_v3
-fuente: LIMPIO_S6.md (v2 · 2026-06-12)
 copyright: © Siete Academy. Todos los derechos reservados.
 ---
 
