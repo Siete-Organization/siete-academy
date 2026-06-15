@@ -1,0 +1,264 @@
+/* ============================================================
+   Siete Academy — Hoja de estilo de marca para guías PDF
+   Tipografía: Montserrat (Light/Regular/Medium/Bold/Black)
+   Colores: Blanco #FFF · Negro #000 · Glacial Sky #8FBDFF · System Blue #007AFF
+   __ASSET_BASE__ se reemplaza en build time por la ruta file:// a tools/brand
+   ============================================================ */
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('__ASSET_BASE__/fonts/Montserrat-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('__ASSET_BASE__/fonts/Montserrat-Italic-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+}
+
+:root {
+  --negro: #000000;
+  --blanco: #FFFFFF;
+  --glacial: #8FBDFF;
+  --blue: #007AFF;
+  --tinta: #0a0a0a;        /* texto cuerpo, casi negro */
+  --gris-suave: #5b6470;   /* texto secundario / notas */
+  --glacial-bg: #eef5ff;   /* fondo suave derivado de Glacial Sky */
+  --linea: #e3e8ef;        /* divisores sutiles */
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  color: var(--tinta);
+  font-size: 10.5pt;
+  line-height: 1.62;
+  margin: 0;
+  padding: 0;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Tipografía base ---------- */
+p { margin: 0 0 0.72em; text-align: justify; }
+strong, b { font-weight: 700; }
+em, i { font-style: italic; }
+a { color: var(--blue); text-decoration: none; }
+
+h1, h2, h3, h4 { color: var(--negro); line-height: 1.18; }
+
+/* Título principal del documento (se renderiza en la portada) */
+h1 { font-weight: 900; font-size: 26pt; margin: 0; }
+
+/* Subtítulos Nivel 1 — secciones "## N. ..." */
+h2 {
+  font-weight: 900;
+  font-size: 16pt;
+  letter-spacing: -0.01em;
+  margin: 1.7em 0 0.7em;
+  padding-bottom: 0.32em;
+  border-bottom: 2.5px solid var(--negro);
+}
+/* la barra inferior recibe un acento azul a la izquierda */
+h2::before {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 5px;
+  background: var(--blue);
+  margin-bottom: 10px;
+  border-radius: 2px;
+}
+
+/* Subtítulos Nivel 2 — "### ..." */
+h3 {
+  font-weight: 700;
+  font-size: 12pt;
+  color: var(--negro);
+  margin: 1.5em 0 0.5em;
+}
+
+/* "#### Solución / Soluciones" → badge */
+h4 {
+  font-weight: 700;
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--blue);
+  margin: 1.2em 0 0.4em;
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--glacial-bg);
+  border-radius: 3px;
+}
+
+/* ---------- Listas ---------- */
+ul, ol { margin: 0.4em 0 0.9em; padding-left: 1.4em; }
+li { margin: 0.28em 0; text-align: left; }
+li::marker { color: var(--blue); font-weight: 700; }
+
+/* ---------- Citas / blockquotes ---------- */
+blockquote {
+  margin: 1em 0;
+  padding: 0.5em 0 0.5em 1.1em;
+  border-left: 3px solid var(--blue);
+  background: var(--glacial-bg);
+  border-radius: 0 4px 4px 0;
+  padding-right: 1em;
+}
+blockquote p { font-style: italic; color: #1d2733; margin: 0.2em 0; text-align: left; }
+
+/* ---------- Tablas ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0 1.2em;
+  font-size: 9.7pt;
+  break-inside: avoid;
+}
+thead th {
+  background: var(--negro);
+  color: var(--blanco);
+  font-weight: 700;
+  text-align: left;
+  padding: 8px 11px;
+  font-size: 9.5pt;
+}
+tbody td {
+  padding: 7px 11px;
+  border-bottom: 1px solid var(--linea);
+  vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--glacial-bg); }
+
+/* ---------- Divisores (---) ---------- */
+hr {
+  border: none;
+  border-top: 1px solid var(--linea);
+  margin: 1.6em 0;
+}
+
+/* ---------- Código (por si aparece) ---------- */
+code {
+  font-family: 'Consolas', 'SF Mono', monospace;
+  background: #f3f5f8;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* ============================================================
+   PORTADA
+   ============================================================ */
+.cover {
+  page-break-after: always;
+  break-after: page;
+  height: 259mm;            /* alto útil A4 menos márgenes (297-19-16) con holgura */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.cover__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cover__logo { height: 26px; }
+.cover__kicker {
+  font-weight: 500;
+  font-size: 9pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gris-suave);
+}
+/* número gigante de la semana, marca de agua */
+.cover__weeknum {
+  position: absolute;
+  top: 30mm;
+  right: -6mm;
+  font-weight: 900;
+  font-size: 200pt;
+  line-height: 0.8;
+  color: var(--glacial);
+  opacity: 0.22;
+  z-index: 0;
+  letter-spacing: -0.04em;
+}
+.cover__center {
+  margin-top: auto;
+  margin-bottom: auto;
+  position: relative;
+  z-index: 1;
+}
+.cover__module {
+  font-weight: 700;
+  font-size: 11pt;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+.cover__title {
+  font-weight: 900;
+  font-size: 34pt;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--negro);
+  margin: 0 0 18px;
+  max-width: 95%;
+}
+.cover__rule {
+  width: 90px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--glacial));
+  margin: 22px 0;
+}
+.cover__week {
+  font-weight: 500;
+  font-size: 13pt;
+  color: var(--tinta);
+}
+.cover__bottom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-top: 1px solid var(--linea);
+  padding-top: 14px;
+}
+.cover__brand {
+  font-weight: 900;
+  font-size: 10pt;
+  letter-spacing: 0.04em;
+}
+.cover__sub {
+  font-weight: 400;
+  font-size: 8.5pt;
+  color: var(--gris-suave);
+  max-width: 60%;
+  text-align: right;
+}
+
+/* ============================================================
+   Estado de la página de contenido
+   ============================================================ */
+.content { position: relative; }
+
+/* evitar que títulos queden huérfanos al final de página */
+h2, h3, h4 { break-after: avoid; }
+table, blockquote, li { break-inside: avoid; }
+
+/* cierre de copyright (último párrafo en itálica) */
+.content > p:last-of-type em,
+.copyright {
+  font-size: 8pt;
+  color: var(--gris-suave);
+}

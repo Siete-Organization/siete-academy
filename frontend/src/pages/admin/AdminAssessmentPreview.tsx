@@ -46,7 +46,7 @@ export function AdminAssessmentPreview() {
         <p className="text-ember border-l-2 border-ember pl-4 text-sm">{error}</p>
       )}
       {!error && !assessment && <p className="num-label">{t("common.loading")}</p>}
-      {assessment && <ExamRunner assessment={assessment} preview />}
+      {assessment && <ExamRunner assessment={assessment} preview answerKey />}
     </div>
   );
 }

@@ -87,13 +87,46 @@ function requiresVideo(type: string): boolean {
   return type === "capa_2" || type === "final_test";
 }
 
+/** Réplica client-side de `_question_is_correct` del backend. Solo para el
+ * preview con clave de respuestas (admin/profesor); el grading real vive server. */
+function isAnswerCorrect(q: ExamQuestion, given: unknown): boolean {
+  if (given === undefined || given === null) return false;
+  const correct = q.correct;
+  if (q.type === "single") {
+    if (Array.isArray(correct)) {
+      return correct.length === 1 && String(given) === String(correct[0]);
+    }
+    return String(given) === String(correct);
+  }
+  if (q.type === "multi") {
+    if (!Array.isArray(correct) || !Array.isArray(given)) return false;
+    const a = [...correct].map(String).sort();
+    const b = [...(given as unknown[])].map(String).sort();
+    return a.length === b.length && a.every((x, i) => x === b[i]);
+  }
+  if (q.type === "match") {
+    if (typeof correct !== "object" || correct === null || Array.isArray(correct)) return false;
+    if (typeof given !== "object" || given === null) return false;
+    const c = correct as Record<string, string>;
+    const g = given as Record<string, string>;
+    const ck = Object.keys(c);
+    if (ck.length !== Object.keys(g).length) return false;
+    return ck.every((k) => String(c[k]) === String(g[k]));
+  }
+  return false;
+}
+
 export function ExamRunner({
   assessment,
   preview = false,
+  answerKey = false,
   onPassed,
 }: {
   assessment: ExamAssessment;
   preview?: boolean;
+  /** Preview con clave de respuestas: habilita inputs y permite calcular la nota
+   * MCQ localmente (vista admin/profesor para testear la puntuación). */
+  answerKey?: boolean;
   onPassed?: () => void;
 }) {
   const { t } = useTranslation();
@@ -102,6 +135,9 @@ export function ExamRunner({
   const shortAnswers = useMemo(() => cfg.short_answers ?? [], [cfg.short_answers]);
   const tables = useMemo(() => cfg.tables ?? [], [cfg.tables]);
   const needsVideo = requiresVideo(assessment.type);
+  // En preview normal todo es solo-lectura. Con answerKey (admin testeando la
+  // nota) habilitamos los inputs sin enviar nada al backend.
+  const inputsDisabled = preview && !answerKey;
 
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
   const [shortText, setShortText] = useState<Record<string, string>>({});
@@ -110,6 +146,17 @@ export function ExamRunner({
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<SubmissionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [localGraded, setLocalGraded] = useState(false);
+
+  const localScore = useMemo(() => {
+    if (questions.length === 0) return 0;
+    const hits = questions.filter((q) => isAnswerCorrect(q, answers[q.id])).length;
+    return Math.round((hits / questions.length) * 10000) / 100;
+  }, [questions, answers]);
+  const localHits = useMemo(
+    () => questions.filter((q) => isAnswerCorrect(q, answers[q.id])).length,
+    [questions, answers],
+  );
 
   const canSubmit =
     !preview &&
@@ -166,9 +213,12 @@ export function ExamRunner({
                 <QuestionInput
                   q={q}
                   value={answers[q.id]}
-                  disabled={preview}
+                  disabled={inputsDisabled}
                   onChange={(v) => setAnswers((p) => ({ ...p, [q.id]: v }))}
                 />
+                {answerKey && localGraded && (
+                  <QuestionFeedback q={q} given={answers[q.id]} t={t} />
+                )}
               </li>
             ))}
           </ol>
@@ -184,7 +234,7 @@ export function ExamRunner({
                 <p className="text-sm leading-relaxed">{sa.prompt}</p>
                 <Textarea
                   rows={4}
-                  disabled={preview}
+                  disabled={inputsDisabled}
                   value={shortText[sa.id] ?? ""}
                   onChange={(e) =>
                     setShortText((p) => ({ ...p, [sa.id]: e.target.value }))
@@ -204,7 +254,7 @@ export function ExamRunner({
                 key={tbl.id}
                 table={tbl}
                 value={tableData[tbl.id]}
-                disabled={preview}
+                disabled={inputsDisabled}
                 onChange={(v) => setTableData((p) => ({ ...p, [tbl.id]: v }))}
                 t={t}
               />
@@ -218,7 +268,7 @@ export function ExamRunner({
           <p className="text-sm text-ink-soft mb-3">{t("exam.videoHint")}</p>
           <Input
             type="url"
-            disabled={preview}
+            disabled={inputsDisabled}
             value={videoUrl}
             placeholder="https://loom.com/..."
             onChange={(e) => setVideoUrl(e.target.value)}
@@ -240,11 +290,70 @@ export function ExamRunner({
           )}
         </div>
       )}
-      {preview && (
+      {preview && answerKey && (
+        <div className="space-y-4 hairline pt-6">
+          <div className="flex items-center gap-4">
+            <Button onClick={() => setLocalGraded(true)} variant="ember">
+              {t("exam.calculateScore")}
+            </Button>
+            <p className="text-xs text-ink-muted">{t("exam.answerKeyNote")}</p>
+          </div>
+          {localGraded && questions.length > 0 && (
+            <div className="border border-ember/40 bg-ember/5 rounded-md p-6">
+              <p className="font-display text-2xl">
+                {t("exam.score", { score: localScore })}
+              </p>
+              <p className="text-sm text-ink-soft mt-1">
+                {t("exam.mcqHits", { hits: localHits, total: questions.length })}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+      {preview && !answerKey && (
         <p className="num-label text-ember hairline pt-6">{t("exam.previewMode")}</p>
       )}
     </div>
   );
+}
+
+function QuestionFeedback({
+  q,
+  given,
+  t,
+}: {
+  q: ExamQuestion;
+  given: unknown;
+  t: (k: string, opts?: Record<string, unknown>) => string;
+}) {
+  const correct = isAnswerCorrect(q, given);
+  return (
+    <div
+      className={`text-xs border-l-2 pl-3 py-1 space-y-1 ${
+        correct ? "border-ember text-ink-soft" : "border-ember/40 text-ink-soft"
+      }`}
+    >
+      <p className="font-mono uppercase tracking-[0.14em] text-ember">
+        {correct ? t("exam.questionCorrect") : t("exam.questionWrong")}
+      </p>
+      <p>
+        <span className="font-medium">{t("exam.correctAnswer")}:</span>{" "}
+        {formatCorrect(q.correct)}
+      </p>
+      {q.explanation && <p className="text-ink-muted">{q.explanation}</p>}
+    </div>
+  );
+}
+
+function formatCorrect(correct: ExamQuestion["correct"]): string {
+  if (correct == null) return "—";
+  if (Array.isArray(correct)) return correct.join(", ");
+  if (typeof correct === "object") {
+    return Object.entries(correct)
+      .map(([k, v]) => `${k}→${v}`)
+      .join(", ");
+  }
+  return String(correct);
 }
 
 function ResultPanel({

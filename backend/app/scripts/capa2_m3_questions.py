@@ -12,30 +12,26 @@ Estructura:
 MCQ: list[dict] = [
     {
         "id": "M3.1",
-        "topic": "Jerarquización de error en copy — pecado capital",
+        "topic": "Escalar el compromiso después de un primer \"sí\"",
         "section": "sem5",
         "type": "single",
         "prompt": (
-            "Leé este primer email de prospección:\n\n"
-            "Asunto: Propuesta para Lava del Pacífico\n"
-            "Estimado Sr. Ramírez, Reciba un cordial saludo. Mi nombre es Pablo Rodríguez y soy "
-            "ejecutivo comercial senior en SoluTech. Somos una empresa con más de 15 años ayudando "
-            "a compañías del sector industrial a optimizar sus procesos operativos. Trabajamos con "
-            "Alicorp, Backus y Gloria automatizando gestión de flotas con IA y consultores "
-            "especializados. Me encantaría coordinar una reunión de 45 minutos para presentarle "
-            "nuestra propuesta para Lava del Pacífico. Quedo atento a su amable respuesta. Pablo.\n\n"
-            "¿Cuál es el problema más grave de este copy?"
+            "Un SDR mandó un primer correo cuyo llamado a la acción era una pregunta de baja "
+            "fricción: \"¿tiene sentido lo que planteo?\". El prospecto respondió: \"Sí, tiene "
+            "sentido, es un tema que tenemos sobre la mesa.\"\n\n"
+            "¿Cuál es la mejor forma de responder?"
         ),
         "choices": [
-            {"id": "a", "text": "El CTA pide 45 minutos, demasiado tiempo para un cold email."},
-            {"id": "b", "text": "Menciona Alicorp, Backus y Gloria — empresas gigantes — cuando Lava del Pacífico es una lavandería industrial de 40 empleados. Activa distancia, no prueba social."},
-            {"id": "c", "text": "Todo el copy habla del remitente (SoluTech, sus 15 años, sus clientes) y no hay una sola referencia a Lava del Pacífico o su contexto específico."},
-            {"id": "d", "text": "El asunto \"Propuesta para Lava del Pacífico\" es genérico."},
+            {"id": "a", "text": "Aprovechar el interés y mandarle de inmediato un PDF con el producto, los casos de éxito y la propuesta comercial, para que llegue informado a una eventual reunión."},
+            {"id": "b", "text": "Responder con una pregunta abierta amplia (\"¿Me cuentas todo el contexto del problema y cómo lo vienen manejando?\") y hacer el diagnóstico completo por correo antes de avanzar."},
+            {"id": "c", "text": "Apoyarse en ese \"sí\" para escalar el compromiso de a poco: \"Buenísimo. ¿Te funciona 15 minutos el martes o el jueves para verlo en concreto?\" — una reunión corta es consistente con algo que el prospecto ya validó."},
+            {"id": "d", "text": "Agradecer la respuesta y esperar una o dos semanas antes de proponer un paso concreto, para no presionar y dejar que el prospecto retome cuando quiera."},
         ],
         "correct": "c",
         "explanation": (
-            "Es el pecado capital (Sem 5 Bloque 4). Corregir a, b o d sin corregir c no mueve la aguja. "
-            "Reescribir desde el foco en el lector cambia todo."
+            "Tras un \"sí\" de baja fricción, el paso correcto es escalar el compromiso de a poco "
+            "hacia una reunión corta y concreta (Sem 5). (a) abruma con un PDF y salta el ritmo; "
+            "(b) convierte el correo en discovery; (d) deja enfriar un interés ya validado."
         ),
     },
     {
@@ -179,22 +175,24 @@ MCQ: list[dict] = [
     },
     {
         "id": "M3.7",
-        "topic": "Encadenada parte 2 — corregir la precalificación",
+        "topic": "Uso correcto de LinkedIn en outbound",
         "section": "sem6",
         "type": "single",
         "prompt": (
-            "Dado el diagnóstico de la pregunta anterior, ¿cuál sería el arranque correcto de la precalificación?"
+            "Un SDR quiere usar LinkedIn para llegar a un decisor que todavía no respondió sus correos.\n\n"
+            "¿Cuál es el uso de LinkedIn más alineado con lo que enseña el módulo?"
         ),
         "choices": [
-            {"id": "a", "text": "Preguntar las mismas 5 cosas pero una por una, esperando respuesta entre cada una."},
-            {"id": "b", "text": "Arrancar con una pregunta abierta de situación (\"Contame cómo están manejando hoy el tema de X\") y dejar que la conversación fluya. El objetivo es validar 3 mínimos: existe el problema, el contacto tiene llegada a la decisión, no hay bloqueador absoluto."},
-            {"id": "c", "text": "Saltar la precalificación y pedir directamente que el prospecto presente la situación cuando se conecte con el AE."},
-            {"id": "d", "text": "Enviar las 5 preguntas por email para que el prospecto las responda por escrito antes de la llamada."},
+            {"id": "a", "text": "Usarlo primero para investigar al decisor (qué publica, qué comenta, qué compartió hace poco) y, si hay material, hacer un micro-contacto genuino: un comentario real en una publicación suya o un mensaje corto que mencione algo específico que él planteó."},
+            {"id": "b", "text": "Reenviarle por mensaje directo el mismo correo que no respondió, ahora por LinkedIn, para subir la probabilidad de que lo vea en otro canal."},
+            {"id": "c", "text": "Conectar y, apenas acepte, mandarle el pitch completo con la propuesta y un link para agendar, aprovechando que LinkedIn funciona como canal de venta directa."},
+            {"id": "d", "text": "Programar solicitudes de conexión automáticas a muchos perfiles del mismo cargo por día, para escalar el volumen de contactos sin invertir tanto tiempo en investigar."},
         ],
-        "correct": "b",
+        "correct": "a",
         "explanation": (
-            "Precalificación como filtro de mínimos (Sem 6 Bloque 5). 1 pregunta abierta de situación + "
-            "dejar fluir. Los 3 mínimos salen naturalmente en una conversación de 10 min si el SDR sabe escuchar."
+            "LinkedIn en outbound es research + micro-contacto genuino, no un canal de venta directa "
+            "ni de volumen (Sem 6). (b) repite el mismo mensaje fallido; (c) trata LinkedIn como pitch "
+            "directo; (d) automatiza volumen sin investigación, lo que quema el perfil."
         ),
     },
     {

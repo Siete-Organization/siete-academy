@@ -280,24 +280,33 @@ MCQ: list[dict] = [
     },
     {
         "id": "M4.11",
-        "topic": "Métricas del outbound — síntoma vs causa",
+        "topic": "Diagnóstico por descarte sobre un tablero de métricas",
         "section": "sem8",
         "type": "single",
         "prompt": (
-            "El show rate cayó de 72% a 48% la última semana. El reply rate, meeting rate sobre reply, "
-            "y precalificación aprobada se mantienen estables. ¿Dónde está más probablemente la causa?"
+            "Tablero semanal de la SDR Valeria. La Semana 4 muestra la anomalía:\n\n"
+            "Métrica                    | Sem 1 | Sem 2 | Sem 3 | Sem 4\n"
+            "Tasa de rebote             | 2.1%  | 2.2%  | 2.0%  | 2.1%\n"
+            "Tasa de respuesta          | 2.4%  | 2.3%  | 2.5%  | 2.4%\n"
+            "Reuniones sobre respuestas | 26%   | 27%   | 25%   | 9%\n"
+            "Tasa de asistencia         | 73%   | 72%   | 74%   | 73%\n"
+            "Precalificaciones aprobadas| 88%   | 90%   | 87%   | 89%\n\n"
+            "Valeria no cambió el mensaje, ni el ICP, ni la cadencia, ni el volumen. Solo cayeron "
+            "las reuniones sobre respuestas.\n\n"
+            "Siguiendo el método de diagnóstico por descarte, ¿dónde está más probablemente la causa?"
         ),
         "choices": [
-            {"id": "a", "text": "En el ICP (etapa 1) — probablemente los prospectos nuevos no son fit."},
-            {"id": "b", "text": "En el copy del email (etapa 4) — probablemente el mensaje no está vendiendo bien la reunión."},
-            {"id": "c", "text": "En el agendamiento o la precalificación (etapas 8-9) — la métrica del síntoma (show rate) es la que describe esa etapa, y las métricas colaterales estables descartan problemas aguas arriba."},
-            {"id": "d", "text": "En la calificación (etapa 7) — probablemente se están calificando prospectos sin intención real."},
+            {"id": "a", "text": "En el ICP (etapa 1): probablemente entraron prospectos que no encajan, y por eso responden, pero no agendan."},
+            {"id": "b", "text": "En la entregabilidad (etapas 4-5): probablemente los correos están cayendo a spam y por eso se pierden reuniones."},
+            {"id": "c", "text": "En la gestión de respuestas (etapa 7): llegan las mismas respuestas que antes, pero se están convirtiendo peor en reuniones agendadas."},
+            {"id": "d", "text": "En la precalificación (etapa 9): probablemente se están filtrando de más los prospectos antes de la reunión."},
         ],
         "correct": "c",
         "explanation": (
-            "Principio del diagnóstico por descarte (Sem 8 Bloque 6): \"un problema en el paso N se "
-            "detecta por la métrica del paso N+1\". El síntoma se observa en show rate (etapa 8). "
-            "Las métricas colaterales estables descartan ICP, copy y calificación."
+            "Diagnóstico por descarte (Sem 8 Bloque 6): la métrica que cae es \"reuniones sobre "
+            "respuestas\", que describe la etapa 7 (gestión de respuestas) — llegan las mismas "
+            "respuestas pero se convierten peor en reuniones agendadas. Las métricas vecinas estables "
+            "(rebote, respuesta, asistencia, precalificación) descartan ICP, entregabilidad y precalificación."
         ),
     },
     {
@@ -324,33 +333,25 @@ MCQ: list[dict] = [
     },
     {
         "id": "M4.13",
-        "topic": "Diagnóstico por descarte (anti-IA)",
+        "topic": "Cargar más contactos de los que el sistema procesa",
         "section": "sem8",
         "type": "single",
         "prompt": (
-            "Tabla del SDR Matías:\n\n"
-            "Métrica          | Sem 1 | Sem 2 | Sem 3 | Sem 4\n"
-            "Bounce rate      | 1.9%  | 2.0%  | 2.1%  | 2.0%\n"
-            "Reply rate       | 2.3%  | 2.4%  | 2.2%  | 0.5%\n"
-            "Meeting/reply    | 26%   | 25%   | 27%   | 26%\n"
-            "Show rate        | 74%   | 73%   | 75%   | 73%\n"
-            "Precalif aprobada| 88%   | 90%   | 87%   | 89%\n\n"
-            "Matías no cambió copy, ICP, cadencia ni volumen. Solo el reply rate cayó.\n\n"
-            "¿Cuál es la hipótesis más probable y cuál es la primera acción diagnóstica?"
+            "Para \"ir más rápido\", un SDR carga en sus secuencias el doble de contactos de los que "
+            "su infraestructura de correos y su tiempo pueden procesar en una semana.\n\n"
+            "¿Qué ocurre, y qué métrica lo delata?"
         ),
         "choices": [
-            {"id": "a", "text": "Problema de ICP — primer paso: revisar filtros de Apollo y ajustar industria/cargo."},
-            {"id": "b", "text": "Fatiga de copy — primer paso: A/B test del asunto con 3 variantes nuevas."},
-            {"id": "c", "text": "Problema de deliverability — primer paso: abrir Google Postmaster Tools y revisar reputación de cada dominio activo."},
-            {"id": "d", "text": "Problema de volumen — primer paso: reducir el volumen diario de envíos en 40%."},
+            {"id": "a", "text": "Cae la tasa de finalización de la secuencia: muchos contactos quedan a mitad de la cadencia y nunca completan sus toques; cargar de más no procesa más, sino peor."},
+            {"id": "b", "text": "Sube la tasa de respuesta, porque tener más contactos activos a la vez aumenta la probabilidad de que alguno conteste en cada tanda de envíos."},
+            {"id": "c", "text": "No pasa nada relevante mientras la infraestructura de correos aguante el volumen, ya que el tiempo del SDR no es una restricción real del sistema."},
+            {"id": "d", "text": "Mejora la cobertura del ICP, porque cargar más contactos amplía la variedad de perfiles alcanzados y reparte mejor el esfuerzo de la campaña."},
         ],
-        "correct": "c",
+        "correct": "a",
         "explanation": (
-            "Con ICP y copy sin cambios + bounce rate estable + métricas colaterales intactas, la única "
-            "variable que explica caída aislada del reply rate es deliverability. Primera acción = "
-            "Postmaster, no tocar copy (Sem 8 Bloque 6). Una IA genérica propondría A/B test (b) o "
-            "ICP (a) — el alumno que acierta c entendió que las métricas colaterales estables son el "
-            "filtro del descarte."
+            "El SDR es el cuello de botella del sistema (Sem 8 Bloque 4). Cargar el doble de la "
+            "capacidad real deja muchos contactos a mitad de la cadencia: cae la tasa de finalización "
+            "de la secuencia. Cargar de más no procesa más, sino peor."
         ),
     },
     {

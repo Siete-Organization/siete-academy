@@ -42,23 +42,32 @@ def create_assessment(
     return a
 
 
+def _public(a: Assessment) -> AssessmentOut:
+    """AssessmentOut con el config sin respuestas — para endpoints del alumno."""
+    return AssessmentOut.model_validate(a).model_copy(
+        update={"config": services.public_config(a.config or {})}
+    )
+
+
 @router.get("/module/{module_id}", response_model=list[AssessmentOut])
-def list_by_module(module_id: int, db: Session = Depends(get_db)) -> list[Assessment]:
-    return db.query(Assessment).filter(Assessment.module_id == module_id).all()
+def list_by_module(module_id: int, db: Session = Depends(get_db)) -> list[AssessmentOut]:
+    rows = db.query(Assessment).filter(Assessment.module_id == module_id).all()
+    return [_public(a) for a in rows]
 
 
 @router.get("/lesson/{lesson_id}", response_model=list[AssessmentOut])
 def list_by_lesson(lesson_id: int, db: Session = Depends(get_db)) -> list[Assessment]:
+    # Capa 1 (micropruebas): se califican client-side, necesitan `correct`. No strip.
     return db.query(Assessment).filter(Assessment.lesson_id == lesson_id).all()
 
 
 @router.get("/final", response_model=AssessmentOut)
-def get_final_test(db: Session = Depends(get_db)) -> Assessment:
+def get_final_test(db: Session = Depends(get_db)) -> AssessmentOut:
     """Prueba Final del curso (Capa 3). El motor la identifica por type, no por módulo."""
     a = db.query(Assessment).filter(Assessment.type == "final_test").first()
     if a is None:
         raise HTTPException(404, "Final test not configured")
-    return a
+    return _public(a)
 
 
 @router.patch("/{assessment_id}", response_model=AssessmentOut)
@@ -300,8 +309,15 @@ def review_submission(
 
 # Declarado al final para no ensombrecer rutas literales (/final, /module/..., /lesson/...).
 @router.get("/{assessment_id}", response_model=AssessmentOut)
-def get_assessment(assessment_id: int, db: Session = Depends(get_db)) -> Assessment:
-    """Un assessment por id — usado por la vista de alumno (final) y el preview admin."""
+def get_assessment(
+    assessment_id: int,
+    _staff: CurrentUser = Depends(require_roles("teacher", "admin")),
+    db: Session = Depends(get_db),
+) -> Assessment:
+    """Config CRUDO (con respuestas y rúbricas). Solo staff: lo usan el preview
+    interactivo (admin), el corrector del caso final (profesor) y el editor de
+    pruebas. El alumno nunca pega acá — usa /final y /module/{id} (strip-eados).
+    """
     a = db.get(Assessment, assessment_id)
     if a is None:
         raise HTTPException(404, "Assessment not found")
