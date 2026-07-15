@@ -1,4 +1,4 @@
-"""HTTP middleware: request-id propagation + access logging."""
+"""HTTP middleware: request-id propagation + access logging + catch-all 500."""
 
 from __future__ import annotations
 
@@ -7,11 +7,31 @@ import uuid
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 
 from app.core.logging import bind_request_id, clear_context, get_logger
 
 log = get_logger("http")
+
+
+class CatchAllExceptionMiddleware(BaseHTTPMiddleware):
+    """Convierte excepciones no manejadas en un 500 JSON que SÍ atraviesa
+    CORSMiddleware (debe agregarse ANTES que CORS para quedar más adentro).
+
+    Sin esto, un crash llega al ServerErrorMiddleware de Starlette (afuera de
+    CORS) y responde `Internal Server Error` en texto plano SIN headers CORS:
+    el navegador lo bloquea y el usuario ve un error de red inexplicable.
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        try:
+            return await call_next(request)
+        except Exception:
+            log.exception(
+                "http.unhandled_exception",
+                extra={"method": request.method, "path": request.url.path},
+            )
+            return JSONResponse({"detail": "internal_error"}, status_code=500)
 
 
 class RequestIDMiddleware(BaseHTTPMiddleware):

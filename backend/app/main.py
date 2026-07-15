@@ -1,12 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import _rate_limit_exceeded_handler
+from fastapi.responses import JSONResponse
 from slowapi.errors import RateLimitExceeded
 
 from app.core.config import get_settings
 from app.core.limiter import limiter
 from app.core.logging import configure_logging, get_logger
-from app.core.middleware import RequestIDMiddleware
+from app.core.middleware import CatchAllExceptionMiddleware, RequestIDMiddleware
 from app.modules.ai_review.router import router as ai_review_router
 from app.modules.applications.admission_router import router as admission_router
 from app.modules.applications.router import router as applications_router
@@ -35,11 +35,27 @@ app = FastAPI(
     root_path=settings.api_root_path,
 )
 
-# Rate limiter hook-up
+# Rate limiter hook-up. Handler propio en vez del de slowapi: el de slowapi
+# llama a limiter._inject_headers(request.state.view_rate_limit), que puede
+# reventar y convertir el 429 en un 500 sin CORS (incidente /apply 2026-07-14:
+# los alumnos veían "Network Error" al enviar la postulación).
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# Order matters: RequestID first so every log line picks up the rid
+
+def _rate_limited_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    return JSONResponse(
+        {"detail": "rate_limited"},
+        status_code=429,
+        headers={"Retry-After": "3600"},
+    )
+
+
+app.add_exception_handler(RateLimitExceeded, _rate_limited_handler)
+
+# Order matters: CatchAll va primero (queda MÁS ADENTRO que CORSMiddleware) para
+# que hasta un 500 inesperado salga como JSON CON headers CORS — un 500 sin CORS
+# el navegador lo reporta como error de red y el front no puede explicar nada.
+app.add_middleware(CatchAllExceptionMiddleware)
 app.add_middleware(RequestIDMiddleware)
 app.add_middleware(
     CORSMiddleware,

@@ -16,3 +16,6 @@ email-validator==2.2.0
 python-json-logger==2.0.7
 tenacity==9.0.0
 slowapi==0.1.9
+# limits es el motor interno de slowapi; sin pin, cada build de imagen
+# resuelve una versión distinta (sospechoso del 500-en-vez-de-429 en prod).
+limits==5.8.0
