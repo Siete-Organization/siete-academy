@@ -1,0 +1,11 @@
+[
+  {"slug": "escribir_email",      "query": "writing email laptop closeup",          "count": 3},
+  {"slug": "redactar_mensaje",    "query": "person typing message keyboard",        "count": 2},
+  {"slug": "llamada_fria",        "query": "call center headset agent",             "count": 3},
+  {"slug": "conversacion_tel",    "query": "salesperson phone conversation office", "count": 3},
+  {"slug": "objecion_charla",     "query": "two people serious conversation office","count": 2},
+  {"slug": "mensajeria_chat",     "query": "smartphone chat notification message",  "count": 2},
+  {"slug": "presentacion_pitch",  "query": "businessman presenting persuasive",     "count": 2},
+  {"slug": "escucha_activa",      "query": "professional listening meeting nod",    "count": 2},
+  {"slug": "laptop_correo",       "query": "hands typing email office desk",        "count": 2}
+]

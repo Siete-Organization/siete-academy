@@ -1,0 +1,24 @@
+[
+  {
+    "file": "02_slide",
+    "kicker": "BLOQUE 1",
+    "title": "Las 5 diferencias estructurales",
+    "subtitle": "Por qué vender B2B no es vender B2C en grande",
+    "stat": null
+  },
+  {
+    "file": "03_slide",
+    "kicker": "BLOQUE 2",
+    "title": "La paradoja del comprador",
+    "subtitle": "Nadie decide solo: basta con que nadie se oponga",
+    "stat": "77%",
+    "stat_label": "de las decisiones B2B requieren consenso"
+  },
+  {
+    "file": "04_slide",
+    "kicker": "BLOQUE 3",
+    "title": "Las 5 etapas del buying cycle",
+    "subtitle": "Prospect → MQL → SQL → Opportunity → Customer",
+    "stat": null
+  }
+]

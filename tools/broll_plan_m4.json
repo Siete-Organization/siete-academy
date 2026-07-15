@@ -1,0 +1,11 @@
+[
+  {"slug": "automatizacion",      "query": "automation technology workflow digital","count": 3},
+  {"slug": "metricas_dashboard",  "query": "analytics dashboard metrics screen",    "count": 3},
+  {"slug": "proceso_equipo",      "query": "sales team working process office",     "count": 2},
+  {"slug": "secuencia_inbox",     "query": "email inbox computer screen",           "count": 2},
+  {"slug": "mejora_crecimiento",  "query": "business growth success graph",         "count": 3},
+  {"slug": "herramientas_soft",   "query": "software interface computer screen",    "count": 2},
+  {"slug": "diagnostico_datos",   "query": "data driven analysis team screen",      "count": 2},
+  {"slug": "productividad",       "query": "productive professional working focused","count": 2},
+  {"slug": "cierre_logro",        "query": "team celebrating success office",       "count": 2}
+]

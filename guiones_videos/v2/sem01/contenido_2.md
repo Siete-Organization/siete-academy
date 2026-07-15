@@ -65,7 +65,7 @@ Tres. **SQL (Sales Qualified Lead).** Pasó el filtro de ventas: perfil correcto
 Cuatro. **Opportunity.** Aceptó una reunión con el AE y hay una venta concreta sobre la mesa, con monto estimado.
 Cinco. **Customer.** Firmó. Y **acá termina la lista**: ya es cliente.
 
-Lo que pasa después de la firma —que renueve, que compre más o que se vaya— es **otra historia, de otra área**: Atención al Cliente. No es trabajo del SDR ni parte de esta lista.
+Lo que pasa después de la firma —que renueve, que compre más o que se vaya— es **otra historia, de otra área**: Customer Success, el equipo que gestiona al cliente después de la firma. No es trabajo del SDR ni parte de esta lista.
 
 **Dónde operas tú:** de Prospect a Opportunity. Tu trabajo es convertir un prospecto frío en un SQL, conseguir la reunión —ahí se crea la Opportunity— y pasársela al AE con contexto. A ese pase se le llama **handoff**. Después del handoff, el SDR sale de la conversación.
 
@@ -136,7 +136,7 @@ Tres. Cinco etapas de buying cycle; el SDR opera en awareness y consideración.
 
 Cuatro. Nueve roles posibles en el comité; cada uno con motivación y miedo distintos. Habla a los suyos, no a los de otro rol.
 
-Cinco. Ciclo de vida del prospecto: cómo tu empresa lo clasifica, de Prospect a Customer. Lo posterior a la firma es de Atención al Cliente, no del SDR.
+Cinco. Ciclo de vida del prospecto: cómo tu empresa lo clasifica, de Prospect a Customer. Lo posterior a la firma es de Customer Success, no del SDR.
 
 Seis. En empresas grandes, identifica las tres capas temprano: quién usa, quién aprueba, quién paga.
 

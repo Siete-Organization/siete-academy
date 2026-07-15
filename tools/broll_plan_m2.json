@@ -1,0 +1,12 @@
+[
+  {"slug": "leer_empresa",        "query": "business financial report analysis",   "count": 3},
+  {"slug": "industria_mercado",   "query": "industry market analysis charts",       "count": 2},
+  {"slug": "investigacion",       "query": "analyst researching computer office",   "count": 3},
+  {"slug": "buyer_persona",       "query": "business customer profile target",      "count": 2},
+  {"slug": "psicologia_decisor",  "query": "businessman decision thinking serious", "count": 3},
+  {"slug": "dolor_solucion",      "query": "team problem solving meeting office",   "count": 2},
+  {"slug": "timing_senales",      "query": "business growth chart trend",           "count": 2},
+  {"slug": "reunion_estrategia",  "query": "strategy meeting professionals table",  "count": 2},
+  {"slug": "ejecutivo_oficina",   "query": "executive working modern office",       "count": 2},
+  {"slug": "documentos_datos",    "query": "reviewing documents data desk",         "count": 2}
+]

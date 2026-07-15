@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "comite_reunion",
+    "query": "business meeting boardroom",
+    "count": 3
+  },
+  {
+    "slug": "equipo_colaboracion",
+    "query": "office team collaboration",
+    "count": 3
+  },
+  {
+    "slug": "acuerdo_cierre",
+    "query": "business handshake deal",
+    "count": 2
+  },
+  {
+    "slug": "trabajo_laptop",
+    "query": "person working laptop office",
+    "count": 3
+  },
+  {
+    "slug": "llamada_sdr",
+    "query": "businesswoman phone call office",
+    "count": 3
+  },
+  {
+    "slug": "discusion_pro",
+    "query": "corporate professionals discussion",
+    "count": 2
+  },
+  {
+    "slug": "oficina_ambiente",
+    "query": "modern office workspace",
+    "count": 2
+  },
+  {
+    "slug": "datos_pantalla",
+    "query": "business report charts presentation screen",
+    "count": 3
+  },
+  {
+    "slug": "reunion_remota",
+    "query": "video conference remote meeting",
+    "count": 2
+  },
+  {
+    "slug": "decisor_pensando",
+    "query": "businessman thinking office window",
+    "count": 2
+  },
+  {
+    "slug": "brainstorm",
+    "query": "diverse team brainstorming whiteboard",
+    "count": 2
+  },
+  {
+    "slug": "teclado_outbound",
+    "query": "typing keyboard close up",
+    "count": 2
+  }
+]
