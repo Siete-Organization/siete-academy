@@ -93,6 +93,34 @@ def get_application(
     return app
 
 
+@router.delete("/{application_id}", status_code=204)
+def delete_application(
+    application_id: int,
+    current: CurrentUser = Depends(require_roles("admin")),
+    db: Session = Depends(get_db),
+) -> Response:
+    """Borrado definitivo de una postulación (solo admin).
+
+    Pensado para limpiar registros de prueba o pedidos de baja del aspirante.
+    El borrado libera el email: la persona puede volver a postular.
+    """
+    app = db.get(Application, application_id)
+    if not app:
+        raise HTTPException(404, "Application not found")
+    log.info(
+        "application.deleted",
+        extra={
+            "application_id": app.id,
+            "email": app.applicant_email,
+            "status": app.status,
+            "deleted_by": current.user.id,
+        },
+    )
+    db.delete(app)
+    db.commit()
+    return Response(status_code=204)
+
+
 @router.post("/{application_id}/review", response_model=ApplicationOut)
 def review(
     application_id: int,
