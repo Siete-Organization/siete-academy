@@ -110,6 +110,18 @@ export function AdminApplications() {
     await load();
   };
 
+  const removeApplication = async () => {
+    if (!selected) return;
+    const ok = window.confirm(
+      `¿Eliminar definitivamente la postulación de ${selected.applicant_name} (${selected.applicant_email})?\n\nEsto libera el email: la persona podrá volver a postular desde cero.`,
+    );
+    if (!ok) return;
+    await api.delete(`/applications/${selected.id}`);
+    setNotes("");
+    setSelected(null);
+    await load();
+  };
+
   return (
     <div className="container-editorial py-16">
       <BackLink to="/admin" className="mb-8">{t("nav.admin")}</BackLink>
@@ -271,13 +283,19 @@ export function AdminApplications() {
                 <span className="num-label mb-2 block">Notas admin</span>
                 <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
               </label>
-              <div className="flex gap-4">
+              <div className="flex gap-4 items-center flex-wrap">
                 <Button onClick={() => review("approved")} variant="ember">
                   {t("admin.approve")}
                 </Button>
                 <Button onClick={() => review("rejected")} variant="outline">
                   {t("admin.reject")}
                 </Button>
+                <button
+                  onClick={() => void removeApplication()}
+                  className="ml-auto text-[11px] font-mono uppercase tracking-[0.14em] text-ink-faint hover:text-ember border-b border-transparent hover:border-ember transition-colors"
+                >
+                  Eliminar postulación
+                </button>
               </div>
             </section>
           </article>
