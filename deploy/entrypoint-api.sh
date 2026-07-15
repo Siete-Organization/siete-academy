@@ -9,9 +9,15 @@ echo "[entrypoint-api] running alembic upgrade head"
 alembic upgrade head
 
 echo "[entrypoint-api] starting gunicorn (workers=${WEB_CONCURRENCY:-3})"
+# --forwarded-allow-ips "*": el contenedor solo es alcanzable por Traefik
+# (red interna de Docker), así que confiamos en su X-Forwarded-For para ver
+# la IP real del cliente. Sin esto, el rate limit de /applications keyea por
+# la IP del proxy y el bucket se comparte entre TODOS los alumnos
+# (incidente 2026-07-14: postulaciones bloqueadas con 500).
 exec gunicorn app.main:app \
     --workers "${WEB_CONCURRENCY:-3}" \
     --worker-class uvicorn.workers.UvicornWorker \
+    --forwarded-allow-ips "*" \
     --bind 0.0.0.0:8000 \
     --access-logfile - \
     --error-logfile - \

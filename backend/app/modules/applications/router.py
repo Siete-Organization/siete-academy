@@ -21,11 +21,13 @@ router = APIRouter()
 
 
 @router.post("", response_model=ApplicationOut, status_code=201)
-# 20/hour/IP: las universidades comparten una IP pública (NAT), así que el
-# límite tiene que dar aire a varios postulantes de la misma red. El "una
-# aplicación por persona" lo garantiza la dedup por email, no este límite,
-# que solo frena spam de bots.
-@limiter.limit("20/hour")
+# 60/hour/IP: las universidades comparten una IP pública (NAT), así que el
+# límite tiene que dar aire a un aula entera postulando en la misma hora. El
+# "una aplicación por persona" lo garantiza la dedup por email, no este
+# límite, que solo frena spam de bots. Requiere que gunicorn corra con
+# --forwarded-allow-ips para ver la IP real (si no, TODOS los alumnos
+# comparten la IP del proxy y el bucket es global — incidente 2026-07-14).
+@limiter.limit("60/hour")
 def submit_application(
     body: ApplicationCreate,
     request: Request,
