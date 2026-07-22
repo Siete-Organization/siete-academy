@@ -9,6 +9,37 @@ import { BackLink } from "@/components/BackLink";
 type Locale = "es" | "en" | "pt";
 const LOCALES: Locale[] = ["es", "en", "pt"];
 
+/** Acepta un ID crudo o cualquier URL de YouTube (watch, youtu.be, shorts,
+ *  embed, live) y devuelve solo el ID de 11 caracteres. */
+export function extractYoutubeId(input: string): string {
+  const raw = input.trim();
+  if (/^[\w-]{11}$/.test(raw)) return raw;
+  const m = raw.match(
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/,
+  );
+  return m ? m[1] : raw;
+}
+
+function YoutubePreview({ videoId }: { videoId: string }) {
+  if (!/^[\w-]{11}$/.test(videoId)) return null;
+  return (
+    <div className="mt-3 max-w-md">
+      <div className="relative w-full rounded-xs overflow-hidden border border-bone" style={{ paddingBottom: "56.25%" }}>
+        <iframe
+          className="absolute inset-0 w-full h-full"
+          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+          title="Vista previa del video"
+          allow="accelerometer; encrypted-media; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+      <p className="text-[10px] font-mono text-ink-faint mt-1">
+        Vista previa — así lo verá el alumno.
+      </p>
+    </div>
+  );
+}
+
 interface ModuleTranslation {
   locale: Locale;
   title: string;
@@ -913,12 +944,13 @@ function LessonEditor({
             <span className="num-label mb-1 block">{t("adminCourse.youtubeId")}</span>
             <Input
               value={youtubeId}
-              onChange={(e) => setYoutubeId(e.target.value)}
-              placeholder="dQw4w9WgXcQ"
+              onChange={(e) => setYoutubeId(extractYoutubeId(e.target.value))}
+              placeholder="dQw4w9WgXcQ o URL completa de YouTube"
             />
             <p className="text-[11px] text-ink-muted mt-1">
-              {t("adminCourse.youtubeHint")}
+              {t("adminCourse.youtubeHint")} Puedes pegar la URL completa: se extrae el ID solo.
             </p>
+            <YoutubePreview videoId={youtubeId} />
           </label>
           <label className="block">
             <span className="num-label mb-1 block">{t("adminCourse.duration")}</span>
@@ -1090,11 +1122,14 @@ function AddLessonForm({
         placeholder={t("adminCourse.lessonTitlePlaceholder")}
       />
       {kind === "video" && (
-        <Input
-          value={youtubeId}
-          onChange={(e) => setYoutubeId(e.target.value)}
-          placeholder="YouTube ID"
-        />
+        <>
+          <Input
+            value={youtubeId}
+            onChange={(e) => setYoutubeId(extractYoutubeId(e.target.value))}
+            placeholder="YouTube ID o URL completa"
+          />
+          <YoutubePreview videoId={youtubeId} />
+        </>
       )}
       <div className="flex items-center gap-3">
         <Button
