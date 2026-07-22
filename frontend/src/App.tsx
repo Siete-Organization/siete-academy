@@ -1,39 +1,56 @@
+import { Suspense, lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "@/lib/auth-context";
 import { Layout } from "@/components/Layout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { ApplyPage } from "@/pages/apply/ApplyPage";
+// Login queda en el bundle inicial: es la primera pantalla de todo el mundo.
 import { LoginPage } from "@/pages/auth/LoginPage";
-import { StudentDashboard } from "@/pages/student/StudentDashboard";
-import { ModulePage } from "@/pages/student/ModulePage";
-import { StudentFinalTest } from "@/pages/student/StudentFinalTest";
-import { StudentModuleExam } from "@/pages/student/StudentModuleExam";
-import { StudentFeedback } from "@/pages/student/StudentFeedback";
-import { StudentCertificate } from "@/pages/student/StudentCertificate";
-import { StudentCalendar } from "@/pages/student/StudentCalendar";
-import { StudentPostAcademy } from "@/pages/student/StudentPostAcademy";
-import {
-  StudentLibrary,
-  StudentLibraryIndustryDetail,
-} from "@/pages/student/StudentLibrary";
-import { AccountPage } from "@/pages/account/AccountPage";
-import { TeacherHome } from "@/pages/teacher/TeacherHome";
-import { TeacherReviews } from "@/pages/teacher/TeacherReviews";
-import { AdminApplications } from "@/pages/admin/AdminApplications";
-import { AdminCohorts } from "@/pages/admin/AdminCohorts";
-import { AdminCourse } from "@/pages/admin/AdminCourse";
-import { AdminPlacement } from "@/pages/admin/AdminPlacement";
-import { AdminPractica } from "@/pages/admin/AdminPractica";
-import { AdminAnalytics } from "@/pages/admin/AdminAnalytics";
-import { AdminHome } from "@/pages/admin/AdminHome";
-import { AdminResults } from "@/pages/admin/AdminResults";
-import { AdminAssessmentPreview } from "@/pages/admin/AdminAssessmentPreview";
-import { RecruiterHome } from "@/pages/recruiter/RecruiterHome";
+
+// Code-splitting por ruta: cada página baja solo cuando se navega a ella.
+// (React.lazy exige default export; adaptamos los named exports en el import.)
+const lazyPage = <T extends object>(
+  loader: () => Promise<T>,
+  name: keyof T,
+) => lazy(() => loader().then((m) => ({ default: m[name] as React.ComponentType })));
+
+const ApplyPage = lazyPage(() => import("@/pages/apply/ApplyPage"), "ApplyPage");
+const StudentDashboard = lazyPage(() => import("@/pages/student/StudentDashboard"), "StudentDashboard");
+const ModulePage = lazyPage(() => import("@/pages/student/ModulePage"), "ModulePage");
+const StudentFinalTest = lazyPage(() => import("@/pages/student/StudentFinalTest"), "StudentFinalTest");
+const StudentModuleExam = lazyPage(() => import("@/pages/student/StudentModuleExam"), "StudentModuleExam");
+const StudentFeedback = lazyPage(() => import("@/pages/student/StudentFeedback"), "StudentFeedback");
+const StudentCertificate = lazyPage(() => import("@/pages/student/StudentCertificate"), "StudentCertificate");
+const StudentCalendar = lazyPage(() => import("@/pages/student/StudentCalendar"), "StudentCalendar");
+const StudentPostAcademy = lazyPage(() => import("@/pages/student/StudentPostAcademy"), "StudentPostAcademy");
+const StudentLibrary = lazyPage(() => import("@/pages/student/StudentLibrary"), "StudentLibrary");
+const StudentLibraryIndustryDetail = lazyPage(() => import("@/pages/student/StudentLibrary"), "StudentLibraryIndustryDetail");
+const AccountPage = lazyPage(() => import("@/pages/account/AccountPage"), "AccountPage");
+const TeacherHome = lazyPage(() => import("@/pages/teacher/TeacherHome"), "TeacherHome");
+const TeacherReviews = lazyPage(() => import("@/pages/teacher/TeacherReviews"), "TeacherReviews");
+const AdminApplications = lazyPage(() => import("@/pages/admin/AdminApplications"), "AdminApplications");
+const AdminCohorts = lazyPage(() => import("@/pages/admin/AdminCohorts"), "AdminCohorts");
+const AdminCourse = lazyPage(() => import("@/pages/admin/AdminCourse"), "AdminCourse");
+const AdminPlacement = lazyPage(() => import("@/pages/admin/AdminPlacement"), "AdminPlacement");
+const AdminPractica = lazyPage(() => import("@/pages/admin/AdminPractica"), "AdminPractica");
+const AdminAnalytics = lazyPage(() => import("@/pages/admin/AdminAnalytics"), "AdminAnalytics");
+const AdminHome = lazyPage(() => import("@/pages/admin/AdminHome"), "AdminHome");
+const AdminResults = lazyPage(() => import("@/pages/admin/AdminResults"), "AdminResults");
+const AdminAssessmentPreview = lazyPage(() => import("@/pages/admin/AdminAssessmentPreview"), "AdminAssessmentPreview");
+const RecruiterHome = lazyPage(() => import("@/pages/recruiter/RecruiterHome"), "RecruiterHome");
+
+function PageLoader() {
+  return (
+    <div className="container-editorial py-32">
+      <p className="num-label">Cargando…</p>
+    </div>
+  );
+}
 
 export default function App() {
   return (
     <AuthProvider>
       <Layout>
+        <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/apply" element={<ApplyPage />} />
@@ -229,6 +246,7 @@ export default function App() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </Suspense>
       </Layout>
     </AuthProvider>
   );
