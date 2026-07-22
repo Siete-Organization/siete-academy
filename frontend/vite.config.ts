@@ -10,6 +10,19 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Vendors estables en chunks propios: cachean entre deploys y
+        // achican el bundle inicial que bloquea el primer render.
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-firebase": ["firebase/app", "firebase/auth"],
+          "vendor-i18n": ["i18next", "react-i18next"],
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     proxy: {
