@@ -20,6 +20,43 @@ export function extractYoutubeId(input: string): string {
   return m ? m[1] : raw;
 }
 
+function VideoModal({ videoId, title, onClose }: { videoId: string; title: string; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-ink/80 flex items-center justify-center p-6"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div className="w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-paper text-sm font-medium truncate pr-4">{title}</p>
+          <button
+            onClick={onClose}
+            className="text-paper/70 hover:text-paper font-mono text-xs uppercase tracking-[0.14em] shrink-0"
+          >
+            Cerrar ✕
+          </button>
+        </div>
+        <div className="relative w-full rounded-xs overflow-hidden" style={{ paddingBottom: "56.25%" }}>
+          <iframe
+            className="absolute inset-0 w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
+            title={title}
+            allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function YoutubePreview({ videoId }: { videoId: string }) {
   if (!/^[\w-]{11}$/.test(videoId)) return null;
   return (
@@ -796,6 +833,7 @@ function LessonRow({
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
   const handleDelete = async () => {
     if (!window.confirm(t("adminCourse.confirmDelete"))) return;
@@ -818,10 +856,27 @@ function LessonRow({
           <span className="text-sm font-medium">
             {getTitle(lesson.translations)}
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
-            {lesson.kind === "reading" ? "📖 manual" : "▶ video"}
-          </span>
+          {lesson.kind === "video" && lesson.youtube_id ? (
+            <button
+              onClick={() => setShowVideo(true)}
+              title="Ver video"
+              className="font-mono text-[10px] uppercase tracking-[0.14em] text-ember hover:text-ink border-b border-dotted border-ember/50 transition-colors"
+            >
+              ▶ video
+            </button>
+          ) : (
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+              {lesson.kind === "reading" ? "📖 manual" : "▶ video"}
+            </span>
+          )}
         </div>
+        {showVideo && lesson.youtube_id && (
+          <VideoModal
+            videoId={lesson.youtube_id}
+            title={getTitle(lesson.translations)}
+            onClose={() => setShowVideo(false)}
+          />
+        )}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setEditing((v) => !v)}
