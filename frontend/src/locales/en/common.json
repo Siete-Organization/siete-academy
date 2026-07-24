@@ -410,6 +410,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "close": "Close",
+    "retry": "Retry",
+    "loadError": "We couldn't load the data. It may be a momentary server interruption — try again in a few seconds.",
     "empty": "Nothing here yet."
   },
   "footer": {

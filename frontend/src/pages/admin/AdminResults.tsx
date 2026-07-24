@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { BackLink } from "@/components/BackLink";
+import { LoadError } from "@/components/LoadError";
 
 interface Cohort {
   id: number;
@@ -90,17 +91,24 @@ export function AdminResults() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [results, setResults] = useState<CohortResults | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
+    setLoadFailed(false);
     void (async () => {
-      const { data } = await api.get<Cohort[]>("/cohorts");
-      setCohorts(data);
-      if (data.length > 0 && selectedId === null) {
-        setSelectedId(data[0].id);
+      try {
+        const { data } = await api.get<Cohort[]>("/cohorts");
+        setCohorts(data);
+        if (data.length > 0 && selectedId === null) {
+          setSelectedId(data[0].id);
+        }
+      } catch {
+        setLoadFailed(true);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [retryKey]);
 
   useEffect(() => {
     if (selectedId === null) {
@@ -108,17 +116,20 @@ export function AdminResults() {
       return;
     }
     setLoading(true);
+    setLoadFailed(false);
     void (async () => {
       try {
         const { data } = await api.get<CohortResults>("/grading/results", {
           params: { cohort_id: selectedId, locale: i18n.language.slice(0, 2) },
         });
         setResults(data);
+      } catch {
+        setLoadFailed(true);
       } finally {
         setLoading(false);
       }
     })();
-  }, [selectedId, i18n.language]);
+  }, [selectedId, i18n.language, retryKey]);
 
   const moduleHeaders = results?.modules ?? [];
 
@@ -139,7 +150,7 @@ export function AdminResults() {
           </label>
           {cohorts.length === 0 ? (
             <p className="text-ink-muted text-sm">
-              {t("adminResults.noCohorts")}
+              {loadFailed ? "—" : t("adminResults.noCohorts")}
             </p>
           ) : (
             <select
@@ -159,9 +170,11 @@ export function AdminResults() {
         <Legend />
       </section>
 
+      {loadFailed && <LoadError onRetry={() => setRetryKey((k) => k + 1)} />}
+
       {loading && <p className="text-ink-muted">{t("common.loading")}</p>}
 
-      {!loading && results && results.students.length === 0 && (
+      {!loading && !loadFailed && results && results.students.length === 0 && (
         <p className="text-ink-muted">{t("adminResults.noStudents")}</p>
       )}
 
@@ -359,16 +372,23 @@ function ReviewModal({
   onClose: () => void;
 }) {
   const [subs, setSubs] = useState<ReviewSubmission[] | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
+    setLoadFailed(false);
     void (async () => {
-      const { data } = await api.get<ReviewSubmission[]>(
-        "/grading/submissions/review",
-        { params: { user_id: target.userId, module_id: target.moduleId } },
-      );
-      setSubs(data);
+      try {
+        const { data } = await api.get<ReviewSubmission[]>(
+          "/grading/submissions/review",
+          { params: { user_id: target.userId, module_id: target.moduleId } },
+        );
+        setSubs(data);
+      } catch {
+        setLoadFailed(true);
+      }
     })();
-  }, [target.userId, target.moduleId]);
+  }, [target.userId, target.moduleId, retryKey]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -403,7 +423,10 @@ function ReviewModal({
         </div>
 
         <div className="px-6 py-5 space-y-8">
-          {subs === null && (
+          {loadFailed && (
+            <LoadError onRetry={() => setRetryKey((k) => k + 1)} />
+          )}
+          {!loadFailed && subs === null && (
             <p className="text-ink-muted text-sm">{t("common.loading")}</p>
           )}
           {subs !== null && subs.length === 0 && (

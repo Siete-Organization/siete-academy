@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { BackLink } from "@/components/BackLink";
+import { LoadError } from "@/components/LoadError";
 
 const RESOURCE_ICONS: Record<string, string> = {
   pdf: "📄",
@@ -88,10 +89,13 @@ export function ModulePage() {
   const [resources, setResources] = useState<ModuleResource[]>([]);
   const [activeStep, setActiveStep] = useState<StepKey>("video");
   const [completedSteps, setCompletedSteps] = useState<Set<StepKey>>(new Set());
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     if (!moduleId) return;
     const controller = new AbortController();
+    setLoadFailed(false);
     void (async () => {
       try {
         const { data } = await api.get<Lesson[]>(
@@ -109,11 +113,11 @@ export function ModulePage() {
           return data[0] ?? null;
         });
       } catch (err) {
-        if ((err as { code?: string })?.code !== "ERR_CANCELED") throw err;
+        if ((err as { code?: string })?.code !== "ERR_CANCELED") setLoadFailed(true);
       }
     })();
     return () => controller.abort();
-  }, [moduleId, i18n.language]);
+  }, [moduleId, i18n.language, retryKey]);
 
   useEffect(() => {
     if (!selectedLesson) {
@@ -187,6 +191,15 @@ export function ModulePage() {
       }
     }
   };
+
+  if (loadFailed) {
+    return (
+      <div className="container-editorial py-12">
+        <BackLink to="/student" className="mb-8">{t("nav.myProgress")}</BackLink>
+        <LoadError onRetry={() => setRetryKey((k) => k + 1)} />
+      </div>
+    );
+  }
 
   return (
     <div className="container-editorial py-12">

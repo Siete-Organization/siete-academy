@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
+import { LoadError } from "@/components/LoadError";
 
 interface Enrollment {
   id: number;
@@ -27,9 +28,12 @@ export function StudentDashboard() {
   const { me } = useAuth();
   const [enrollments, setEnrollments] = useState<Enrollment[] | null>(null);
   const [windowsByCohort, setWindowsByCohort] = useState<Record<number, ModuleWindow[]>>({});
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
+    setLoadFailed(false);
     void (async () => {
       try {
         const { data } = await api.get<Enrollment[]>("/enrollment/me", {
@@ -49,11 +53,19 @@ export function StudentDashboard() {
         setWindowsByCohort(Object.fromEntries(pairs));
       } catch (err) {
         // Abortos al desmontar no son errores
-        if ((err as { code?: string })?.code !== "ERR_CANCELED") throw err;
+        if ((err as { code?: string })?.code !== "ERR_CANCELED") setLoadFailed(true);
       }
     })();
     return () => controller.abort();
-  }, []);
+  }, [retryKey]);
+
+  if (loadFailed) {
+    return (
+      <div className="container-editorial">
+        <LoadError onRetry={() => setRetryKey((k) => k + 1)} />
+      </div>
+    );
+  }
 
   if (enrollments === null) {
     return <div className="container-editorial py-24 text-ink-muted">{t("common.loading")}</div>;
