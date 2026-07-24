@@ -56,9 +56,11 @@ def list_by_module(module_id: int, db: Session = Depends(get_db)) -> list[Assess
 
 
 @router.get("/lesson/{lesson_id}", response_model=list[AssessmentOut])
-def list_by_lesson(lesson_id: int, db: Session = Depends(get_db)) -> list[Assessment]:
-    # Capa 1 (micropruebas): se califican client-side, necesitan `correct`. No strip.
-    return db.query(Assessment).filter(Assessment.lesson_id == lesson_id).all()
+def list_by_lesson(lesson_id: int, db: Session = Depends(get_db)) -> list[AssessmentOut]:
+    # Strip también en capa 1: la corrección vive server-side y la revisión
+    # llega en la respuesta del POST /submissions (build_mcq_review).
+    rows = db.query(Assessment).filter(Assessment.lesson_id == lesson_id).all()
+    return [_public(a) for a in rows]
 
 
 @router.get("/final", response_model=AssessmentOut)
@@ -116,7 +118,7 @@ def submit(
     body: SubmissionCreate,
     current: CurrentUser = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> Submission:
+) -> SubmissionOut:
     try:
         s = services.submit(
             db,
@@ -142,7 +144,10 @@ def submit(
     # Notificación Slack al subir video de fin de módulo o Prueba Final
     _maybe_notify_slack_video(db, submission=s, student=current.user)
 
-    return s
+    assessment = db.get(Assessment, s.assessment_id)
+    return SubmissionOut.model_validate(s).model_copy(
+        update={"review": services.build_mcq_review(assessment, body.payload)}
+    )
 
 
 def _maybe_notify_slack_video(

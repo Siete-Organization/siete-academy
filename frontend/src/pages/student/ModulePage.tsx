@@ -49,8 +49,15 @@ interface McqQuestion {
   choices?: McqChoice[];
   left?: McqChoice[];
   right?: McqChoice[];
-  correct: string[] | Record<string, string>;
-  explanation?: string;
+}
+
+// Corrección pregunta a pregunta que devuelve el server tras entregar.
+// El config del assessment ya no incluye respuestas correctas.
+interface ReviewItem {
+  id: string;
+  is_correct: boolean;
+  correct: string[] | Record<string, string> | null;
+  explanation: string | null;
 }
 
 interface Assessment {
@@ -78,6 +85,7 @@ interface SubmissionResult {
   id: number;
   auto_score: number | null;
   status: string;
+  review: ReviewItem[] | null;
 }
 
 export function ModulePage() {
@@ -764,7 +772,8 @@ function ExamReview({
       <ol className="space-y-4">
         {questions.map((q, i) => {
           const given = answers[q.id];
-          const isCorrect = checkAnswer(q, given);
+          const r = result.review?.find((x) => x.id === q.id);
+          const isCorrect = r?.is_correct ?? false;
           return (
             <li
               key={q.id}
@@ -787,15 +796,15 @@ function ExamReview({
                   <span className="font-mono uppercase tracking-[0.14em] mr-2">
                     {t("student.examCorrect")}:
                   </span>
-                  {formatAnswer(q, q.correct)}
+                  {formatAnswer(q, r?.correct)}
                 </p>
               </div>
-              {q.explanation && (
+              {r?.explanation && (
                 <p className="text-sm text-ink-soft border-t border-bone pt-3">
                   <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint mr-2">
                     {t("student.examExplanation")}:
                   </span>
-                  {q.explanation}
+                  {r.explanation}
                 </p>
               )}
             </li>
@@ -804,32 +813,6 @@ function ExamReview({
       </ol>
     </div>
   );
-}
-
-function checkAnswer(q: McqQuestion, given: unknown): boolean {
-  if (given === undefined || given === null) return false;
-  if (q.type === "single") {
-    const correct = Array.isArray(q.correct) ? q.correct[0] : q.correct;
-    return String(given) === String(correct);
-  }
-  if (q.type === "multi") {
-    if (!Array.isArray(given) || !Array.isArray(q.correct)) return false;
-    const a = [...given].map(String).sort();
-    const b = [...(q.correct as string[])].map(String).sort();
-    return a.length === b.length && a.every((x, i) => x === b[i]);
-  }
-  if (q.type === "match") {
-    if (typeof given !== "object" || typeof q.correct !== "object" || Array.isArray(q.correct)) {
-      return false;
-    }
-    const g = given as Record<string, string>;
-    const c = q.correct as Record<string, string>;
-    const gKeys = Object.keys(g);
-    const cKeys = Object.keys(c);
-    if (gKeys.length !== cKeys.length) return false;
-    return cKeys.every((k) => String(g[k]) === String(c[k]));
-  }
-  return false;
 }
 
 function formatAnswer(q: McqQuestion, ans: unknown): string {

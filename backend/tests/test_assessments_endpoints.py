@@ -138,23 +138,89 @@ class TestAnswerLeakIsClosed:
         assert len(bodies) == 1
         self._assert_stripped(bodies[0])
 
-    def test_lesson_endpoint_keeps_correct_for_client_grading(self, client, db):
-        # Capa 1: micropruebas se corrigen client-side → `correct` debe seguir.
-        m_id = _seed_module(db)
-        lesson = Lesson(module_id=m_id, order_index=0)
-        db.add(lesson)
-        db.commit()
-        db.refresh(lesson)
-        a = Assessment(
-            module_id=m_id,
-            lesson_id=lesson.id,
-            type="mcq",
-            title="Microprueba",
-            config={"questions": [{"id": "q1", "type": "single", "correct": "a"}]},
-            passing_score=70.0,
-        )
-        db.add(a)
-        db.commit()
+    def test_lesson_endpoint_strips_answers(self, client, db):
+        # Capa 1: la corrección vive server-side → `correct` ya no viaja.
+        a = _seed_mcq_lesson(db)
         r = client.get(f"/assessments/lesson/{a.lesson_id}")
         assert r.status_code == 200, r.text
-        assert r.json()[0]["config"]["questions"][0]["correct"] == "a"
+        q = r.json()[0]["config"]["questions"][0]
+        assert "correct" not in q
+        assert "explanation" not in q
+        # El enunciado y las opciones sí se conservan.
+        assert q["prompt"] == "¿?"
+        assert q["choices"][0]["id"] == "a"
+
+
+def _seed_mcq_lesson(db) -> Assessment:
+    m_id = _seed_module(db)
+    lesson = Lesson(module_id=m_id, order_index=0)
+    db.add(lesson)
+    db.commit()
+    db.refresh(lesson)
+    a = Assessment(
+        module_id=m_id,
+        lesson_id=lesson.id,
+        type="mcq",
+        title="Microprueba",
+        config={
+            "questions": [
+                {
+                    "id": "q1",
+                    "type": "single",
+                    "prompt": "¿?",
+                    "choices": [{"id": "a", "text": "A"}, {"id": "b", "text": "B"}],
+                    "correct": ["a"],
+                    "explanation": "porque sí",
+                },
+                {
+                    "id": "q2",
+                    "type": "multi",
+                    "prompt": "¿multi?",
+                    "choices": [
+                        {"id": "a", "text": "A"},
+                        {"id": "b", "text": "B"},
+                        {"id": "c", "text": "C"},
+                    ],
+                    "correct": ["a", "b"],
+                },
+            ]
+        },
+        passing_score=70.0,
+    )
+    db.add(a)
+    db.commit()
+    db.refresh(a)
+    return a
+
+
+class TestSubmissionReview:
+    """El POST de una microprueba devuelve la corrección pregunta a pregunta."""
+
+    def test_mcq_submission_returns_review(self, client, db):
+        a = _seed_mcq_lesson(db)
+        r = client.post(
+            "/assessments/submissions",
+            json={
+                "assessment_id": a.id,
+                "payload": {"answers": {"q1": "a", "q2": ["a", "c"]}},
+            },
+        )
+        assert r.status_code == 201, r.text
+        body = r.json()
+        assert body["status"] == "auto_graded"
+        review = body["review"]
+        assert [x["id"] for x in review] == ["q1", "q2"]
+        assert review[0]["is_correct"] is True
+        assert review[0]["correct"] == ["a"]
+        assert review[0]["explanation"] == "porque sí"
+        assert review[1]["is_correct"] is False
+        assert review[1]["correct"] == ["a", "b"]
+
+    def test_capa2_submission_has_no_review(self, client, db):
+        a = _seed_assessment(db, type="capa_2", config=dict(TestAnswerLeakIsClosed.LEAKY_CONFIG))
+        r = client.post(
+            "/assessments/submissions",
+            json={"assessment_id": a.id, "payload": {"answers": {"q1": "a"}}},
+        )
+        assert r.status_code == 201, r.text
+        assert r.json()["review"] is None

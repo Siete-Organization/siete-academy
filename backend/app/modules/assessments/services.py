@@ -110,10 +110,9 @@ def public_config(config: dict[str, Any]) -> dict[str, Any]:
     review del profesor), que lee el config crudo de la DB, así que quitar estas
     claves de la respuesta HTTP no afecta la nota.
 
-    Solo se usa en capa_2 / final_test, que se corrigen server-side. Las
-    micropruebas (capa_1) se siguen calificando client-side en el front, así que
-    el endpoint ``/lesson/{id}`` mantiene ``correct`` hasta mover ese grading al
-    server (deuda trackeada).
+    Se aplica a TODOS los endpoints student-facing, incluidas las micropruebas
+    (capa_1): su corrección vive server-side y la revisión post-entrega viaja
+    en la respuesta del POST (``build_mcq_review``).
     """
     if not config:
         return {}
@@ -153,6 +152,38 @@ def _public_table(table: dict[str, Any]) -> dict[str, Any]:
             if isinstance(row, dict)
         ]
     return clean
+
+
+def build_mcq_review(assessment: Assessment, payload: dict) -> list[dict[str, Any]] | None:
+    """Corrección pregunta a pregunta para la respuesta del POST de entrega.
+
+    Solo micropruebas (type ``mcq``): el alumno recibe su revisión DESPUÉS de
+    entregar, en vez de tener las respuestas correctas en el config pre-entrega
+    (que era el leak de capa 1). Capa_2/final no devuelven revisión: quedan
+    en manos del profesor.
+    """
+    if assessment.type != "mcq":
+        return None
+    questions = (assessment.config or {}).get("questions")
+    if not isinstance(questions, list):
+        return None
+    answers = payload.get("answers", {}) or {}
+    review: list[dict[str, Any]] = []
+    for q in questions:
+        if not isinstance(q, dict):
+            continue
+        qid = q.get("id")
+        review.append(
+            {
+                "id": qid,
+                "is_correct": _question_is_correct(
+                    q.get("type", "single"), q.get("correct"), answers.get(qid)
+                ),
+                "correct": q.get("correct"),
+                "explanation": q.get("explanation"),
+            }
+        )
+    return review
 
 
 def submit(

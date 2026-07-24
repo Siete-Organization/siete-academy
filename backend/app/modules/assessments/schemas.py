@@ -59,6 +59,10 @@ class SubmissionOut(BaseModel):
     status: str
     auto_score: float | None
     submitted_at: datetime
+    # Solo en la respuesta del POST de una microprueba (mcq): corrección
+    # pregunta a pregunta. El alumno la ve DESPUÉS de entregar — las
+    # respuestas correctas ya no viajan en el config del assessment.
+    review: list[dict[str, Any]] | None = None
 
     class Config:
         from_attributes = True
