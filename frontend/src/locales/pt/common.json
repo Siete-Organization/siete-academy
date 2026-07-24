@@ -409,6 +409,7 @@
     "error": "Ocorreu um erro",
     "save": "Salvar",
     "cancel": "Cancelar",
+    "close": "Fechar",
     "empty": "Nada por aqui ainda."
   },
   "footer": {
@@ -488,6 +489,12 @@
     "legendDistinction": "≥85 — distinção",
     "legendBasic": "65–84 — básico",
     "legendBelow": "<65",
-    "legendMissing": "— (sem entrega)"
+    "legendMissing": "— (sem entrega)",
+    "viewTest": "Ver prova",
+    "reviewEmpty": "Sem entregas neste módulo.",
+    "reviewVideo": "Ver vídeo enviado",
+    "reviewStudentAnswer": "Resposta do aluno",
+    "reviewCorrectAnswer": "Resposta correta",
+    "reviewNoAnswer": "Sem resposta"
   }
 }

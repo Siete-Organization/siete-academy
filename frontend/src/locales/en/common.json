@@ -409,6 +409,7 @@
     "error": "An error occurred",
     "save": "Save",
     "cancel": "Cancel",
+    "close": "Close",
     "empty": "Nothing here yet."
   },
   "footer": {
@@ -488,6 +489,12 @@
     "legendDistinction": "≥85 — distinction",
     "legendBasic": "65–84 — basic",
     "legendBelow": "<65",
-    "legendMissing": "— (no submission)"
+    "legendMissing": "— (no submission)",
+    "viewTest": "View test",
+    "reviewEmpty": "No submissions in this module.",
+    "reviewVideo": "View submitted video",
+    "reviewStudentAnswer": "Student's answer",
+    "reviewCorrectAnswer": "Correct answer",
+    "reviewNoAnswer": "No answer"
   }
 }

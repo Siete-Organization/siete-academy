@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -47,6 +47,34 @@ interface CohortResults {
   cohort_id: number;
   modules: ModuleHeader[];
   students: StudentResult[];
+}
+
+interface ReviewQuestion {
+  id: string;
+  prompt: string | null;
+  type: string;
+  student_answer: string | null;
+  correct_answer: string | null;
+  is_correct: boolean;
+}
+
+interface ReviewSubmission {
+  submission_id: number;
+  assessment_id: number;
+  assessment_title: string;
+  assessment_type: string;
+  submitted_at: string | null;
+  status: string;
+  auto_score: number | null;
+  video_url: string | null;
+  questions: ReviewQuestion[];
+}
+
+interface ReviewTarget {
+  userId: number;
+  studentLabel: string;
+  moduleId: number;
+  moduleLabel: string;
 }
 
 const STATUS_STYLES: Record<StudentResult["status"], string> = {
@@ -190,8 +218,10 @@ function ResultsTable({
     () => [...modules].sort((a, b) => a.order_index - b.order_index),
     [modules],
   );
+  const [review, setReview] = useState<ReviewTarget | null>(null);
 
   return (
+    <>
     <div className="overflow-x-auto border border-bone">
       <table className="min-w-full text-sm">
         <thead className="bg-paper-tint">
@@ -236,10 +266,22 @@ function ResultsTable({
                 <div className="font-medium text-ink">{s.name || s.email}</div>
                 <div className="text-xs text-ink-muted">{s.email}</div>
               </td>
-              {sortedModules.map((m) => {
+              {sortedModules.map((m, idx) => {
                 const mr = s.modules.find((x) => x.module_id === m.id);
                 return (
-                  <ModuleCells key={m.id} mr={mr ?? null} />
+                  <ModuleCells
+                    key={m.id}
+                    mr={mr ?? null}
+                    t={t}
+                    onView={() =>
+                      setReview({
+                        userId: s.user_id,
+                        studentLabel: s.name || s.email,
+                        moduleId: m.id,
+                        moduleLabel: t("adminResults.moduleN", { n: idx + 1 }),
+                      })
+                    }
+                  />
                 );
               })}
               <ScoreCell value={s.final.score} />
@@ -252,6 +294,10 @@ function ResultsTable({
         </tbody>
       </table>
     </div>
+    {review && (
+      <ReviewModal target={review} t={t} onClose={() => setReview(null)} />
+    )}
+    </>
   );
 }
 
@@ -270,12 +316,157 @@ function SubHeader({
   );
 }
 
-function ModuleCells({ mr }: { mr: ModuleResult | null }) {
+function ModuleCells({
+  mr,
+  t,
+  onView,
+}: {
+  mr: ModuleResult | null;
+  t: (key: string, options?: Record<string, unknown>) => string;
+  onView: () => void;
+}) {
+  const hasSubmissions =
+    mr !== null &&
+    (mr.capa_1_avg !== null ||
+      mr.capa_2_score !== null ||
+      mr.capa_2_mcq !== null ||
+      mr.capa_1_scores.some((v) => v !== null));
   return (
     <>
       <ScoreCell value={mr?.capa_1_avg ?? null} subtle />
-      <ScoreCell value={mr?.capa_2_score ?? null} />
+      <ScoreCell value={mr?.capa_2_score ?? null}>
+        {hasSubmissions && (
+          <button
+            type="button"
+            onClick={onView}
+            className="block mx-auto mt-1 text-[10px] uppercase tracking-[0.12em] text-ink-muted underline underline-offset-2 hover:text-ink"
+          >
+            {t("adminResults.viewTest")}
+          </button>
+        )}
+      </ScoreCell>
     </>
+  );
+}
+
+function ReviewModal({
+  target,
+  t,
+  onClose,
+}: {
+  target: ReviewTarget;
+  t: (key: string, options?: Record<string, unknown>) => string;
+  onClose: () => void;
+}) {
+  const [subs, setSubs] = useState<ReviewSubmission[] | null>(null);
+
+  useEffect(() => {
+    void (async () => {
+      const { data } = await api.get<ReviewSubmission[]>(
+        "/grading/submissions/review",
+        { params: { user_id: target.userId, module_id: target.moduleId } },
+      );
+      setSubs(data);
+    })();
+  }, [target.userId, target.moduleId]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-paper border border-bone"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="sticky top-0 flex items-start justify-between gap-4 bg-paper border-b border-bone px-6 py-4">
+          <div>
+            <p className="num-label">{target.moduleLabel}</p>
+            <h2 className="font-display text-xl mt-1">{target.studentLabel}</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t("common.close")}
+            className="text-ink-muted hover:text-ink text-xl leading-none px-2 py-1"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="px-6 py-5 space-y-8">
+          {subs === null && (
+            <p className="text-ink-muted text-sm">{t("common.loading")}</p>
+          )}
+          {subs !== null && subs.length === 0 && (
+            <p className="text-ink-muted text-sm">
+              {t("adminResults.reviewEmpty")}
+            </p>
+          )}
+          {subs?.map((sub) => (
+            <section key={sub.submission_id} className="space-y-4">
+              <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-bone pb-2">
+                <h3 className="font-medium text-ink">{sub.assessment_title}</h3>
+                <p className="text-xs text-ink-muted tabular-nums">
+                  {sub.auto_score !== null && (
+                    <span className={cn("font-semibold mr-3", scoreTone(sub.auto_score))}>
+                      {sub.auto_score.toFixed(1)}
+                    </span>
+                  )}
+                  {sub.submitted_at &&
+                    new Date(sub.submitted_at).toLocaleDateString()}
+                </p>
+              </header>
+              {sub.video_url && (
+                <a
+                  href={sub.video_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block text-sm underline underline-offset-2 text-ink-muted hover:text-ink"
+                >
+                  {t("adminResults.reviewVideo")}
+                </a>
+              )}
+              <ol className="space-y-4">
+                {sub.questions.map((q, i) => (
+                  <li key={q.id ?? i} className="text-sm">
+                    <p className="font-medium text-ink">
+                      {i + 1}. {q.prompt}
+                    </p>
+                    <p
+                      className={cn(
+                        "mt-1",
+                        q.is_correct ? "text-emerald-700" : "text-rose-700",
+                      )}
+                    >
+                      {q.is_correct ? "✓" : "✗"}{" "}
+                      <span className="text-ink-muted">
+                        {t("adminResults.reviewStudentAnswer")}:
+                      </span>{" "}
+                      {q.student_answer ?? t("adminResults.reviewNoAnswer")}
+                    </p>
+                    {!q.is_correct && (
+                      <p className="mt-0.5 text-ink-muted">
+                        {t("adminResults.reviewCorrectAnswer")}:{" "}
+                        <span className="text-ink">{q.correct_answer}</span>
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -283,10 +474,12 @@ function ScoreCell({
   value,
   bold = false,
   subtle = false,
+  children,
 }: {
   value: number | null;
   bold?: boolean;
   subtle?: boolean;
+  children?: ReactNode;
 }) {
   return (
     <td
@@ -298,6 +491,7 @@ function ScoreCell({
       )}
     >
       {value === null ? "—" : value.toFixed(1)}
+      {children}
     </td>
   );
 }
