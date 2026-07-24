@@ -185,10 +185,21 @@ def _fetch_module_titles(
 
 
 def _latest_submission(views: list[_SubmissionView]) -> _SubmissionView | None:
-    """Toma la submission más reciente — la última que cuenta para nota."""
+    """Submission más reciente — capa 2 y final: la re-entrega reemplaza."""
     if not views:
         return None
-    return max(views, key=lambda v: v.submission.submitted_at)
+    return max(views, key=lambda v: (v.submission.submitted_at, v.submission.id))
+
+
+def _first_submission(views: list[_SubmissionView]) -> _SubmissionView | None:
+    """Primera submission — capa 1: solo el primer intento cuenta para la nota.
+
+    Los reintentos quedan como práctica (decisión 2026-07-24: sin esto, un
+    alumno podía entregar en blanco, leer la revisión y re-entregar perfecto).
+    """
+    if not views:
+        return None
+    return min(views, key=lambda v: (v.submission.submitted_at, v.submission.id))
 
 
 def _build_student_result(
@@ -225,9 +236,9 @@ def _build_student_result(
             order_index=m.order_index,
         )
 
-        # Capa 1 — micro-pruebas (auto_score directo)
+        # Capa 1 — micro-pruebas (auto_score directo, cuenta el primer intento)
         for a in capa1_by_module.get(m.id, []):
-            view = _latest_submission(subs_by_asmt.get(a.id, []))
+            view = _first_submission(subs_by_asmt.get(a.id, []))
             mr.capa_1_scores.append(view.submission.auto_score if view else None)
         mr.capa_1_avg = grading.average(mr.capa_1_scores)
 

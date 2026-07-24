@@ -168,6 +168,7 @@
     "avatarPlayPrompt": "Aperte play para ouvir o coach IA",
     "examStart": "Começar prova",
     "examSubmit": "Enviar respostas",
+    "examFirstAttempt": "A primeira tentativa é a que conta para a sua nota. Você pode refazer como prática.",
     "examScore": "Sua nota: {{score}}%",
     "examPass": "Você passou do limite de {{passing}}%.",
     "examFail": "Abaixo do limite de {{passing}}%. Revise e tente na próxima turma.",

@@ -633,6 +633,9 @@ function ExamStep({
   return (
     <div className="space-y-6">
       <p className="text-sm text-ink-muted">{assessment.title}</p>
+      <p className="text-xs text-ink-faint border-l-2 border-bone pl-3">
+        {t("student.examFirstAttempt")}
+      </p>
       <ol className="space-y-6">
         {questions.map((q, i) => (
           <li key={q.id} className="border border-bone rounded-md p-5 space-y-4">
