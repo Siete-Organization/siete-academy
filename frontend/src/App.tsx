@@ -8,10 +8,28 @@ import { LoginPage } from "@/pages/auth/LoginPage";
 
 // Code-splitting por ruta: cada página baja solo cuando se navega a ella.
 // (React.lazy exige default export; adaptamos los named exports en el import.)
+// Tras un deploy los chunks viejos ya no existen: si el import dinámico falla,
+// recargamos una vez para bajar el index.html nuevo (guard contra loops).
+const CHUNK_RELOAD_KEY = "siete.chunk-reloaded";
 const lazyPage = <T extends object>(
   loader: () => Promise<T>,
   name: keyof T,
-) => lazy(() => loader().then((m) => ({ default: m[name] as React.ComponentType })));
+) =>
+  lazy(() =>
+    loader().then(
+      (m) => {
+        sessionStorage.removeItem(CHUNK_RELOAD_KEY);
+        return { default: m[name] as React.ComponentType };
+      },
+      (err) => {
+        if (!sessionStorage.getItem(CHUNK_RELOAD_KEY)) {
+          sessionStorage.setItem(CHUNK_RELOAD_KEY, "1");
+          window.location.reload();
+        }
+        throw err;
+      },
+    ),
+  );
 
 const ApplyPage = lazyPage(() => import("@/pages/apply/ApplyPage"), "ApplyPage");
 const StudentDashboard = lazyPage(() => import("@/pages/student/StudentDashboard"), "StudentDashboard");

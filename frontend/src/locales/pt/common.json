@@ -410,6 +410,8 @@
     "save": "Salvar",
     "cancel": "Cancelar",
     "close": "Fechar",
+    "retry": "Tentar novamente",
+    "loadError": "Não conseguimos carregar os dados. Pode ser uma interrupção momentânea do servidor — tente novamente em alguns segundos.",
     "empty": "Nada por aqui ainda."
   },
   "footer": {

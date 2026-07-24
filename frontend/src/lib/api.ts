@@ -41,6 +41,39 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Reintentos ante errores transitorios (deploy de Coolify = ~30-60s de 502
+// mientras se recrean los contenedores). Solo GETs: son idempotentes; un POST
+// reintentado podría duplicar postulaciones o entregas.
+const RETRIABLE_STATUS = new Set([502, 503, 504]);
+const RETRY_DELAYS_MS = [1000, 2000, 4000, 8000, 15000, 15000];
+
+api.interceptors.response.use(undefined, async (error: AxiosError) => {
+  const config = error.config as
+    | (NonNullable<AxiosError["config"]> & { _retryCount?: number })
+    | undefined;
+  const transient =
+    error.code !== "ERR_CANCELED" &&
+    (!error.response || RETRIABLE_STATUS.has(error.response.status));
+  const attempt = config?._retryCount ?? 0;
+  if (
+    !config ||
+    config.method?.toLowerCase() !== "get" ||
+    !transient ||
+    attempt >= RETRY_DELAYS_MS.length
+  ) {
+    return Promise.reject(error);
+  }
+  config._retryCount = attempt + 1;
+  logger.warn("api.retry", {
+    url: config.url,
+    attempt: attempt + 1,
+    status: error.response?.status,
+    code: error.code,
+  });
+  await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+  return api.request(config);
+});
+
 api.interceptors.response.use(
   (response) => {
     const meta = (response.config as typeof response.config & {
