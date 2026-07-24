@@ -291,3 +291,108 @@ def test_module_order_stable(client, login_as, scenario):
     r = client.get("/grading/results", params={"cohort_id": scenario["cohort"].id})
     modules = r.json()["modules"]
     assert [m["order_index"] for m in modules] == sorted([m["order_index"] for m in modules])
+
+
+# ──────────────────  GET /grading/submissions/review  ──────────────────
+
+
+def test_review_student_forbidden(client, scenario):
+    r = client.get(
+        "/grading/submissions/review",
+        params={"user_id": scenario["alice"].id, "module_id": scenario["modules"][0].id},
+    )
+    assert r.status_code == 403
+
+
+def test_review_empty_without_submissions(client, login_as, scenario):
+    login_as("teacher")
+    r = client.get(
+        "/grading/submissions/review",
+        params={"user_id": scenario["alice"].id, "module_id": scenario["modules"][0].id},
+    )
+    assert r.status_code == 200
+    assert r.json() == []
+
+
+def test_review_question_breakdown(client, login_as, db, scenario):
+    """Devuelve por pregunta: respuesta del alumno (texto), correcta y ✓/✗."""
+    login_as("admin")
+    alice = scenario["alice"]
+    micro = scenario["capa1"][0]
+    micro.config = {
+        "questions": [
+            {
+                "id": "q1",
+                "type": "single",
+                "prompt": "¿Qué es un SDR?",
+                "choices": [
+                    {"id": "a", "text": "Sales Development Rep"},
+                    {"id": "b", "text": "Software Design Review"},
+                ],
+                "correct": ["a"],
+            },
+            {
+                "id": "q2",
+                "type": "multi",
+                "prompt": "Canales de prospección",
+                "choices": [
+                    {"id": "a", "text": "Email"},
+                    {"id": "b", "text": "LinkedIn"},
+                    {"id": "c", "text": "Fax"},
+                ],
+                "correct": ["a", "b"],
+            },
+        ]
+    }
+    db.commit()
+    _submit(
+        db, assessment_id=micro.id, user_id=alice.id, auto_score=50.0,
+        payload={"answers": {"q1": "a", "q2": ["a", "c"]}},
+    )
+
+    r = client.get(
+        "/grading/submissions/review",
+        params={"user_id": alice.id, "module_id": scenario["modules"][0].id},
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert len(body) == 1
+    sub = body[0]
+    assert sub["assessment_title"] == micro.title
+    assert sub["auto_score"] == 50.0
+
+    q1, q2 = sub["questions"]
+    assert q1["is_correct"] is True
+    assert q1["student_answer"] == "Sales Development Rep"
+    assert q1["correct_answer"] == "Sales Development Rep"
+    assert q2["is_correct"] is False
+    assert q2["student_answer"] == "Email · Fax"
+    assert q2["correct_answer"] == "Email · LinkedIn"
+
+
+def test_review_unanswered_question_marked_wrong(client, login_as, db, scenario):
+    login_as("admin")
+    bob = scenario["bob"]
+    micro = scenario["capa1"][1]
+    micro.config = {
+        "questions": [
+            {
+                "id": "q1",
+                "type": "single",
+                "prompt": "Pregunta sin responder",
+                "choices": [{"id": "a", "text": "A"}],
+                "correct": ["a"],
+            }
+        ]
+    }
+    db.commit()
+    _submit(db, assessment_id=micro.id, user_id=bob.id, auto_score=0.0,
+            payload={"answers": {}})
+
+    r = client.get(
+        "/grading/submissions/review",
+        params={"user_id": bob.id, "module_id": scenario["modules"][1].id},
+    )
+    q = r.json()[0]["questions"][0]
+    assert q["is_correct"] is False
+    assert q["student_answer"] is None
