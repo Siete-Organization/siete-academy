@@ -135,7 +135,7 @@ def scenario(db):
 
 def _submit(
     db, *, assessment_id, user_id, auto_score, review_score=None,
-    payload=None, review_details=None,
+    payload=None, review_details=None, submitted_at=None,
 ):
     reviewed = review_score is not None or review_details is not None
     s = Submission(
@@ -145,6 +145,8 @@ def _submit(
         auto_score=auto_score,
         status="reviewed" if reviewed else "auto_graded",
     )
+    if submitted_at is not None:
+        s.submitted_at = submitted_at
     db.add(s)
     db.commit()
     db.refresh(s)
@@ -291,6 +293,40 @@ def test_module_order_stable(client, login_as, scenario):
     r = client.get("/grading/results", params={"cohort_id": scenario["cohort"].id})
     modules = r.json()["modules"]
     assert [m["order_index"] for m in modules] == sorted([m["order_index"] for m in modules])
+
+
+def test_capa1_counts_first_attempt_only(client, login_as, db, scenario):
+    """Capa 1: reintentos no pisan la nota — cuenta el primer intento."""
+    from datetime import datetime
+
+    login_as("admin")
+    alice = scenario["alice"]
+    micro = scenario["capa1"][0]
+    _submit(db, assessment_id=micro.id, user_id=alice.id, auto_score=60.0,
+            submitted_at=datetime(2026, 7, 20, 10, 0, 0))
+    _submit(db, assessment_id=micro.id, user_id=alice.id, auto_score=100.0,
+            submitted_at=datetime(2026, 7, 20, 11, 0, 0))
+
+    r = client.get("/grading/results", params={"cohort_id": scenario["cohort"].id})
+    s = next(x for x in r.json()["students"] if x["email"] == "alice@test.dev")
+    assert s["modules"][0]["capa_1_scores"][0] == 60.0
+
+
+def test_capa2_still_counts_latest_attempt(client, login_as, db, scenario):
+    """Capa 2: la re-entrega reemplaza (flujo con review del profesor)."""
+    from datetime import datetime
+
+    login_as("admin")
+    alice = scenario["alice"]
+    capa2 = scenario["capa2"][0]
+    _submit(db, assessment_id=capa2.id, user_id=alice.id, auto_score=70.0,
+            review_score=70.0, submitted_at=datetime(2026, 7, 20, 10, 0, 0))
+    _submit(db, assessment_id=capa2.id, user_id=alice.id, auto_score=80.0,
+            review_score=80.0, submitted_at=datetime(2026, 7, 20, 11, 0, 0))
+
+    r = client.get("/grading/results", params={"cohort_id": scenario["cohort"].id})
+    s = next(x for x in r.json()["students"] if x["email"] == "alice@test.dev")
+    assert s["modules"][0]["capa_2_mcq"] == 80.0
 
 
 # ──────────────────  GET /grading/submissions/review  ──────────────────

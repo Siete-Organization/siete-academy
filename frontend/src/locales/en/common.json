@@ -168,6 +168,7 @@
     "avatarPlayPrompt": "Press play to listen to the AI coach",
     "examStart": "Start quiz",
     "examSubmit": "Submit answers",
+    "examFirstAttempt": "Your first attempt is the one that counts toward your grade. You can retake it as practice.",
     "examScore": "Your score: {{score}}%",
     "examPass": "You passed the {{passing}}% threshold.",
     "examFail": "Below the {{passing}}% threshold. Review the content and retry next cohort.",
